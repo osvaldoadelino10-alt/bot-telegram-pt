@@ -1,3 +1,5 @@
+import os
+from flask import FLask, request
 from telegram import Update
 from telegram.ext import ApplicationBuilder, CommandHandler, MessageHandler, filters, ContextTypes
 
@@ -67,8 +69,42 @@ app = ApplicationBuilder().token(TOKEN).build()
 app.add_handler(CommandHandler("start", start))
 app.add_handler(MessageHandler(filters.TEXT, responder))
 
-print("Bot do Pitágoras rodandooo...")
-app.run_polling()
+flask_app = Flask(__name__)
+
+@flask_app.route('/webhook', methods=['POST'])
+def webhook():
+    update = Update.de_json(request.get_json(force=True), app.bot)
+    app.process_update(update)
+    return 'ok'
+@flask_app.route('/') 
+def index():
+    return 'Bot do Pitágoras online!'
+
+if __name__=="__main__":
+    app.run_webhook(
+        listen="0.0.0",
+        port=int(os.environ.get('PORT', 5000)),
+        webhook_url=f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}/webhook"
+    )
+else:
+    app.run_webhook(
+        listen="0.0.0",
+        port=int(os.environ.get('PORT', 5000)),
+        webhook_url=f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}/webhook"
+
+
+
+
+
+    
+
+
+
+
+
+
+
+
 
 
 

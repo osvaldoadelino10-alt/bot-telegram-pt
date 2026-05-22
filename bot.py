@@ -1,6 +1,14 @@
 from flask import Flask
 import threading
+import logging
+import os 
+import google.generativeai as genai
+from telegram import Update
+from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, CommandHandler, filters
 
+# =====================================================================
+# 1. SERVIDOR WEB PARA MANTER O RENDER ATIVO (PLANO FREE)
+# =====================================================================
 app = Flask('')
 
 @app.route('/')
@@ -10,21 +18,24 @@ def home():
 # Inicia o servidor web falso para o Render
 threading.Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
 
-# Os teus imports organizados (um por linha):
-import logging
-import os 
-import google.generativeai as genai
-from telegram import Update
-from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
-# 1. CONFIGURAÇÃO DE CREDENCIAIS
-# ===================================================================
+# =====================================================================
+# 2. CONFIGURAÇÕES INICIAIS E VARIÁVEIS DE AMBIENTE
+# =====================================================================
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    level=logging.INFO
+)
+
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
+
+if not TELEGRAM_TOKEN or not GEMINI_API_KEY:
+    print("⚠️ ERRO: As variáveis TELEGRAM_TOKEN ou GEMINI_API_KEY não foram encontradas no Render!")
 
 genai.configure(api_key=GEMINI_API_KEY)
 
 # =====================================================================
-# 2. A BÍBLIA DE ONDJIVA (Base de Conhecimento Manual Injetada)
+# 3. A BÍBLIA DE ONDJIVA (Base de Conhecimento Manual Injetada)
 # =====================================================================
 CONTEXTO_ONDJIVA = """
 Você é o Assistente Virtual Oficial da Província do Cunene, focado na capital Ondjiva.
@@ -64,8 +75,17 @@ REGRAS DE POSTURA:
 """
 
 # =====================================================================
-# 3. CAMADA DE REGRAS E FILTRAGEM (Lógica de Negócio)
+# 4. CAMADA DE REGRAS E FILTRAGEM (Lógica de Negócio)
 # =====================================================================
+async def comando_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    """Responde ao botão /start ou Iniciar do Telegram."""
+    boas_vindas = (
+        "👋 Olá! Sou o Bot de Apoio do Cunene.\n\n"
+        "Podes utilizar este canal para reportar problemas no município ou pedir "
+        "contactos de saúde e emergências locais. Como posso ajudar-te hoje?"
+    )
+    await update.message.reply_text(boas_vindas)
+
 async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Garante que a mensagem contém texto
     if not update.message or not update.message.text:
@@ -77,7 +97,7 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
     print(f"📥 [Telegram Log] Recebido: {user_text}")
 
     # --- FILTRO 1: EMERGÊNCIA (Prioridade Absoluta) ---
-    if any(palavra in texto_baixo for palabra in ["emergencia", "emergência", "perigo", "socorro", "fogo", "acidente", "policia", "bombeiros"]):
+    if any(palavra in texto_baixo for palavra in ["emergencia", "emergência", "perigo", "socorro", "fogo", "acidente", "policia", "bombeiros"]):
         resposta = (
             "🚨 **ALERTA DE EMERGÊNCIA IMEDIATA!** 🚨\n\n"
             "Se está a passar por uma situação de perigo real, crime ou incêndio, ligue diretamente:\n"
@@ -86,9 +106,9 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
             "Por favor, certifique-se de que está num local seguro."
         )
     
-    # --- FILTRO 2: REPORTAGEM (Estrutura idêntica ao WhatsApp) ---
+    # --- FILTRO 2: REPORTAGEM ---
     elif "reportagem" in texto_baixo:
-        # Extrai o relato removendo a palavra gatilho
+        # Extrai o relato removendo a palavra
         relato = user_text.replace("Reportagem", "").replace("reportagem", "").strip()
         if not relato:
             resposta = (
@@ -118,16 +138,23 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
     await update.message.reply_text(resposta, parse_mode="Markdown")
 
 # =====================================================================
-# 4. INICIALIZAÇÃO DO SERVIDOR DO BOT
+# 5. INICIALIZAÇÃO DO SERVIDOR DO BOT
 # =====================================================================
 if __name__ == '__main__':
     print("⚡ Inicializando a infraestrutura do Bot Apoio Cunene para Telegram...")
     
-    # Constrói a aplicação usando a biblioteca oficial python-telegram-bot
-    app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
+    # Mudámos o nome para 'bot_app' para não chocar com a página Flask lá de cima
+    bot_app = ApplicationBuilder().token(TELEGRAM_TOKEN).build()
     
-    # Registra o manipulador de mensagens de texto para passar pelo nosso filtro unificado
-    app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), processar_mensagem))
+    # 1. Registra a resposta para o botão /start
+    bot_app.add_handler(CommandHandler("start", comando_start))
+    
+    # 2. Registra o manipulador de mensagens de texto normais para o Gemini
+    bot_app.add_handler(MessageHandler(filters.TEXT & (~filters.COMMAND), processar_mensagem))
     
     print("🚀 Servidor online no Telegram! Pronto para receber mensagens via Polling.")
-    app.run_polling()
+    
+    # O truque final: drop_pending_updates=True apaga mensagens antigas e destrava o bot!
+    bot_app.run_polling(drop_pending_updates=True)
+
+``

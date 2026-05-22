@@ -85,16 +85,28 @@ async def comando_start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         "contactos de saúde e emergências locais. Como posso ajudar-te hoje?"
     )
     await update.message.reply_text(boas_vindas)
-
 async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Garante que a mensagem contém texto
     if not update.message or not update.message.text:
         return
 
     user_text = update.message.text
-    texto_baixo = user_text.lower()
     
-    print(f"📥 [Telegram Log] Recebido: {user_text}")
+    try:
+        # Se a chave estiver vazia, o bot avisa-te logo aqui
+        if not GEMINI_API_KEY:
+            await update.message.reply_text("🚨 Erro: O Python não conseguiu ler a variável GEMINI_API_KEY do Render!")
+            return
+            
+        model = genai.GenerativeModel('gemini-1.5-flash')
+        response = model.generate_content(user_text)
+        resposta = response.text
+        
+    except Exception as erro_real:
+        # Isto vai enviar o erro do Python direto no teu Telegram para sabermos a verdade!
+        resposta = f"❌ Erro Técnico Real: {erro_real}"
+
+    await update.message.reply_text(resposta, parse_mode="Markdown")
+
 
     # --- FILTRO 1: EMERGÊNCIA (Prioridade Absoluta) ---
     if any(palavra in texto_baixo for palavra in ["emergencia", "emergência", "perigo", "socorro", "fogo", "acidente", "policia", "bombeiros"]):

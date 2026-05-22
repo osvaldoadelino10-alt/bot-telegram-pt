@@ -6,8 +6,8 @@ from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filte
 # =====================================================================
 # 1. CONFIGURAÇÃO DE CREDENCIAIS
 # =====================================================================
-TELEGRAM_TOKEN = "TEU_TOKEN_DO_BOT_FATHER"
-GEMINI_API_KEY = "TUA_CHAVE_GEMINI_AQUI"
+TELEGRAM_TOKEN ="8322294828:AAEtputFF8a9KAOJmrqlgYLxlMPAvHHot8Y"
+GEMINI_API_KEY =
 
 genai.configure(api_key=GEMINI_API_KEY)
 

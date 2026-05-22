@@ -16,7 +16,6 @@ import os
 import google.generativeai as genai
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
-=====================================================================
 # 1. CONFIGURAÇÃO DE CREDENCIAIS
 # ===================================================================
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")

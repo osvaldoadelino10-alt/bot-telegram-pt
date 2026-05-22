@@ -1,10 +1,22 @@
+from flask import Flask
+import threading
+
+app = Flask('')
+
+@app.route('/')
+def home(): 
+    return "Bot Online"
+
+# Inicia o servidor web falso para o Render
+threading.Thread(target=lambda: app.run(host='0.0.0.0', port=8080)).start()
+
+# Os teus imports organizados (um por linha):
 import logging
 import os 
 import google.generativeai as genai
 from telegram import Update
 from telegram.ext import ApplicationBuilder, ContextTypes, MessageHandler, filters
-
-# =====================================================================
+=====================================================================
 # 1. CONFIGURAÇÃO DE CREDENCIAIS
 # ===================================================================
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")

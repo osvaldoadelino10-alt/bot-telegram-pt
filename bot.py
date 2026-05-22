@@ -97,7 +97,7 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
             await update.message.reply_text("🚨 Erro: O Python não conseguiu ler a variável GEMINI_API_KEY do Render!")
             return
             
-        model = genai.GenerativeModel('gemini-pro', system_instruction=CONTEXTO_ONDJIVA)
+        model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=CONTEXTO_ONDJIVA)
         response = model.generate_content(user_text)
         resposta = response.text
         

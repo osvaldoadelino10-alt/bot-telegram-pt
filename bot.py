@@ -156,5 +156,3 @@ if __name__ == '__main__':
     
     # O truque final: drop_pending_updates=True apaga mensagens antigas e destrava o bot!
     bot_app.run_polling(drop_pending_updates=True)
-
-``

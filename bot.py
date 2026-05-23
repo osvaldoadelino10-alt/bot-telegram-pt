@@ -2,7 +2,10 @@ import os
 from flask import Flask
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters, ContextTypes
-import google.generativeai as genai
+
+# Novas importações da biblioteca moderna da Google
+from google import genai
+from google.genai import types
 
 # ==========================================
 # 1. CONFIGURAÇÕES E VARIÁVEIS DE AMBIENTE
@@ -10,19 +13,34 @@ import google.generativeai as genai
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_TOKEN")
 GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")
 
-# Configura a API do Gemini com a chave do Render
+# Inicializa o cliente do novo SDK da Google
+client = None
 if GEMINI_API_KEY:
-    genai.configure(api_key=GEMINI_API_KEY)
+    client = genai.Client(api_key=GEMINI_API_KEY)
 
-# Contexto para o teu TCC (Bíblia de Ondjiva / Cunene)
-CONTEXTO_ONDJIVA = (
-    "Tu és o Ndjili, um assistente virtual inteligente e amigável criado para apoiar a "
-    "população da província do Cunene, em Angola. O teu objetivo é ajudar os cidadãos com "
-    "informações sobre serviços públicos, saúde, contactos de emergência locais e apoiar na "
-    "reportagem de problemas municipais (como falta de água, luz, buracos nas vias ou saneamento). "
-    "Responde sempre em português de Angola, usa uma linguagem acolhedora, respeitosa e foca-te "
-    "em soluções para a região do Cunene (Ondjiva, Namacunde, Cuanhama, etc.)."
-)
+# ==========================================
+# 2. A BÍBLIA DE ONDJIVA (Base de Conhecimento do TCC)
+# ==========================================
+CONTEXTO_ONDJIVA = """
+Tu és o Ndjili, o assistente virtual oficial e inteligente da província do Cunene, em Angola. 
+O teu papel é ser um prestador de serviços de utilidade pública para os cidadãos do Cunene (focado nos municípios de Cuanhama, Namacunde, Ombadja, Cuvelai, Curoca e Cahama, com destaque para a cidade de Ondjiva).
+
+A tua linguagem deve ser sempre no Português de Angola: acolhedora, respeitosa, prestativa e muito educada. Trata os cidadãos com proximidade, mas mantém a formalidade de um serviço público.
+
+=== DIRETRIZES DE ATENDIMENTO ===
+1. Sê direto e claro nas respostas, evitando blocos de texto demasiado longos.
+2. Foca-te em resolver problemas locais: infraestruturas, saúde, segurança e serviços públicos.
+3. Se o utilizador relatar um problema na rua (ex: buraco, falta de luz, falta de água, lixo acumulado), orienta-o a escrever a palavra "Reportagem" seguida do problema, para que o nosso sistema automático possa registar e enviar à Administração Municipal.
+4. Para situações de perigo imediato, encaminha sempre para os números de emergência oficiais.
+
+=== BASE DE DADOS E CONTACTOS LOCAIS ===
+- Segurança e Polícia Nacional (Comando Provincial do Cunene): Ligar para o 113.
+- Bombeiros e Proteção Civil: Ligar para o 115.
+- Saúde: Hospital Geral de Ondjiva e principais centros médicos de referência na província.
+
+=== CONTEXTO DO PROJETO ===
+Deves saber (e informar se perguntarem) que foste desenvolvido como uma inovação tecnológica (projeto de fim de curso - TCC) para modernizar a província do Cunene. O teu objetivo é dar voz aos munícipes e criar uma ponte direta, rápida e digital entre a população e as autoridades locais para a resolução de problemas e prestação de informações úteis.
+"""
 
 # Inicializa o Flask para o Render não dar timeout
 app = Flask(__name__)
@@ -32,20 +50,21 @@ def home():
     return "Bot do Cunene está Online e Ativo!"
 
 # ==========================================
-# 2. COMANDOS DO TELEGRAM
+# 3. COMANDOS DO TELEGRAM
 # ==========================================
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     nome = update.effective_user.first_name
     boas_vindas = (
-        f"Olá {nome}! 🇦🇴 Bem-vindo ao assistente do Cunene.\n\n"
-        "Estou aqui para ajudar com informações sobre a nossa província e apoiar a comunidade.\n\n"
-        "👉 Para reportar um problema na tua rua, escreva: *Reportagem [teu relato]*\n"
-        "👉 Para emergências, escreva: *Emergência*"
+        f"Olá {nome}! 🇦🇴 Bem-vindo ao Ndjili, o assistente do Cunene.\n\n"
+        "Estou aqui para te ajudar com informações úteis sobre a nossa província e apoiar a comunidade.\n\n"
+        "👉 Para reportar um problema na tua zona (água, luz, estradas), escreve: *Reportagem [teu relato]*\n"
+        "👉 Para pedir ajuda urgente, escreve: *Emergência*\n"
+        "👉 Ou simplesmente faz-me uma pergunta sobre os nossos serviços locais!"
     )
     await update.message.reply_text(boas_vindas, parse_mode="Markdown")
 
 # ==========================================
-# 3. FILTROS E PROCESSAMENTO DA IA
+# 4. FILTROS E PROCESSAMENTO DA IA
 # ==========================================
 async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not update.message or not update.message.text:
@@ -57,13 +76,13 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
     print(f"📥 Mensagem recebida: {user_text}")
 
     # --- FILTRO 1: EMERGÊNCIA ---
-    if any(palavra in texto_baixo for palavra in ["emergencia", "emergência", "perigo", "socorro", "policia", "bombeiros"]):
+    if any(palavra in texto_baixo for palavra in ["emergencia", "emergência", "perigo", "socorro", "policia", "bombeiros", "acidente", "fogo"]):
         resposta = (
             "🚨 **ALERTA DE EMERGÊNCIA IMEDIATA!** 🚨\n\n"
-            "Se estás diante de uma situação de perigo real ou acidente no Cunene, liga diretamente:\n"
+            "Se estás diante de uma situação de perigo real, acidente ou incêndio no Cunene, liga de imediato para as autoridades:\n\n"
             "🚓 **Polícia Nacional:** 113\n"
             "👨‍🚒 **Bombeiros (Proteção Civil):** 115\n\n"
-            "Por favor, mantém-te em segurança!"
+            "Por favor, procura um local seguro!"
         )
     
     # --- FILTRO 2: REPORTAGEM MUNICIPAL ---
@@ -71,54 +90,59 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
         relato = user_text.replace("Reportagem", "").replace("reportagem", "").strip()
         if not relato:
             resposta = (
-                "🚨 **Como fazer uma reportagem:**\n"
-                "Escreve a palavra *Reportagem* seguida do problema técnico.\n\n"
+                "🚨 **Como registar uma ocorrência:**\n\n"
+                "Para avisar a Administração sobre um problema, escreve a palavra *Reportagem* seguida da descrição.\n\n"
                 "Exemplo:\n"
-                "_Reportagem Falta de iluminação pública na rua principal de Naipalala._"
+                "_Reportagem Falta de iluminação pública no bairro Naipalala, rua principal._"
             )
         else:
             resposta = (
-                "✅ **Ocorrência Registada no Sistema!**\n\n"
-                f"O teu relato: \"_{relato}_\" foi guardado com sucesso e será encaminhado para as "
-                "equipas de análise da Administração Municipal.\n\n"
-                "Obrigado por ajudares a melhorar o Cunene!"
+                "✅ **Ocorrência Registada com Sucesso no Sistema!**\n\n"
+                f"O teu relato: \"_{relato}_\"\n"
+                "Foi guardado de forma segura e será reencaminhado para as equipas técnicas da Administração Municipal.\n\n"
+                "Obrigado por exerceres a tua cidadania e ajudares a desenvolver o Cunene!"
             )
 
-    # --- FILTRO 3: INTELIGÊNCIA ARTIFICIAL (GEMINI) ---
+    # --- FILTRO 3: INTELIGÊNCIA ARTIFICIAL (GEMINI NOVA API) ---
     else:
         try:
-            if not GEMINI_API_KEY:
-                resposta = "🚨 Erro interno: A chave da API do Gemini não foi configurada no Render."
+            if not client:
+                resposta = "🚨 Erro interno de Servidor: A chave da API do Gemini não foi configurada corretamente no sistema."
             else:
-                # Modelo correto, atualizado e estável para a API pública da Google
-                model = genai.GenerativeModel('gemini-1.5-flash', system_instruction=CONTEXTO_ONDJIVA)
-                response = model.generate_content(user_text)
+                # O processamento com a nova sintaxe do Google GenAI
+                response = client.models.generate_content(
+                    model='gemini-1.5-flash',
+                    contents=user_text,
+                    config=types.GenerateContentConfig(
+                        system_instruction=CONTEXTO_ONDJIVA,
+                    )
+                )
                 resposta = response.text
         except Exception as erro_tecnico:
-            resposta = f"❌ Erro Técnico do Gemini: {erro_tecnico}"
+            resposta = f"❌ Ocorreu um erro técnico na IA ao tentar responder: {erro_tecnico}"
 
+    # Envia a resposta final para o chat do utilizador
     await update.message.reply_text(resposta, parse_mode="Markdown")
 
 # ==========================================
-# 4. EXECUÇÃO DO BOT
+# 5. EXECUÇÃO DO SERVIDOR E DO BOT
 # ==========================================
 if __name__ == '__main__':
     import threading
 
-    # 1. Inicia o Flask numa thread secundária para o URL do Render responder "Online"
+    # Mantém a porta aberta para o Render não desligar o processo
     port = int(os.environ.get("PORT", 5000))
     threading.Thread(target=lambda: app.run(host='0.0.0.0', port=port, use_reloader=False)).start()
 
-    # 2. Inicia o Bot do Telegram na thread principal
+    # Arranca o cérebro principal do Bot do Telegram
     if not TELEGRAM_TOKEN:
-        print("🚨 ERRO CRÍTICO: TELEGRAM_TOKEN não configurado!")
+        print("🚨 ERRO CRÍTICO: A variável TELEGRAM_TOKEN não foi configurada no Render!")
     else:
-        print("🚀 A iniciar ligação com o Telegram...")
+        print("🚀 A iniciar a ligação segura com o Telegram e a IA...")
         application = Application.builder().token(TELEGRAM_TOKEN).build()
         
-        # Adiciona os detetores de mensagens
         application.add_handler(CommandHandler("start", start))
         application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, processar_mensagem))
         
-        # Corre o bot continuamente
+        # Inicia a escuta de mensagens sem bloquear o Render
         application.run_polling()

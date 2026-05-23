@@ -99,8 +99,9 @@ def processar_texto(user_text):
             if not client:
                 return "🚨 Erro: API da OpenAI não configurada."
                 
-            response = client.chat.completions.create(
-                    model="llama3-8b-8192",
+         response = client.chat.completions.create(
+                    model="llama-3.1-8b-instant",
+                
                
                 messages=[
                     {"role": "system", "content": CONTEXTO_ONDJIVA},

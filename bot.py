@@ -109,15 +109,18 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
             if not client:
                 resposta = "🚨 Erro interno de Servidor: A chave da API do Gemini não foi configurada corretamente no sistema."
             else:
+               
+            # O processamento com a nova sintaxe do Google GenAI
                 # O processamento com a nova sintaxe do Google GenAI
                 response = client.models.generate_content(
-                    model='response = client.models.generate_content(
                     model='gemini-2.0-flash',
-                    contents=user_text,  
+                    contents=user_text,
                     config=types.GenerateContentConfig(
                         system_instruction=CONTEXTO_ONDJIVA,
                     )
                 )
+                
+                
                 resposta = response.text
         except Exception as erro_tecnico:
             resposta = f"❌ Ocorreu um erro técnico na IA ao tentar responder: {erro_tecnico}"

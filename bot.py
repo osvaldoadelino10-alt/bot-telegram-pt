@@ -113,7 +113,7 @@ async def processar_mensagem(update: Update, context: ContextTypes.DEFAULT_TYPE)
             # O processamento com a nova sintaxe do Google GenAI
                 # O processamento com a nova sintaxe do Google GenAI
                 response = client.models.generate_content(
-                    model='gemini-1.5-pro',
+                    model='gemini-2.0-flash',
                     contents=user_text,
                     config=types.GenerateContentConfig(
                         system_instruction=CONTEXTO_ONDJIVA,

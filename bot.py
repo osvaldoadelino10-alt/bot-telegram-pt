@@ -97,12 +97,10 @@ def processar_texto(user_text):
     else:
         try:
             if not client:
-                return "🚨 Erro: API da OpenAI não configurada."
+                return "🚨 Erro: API da IA não configurada."
                 
-         response = client.chat.completions.create(
-                    model="llama-3.1-8b-instant",
-                
-               
+            response = client.chat.completions.create(
+                model="llama-3.1-8b-instant",
                 messages=[
                     {"role": "system", "content": CONTEXTO_ONDJIVA},
                     {"role": "user", "content": user_text}
@@ -111,6 +109,16 @@ def processar_texto(user_text):
             return response.choices[0].message.content
         except Exception as e:
             return f"❌ Erro na IA: {e}"
+        
+        
+               
+                
+         
+                    
+                
+               
+                
+                    
 
 # ==========================================
 # 5. ROTAS DO FLASK (WEBHOOK DA META)

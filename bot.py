@@ -100,7 +100,8 @@ def processar_texto(user_text):
                 return "🚨 Erro: API da OpenAI não configurada."
                 
             response = client.chat.completions.create(
-                model="gpt-4o-mini",
+                    model="llama3-8b-8192",
+               
                 messages=[
                     {"role": "system", "content": CONTEXTO_ONDJIVA},
                     {"role": "user", "content": user_text}

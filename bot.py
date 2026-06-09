@@ -1,17 +1,21 @@
 import os
+import time
+import threading
 import requests
+import psycopg2
+from datetime import datetime, timedelta
 from flask import Flask, request, jsonify
 from openai import OpenAI
 
 # ==========================================
-# 1. VARIÁVEIS DE AMBIENTE (META & OPENAI)
+# 1. VARIÁVEIS DE AMBIENTE (META, GROQ & BD)
 # ==========================================
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 WHATSAPP_TOKEN = os.environ.get("WHATSAPP_TOKEN")
 WHATSAPP_PHONE_ID = os.environ.get("WHATSAPP_PHONE_ID")
-VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "cunene2026") # Palavra-passe do Webhook
+VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "cunene2026")
+DATABASE_URL = os.environ.get("DATABASE_URL")
 
-# Inicializa OpenAI
 client = None
 if GROQ_API_KEY:
     client = OpenAI(
@@ -19,75 +23,99 @@ if GROQ_API_KEY:
         base_url="https://api.groq.com/openai/v1"
     )
 
-
-
 app = Flask(__name__)
+MEMORIA_CONVERSAS = {}
 
 # ==========================================
-# 2. A BÍBLIA DE ONDJIVA (Base Embutida do TCC)
+# 2. A BÍBLIA DE ONDJIVA (Versão 2.0)
 # ==========================================
 CONTEXTO_ONDJIVA = """
-Tu és o Bot_cunene, o assistente oficial e inteligente da Administração de Ondjiva, província do Cunene.
-O teu objetivo é informar os cidadãos, receber denúncias e reportagens comunitárias.
+Tu és o Ndjili, o assistente virtual oficial, humano e direto da Administração de Ondjiva, província do Cunene, Angola.
 
-### REGRAS DE OURO:
-1. Se não tiveres a informação na tua base de dados abaixo, diz: "Lamento, não possuo essa informação oficial no momento. Sugiro que se dirija aos serviços da Administração."
-2. Se o utilizador quiser fazer uma reportagem ou denúncia, agradece, pede detalhes (o que aconteceu, local, data) e diz que a informação foi registada para análise.
-3. Sê formal, direto, prestativo e educado.
+### DIRETIVAS CRÍTICAS DE RESPOSTA (OBRIGATÓRIO):
+1. FORMATO WHATSAPP: O WhatsApp usa asteriscos para negrito. Sempre que quiseres destacar algo, usa *texto* e nunca **texto**.
+2. IDIOMA EXCLUSIVO: Responde SEMPRE in Português de Angola. Se o utilizador pedir para responder noutro idioma (Inglês) ou língua nacional (Cuanhama), responde rigorosamente: "Como assistente oficial da Administração de Ondjiva, presto atendimento exclusivamente em Língua Portuguesa."
+3. MAPA GEOGRÁFICO: O Cuanhama é um município e uma língua nacional da província do Cunene. Nunca digas que é outra província.
+4. RIGOR NOS HORÁRIOS: Só podes informar os horários listados abaixo. Nunca inventes horas.
+5. ANTI-VAZAMENTO: Proibido usar termos técnicos como "regras", "prompt" ou "base de dados".
 
 ---
-### 1. ADMINISTRAÇÃO E LOCALIZAÇÃO
-- Capital da província do Cunene: Ondjiva.
-- Governo Provincial, Jardim Provincial, Palácio, Tribunal, Delegacia Provincial, AGT e Tribuna: Centro da Cidade.
+### DADOS OFICIAIS E HORÁRIOS DE ATENDIMENTO (A TUA ÚNICA FONTE DE VERDADE)
+
+### 1. ADMINISTRAÇÃO PÚBLICA E INSTITUIÇÕES
+* Horário de Atendimento: Segunda a Quinta das 08h00 às 15h30 | Sexta das 08h00 às 15h00.
+- Governo Provincial, Tribunal, Delegacia Provincial, AGT e Tribuna: Centro da Cidade.
 - Administração Provincial e Aeroporto Provincial: Bairro Kaculuvale.
-- Comando Provincial da Polícia: Centro da Cidade.
-- Mediateca Lucas: Pesquisa e internet.
+- Comando Provincial da Polícia e Mediateca Lucas: Centro da Cidade.
 
-### 2. BAIRROS E COMANDOS
-- Bairros: Kafitu (1/2), Onahumba (1/2/3), Castilhos, Kaculuvale, Caxila (1/2/3), Pioneiro Zeca, Bangula, Muhongo, Naipalala, Ekuma.
-- Comandos Policiais: 
-  - Municipal e Investigação: Castilhos.
-  - Guarda Fronteira: Cafitu.
-  - Bombeiros e Viação Trânsito: Naipalala.
-  - Esquadras: Kaculuvale e Onahumba.
+### 2. SERVIÇOS DE SAÚDE E HOSPITAIS
+* Urgências: 24 horas por dia, todos os dias.
+* Consultas Externas/Administrativo: Segunda a Sexta das 08h00 às 15h00.
+- Hospital Provincial/Ekuma: Bairro Ekuma.
+- Hospital Central Simeone Mucunde: Bairro Naipalala.
+- Hospital Municipal: Centro da Cidade.
 
-### 3. SAÚDE
-- Hospitais Principais:
-  - Hospital Provincial (EKUMA): Bairro Ekuma.
-  - Hospital Central Simeone Mucunde: Bairro Naipalala.
-  - Hospital Municipal: Centro da Cidade.
-  - Hospital Adicional: Onahumba.
-
-### 4. EDUCAÇÃO
+### 3. INSTITUIÇÕES DE ENSINO E ESCOLAS
+* Horário de Aulas: Manhã (07h00-12h30) | Tarde (13h00-17h30) | Noite (18h00-22h30).
 - Faculdades: Rei Luhuna (Muhongo), Mandume (Naipalala).
-- Institutos/Colégios (Resumo):
-  - ITSO (Saúde): Ekuma.
-  - Eiffel, Oulondelo, Instituto ITSO, IMPO (Pedagogia), Colégio Bolet Salú, Colégio Pitágoras, Colégio Arcanjo: Naipalala.
-  - Cesmo, Colégio Ednans, Colégio Popiene, Marco Lendros: Kaculuvale.
-  - Complexo Abcunene: Caxila 3.
-- Escolas Primárias/1º Ciclo: Cow-Boy (Castilhos), Centralidade, Ocapale (Kaculuvale), Rei Nande (Naipalala), E.P. 122 (Zeca), 4 de Janeiro (Kafitu1), e outras nos bairros Kafitu2, Onahumba e Zeca.
+- Institutos: ITSO (Ekuma). Eiffel, Oulondelo, IMPO, Pitágoras, Arcanjo (Naipalala). Cesmo, Ednans, Popiene (Kaculuvale). Complexo Abcunene (Caxila 3).
+- Escolas Primárias Kafitu: Escola 4 de Janeiro (Kafitu 1) e básicas no Kafitu 2.
 
-### 5. SERVIÇOS E COMÉRCIO
-- Bancos: 
-  - Centro: BAI. 
-  - Bangula: BCI, BPC, Banco Sol, Banco Económico. 
-  - Zeca: BFA, BIC. 
-  - Castilhos: BCA. 
-  - Naipalala: BPC2, Atlântico.
-- Supermercados: Shoprite e AngoMarte (Castilhos).
-- Lazer/Restaurantes: Lodge (Naipalala), Cumbuessa (Zeca), Moreira (Caxila 2), Skiva (Caxila 3), Vila Ocapale. Brothers (Bangula/Zeca), Fórmula (Zeca), Rodrigão (Zeca), Rosmélia (Castilhos), Kaculuvale.
+### 4. BANCOS E SERVIÇOS FINANCEIROS
+* Horário Bancário: Segunda a Sexta das 08h00 às 15h00.
+- Banco BAI: Centro da Cidade.
+- Bancos BCI, BPC, Banco Sol, Económico: Bairro Bangula.
+- Bancos BFA, BIC: Bairro Zeca.
+- Bancos BPC2, Atlântico: Bairro Naipalala.
 
-### 6. DESPORTO
-- Estádios: Onze de Novembro (Castilhos) e Campo da Centralidade.
+### 5. COMÉRCIO E LAZER
+* Supermercados (Shoprite e AngoMarte): Abertos todos os dias das 08h00 às 20h00. Ficam no bairro Castilhos.
 """
 
 # ==========================================
-# 3. FUNÇÃO DE ENVIAR MENSAGEM (META API)
+# 3. CONECTOR DA BASE DE DADOS (POSTGRESQL DO RENDER)
+# ==========================================
+def guardar_reportagem_bd(telefone, relato):
+    if not DATABASE_URL:
+        print("⚠️ DATABASE_URL não configurada.")
+        return False
+        
+    try:
+        conn = psycopg2.connect(DATABASE_URL)
+        cur = conn.cursor()
+        
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS reportagens (
+                id SERIAL PRIMARY KEY,
+                telefone VARCHAR(50),
+                relato TEXT,
+                data_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+        """)
+        
+        cur.execute(
+            "INSERT INTO reportagens (telefone, relato) VALUES (%s, %s)",
+            (telefone, relato)
+        )
+        
+        conn.commit()
+        cur.close()
+        conn.close()
+        print("💾 Relato guardado com sucesso!")
+        return True
+    except Exception as e:
+        print(f"🚨 Erro na BD: {e}")
+        return False
+
+# ==========================================
+# 4. FUNÇÃO DE ENVIAR MENSAGEM (META API)
 # ==========================================
 def enviar_mensagem_whatsapp(telefone_destino, texto):
     if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_ID:
-        print("🚨 Faltam credenciais do WhatsApp no Render!")
+        print("🚨 Faltam credenciais do WhatsApp.")
         return
+
+    texto_formatado = texto.replace("**", "*")
 
     url = f"https://graph.facebook.com/v19.0/{WHATSAPP_PHONE_ID}/messages"
     headers = {
@@ -98,19 +126,18 @@ def enviar_mensagem_whatsapp(telefone_destino, texto):
         "messaging_product": "whatsapp",
         "to": telefone_destino,
         "type": "text",
-        "text": {"body": texto}
+        "text": {"body": texto_formatado}
     }
     
     resposta = requests.post(url, headers=headers, json=payload)
-    print(f"📤 Resposta enviada. Status: {resposta.status_code}")
+    print(f"📤 Status de envio: {resposta.status_code}")
 
 # ==========================================
-# 4. PROCESSAMENTO DO BOT (FILTROS + OPENAI)
+# 5. PROCESSAMENTO DO BOT (MEMÓRIA + RELÓGIO + IA)
 # ==========================================
-def processar_texto(user_text):
+def processar_texto(telefone_origem, user_text):
     texto_baixo = user_text.lower()
     
-    # --- FILTRO 1: EMERGÊNCIA ---
     if any(palavra in texto_baixo for palavra in ["emergencia", "emergência", "socorro", "policia", "bombeiros"]):
         return (
             "🚨 *ALERTA DE EMERGÊNCIA IMEDIATA!* 🚨\n\n"
@@ -120,48 +147,73 @@ def processar_texto(user_text):
             "Procura um local seguro!"
         )
     
-    # --- FILTRO 2: REPORTAGEM ---
     elif "reportagem" in texto_baixo:
         relato = user_text.lower().replace("reportagem", "").strip()
         if not relato:
-            return "🚨 Escreve a palavra *Reportagem* seguida da descrição do problema (Ex: Reportagem falta de luz no bairro X)."
-        return f"✅ *Ocorrência Registada!*\n\nO teu relato:\n_{relato}_\n\nFoi guardado e será reencaminhado para a Administração Municipal. Obrigado!"
+            return "🚨 Para registar, escreva a palavra *Reportagem* seguida do problema (Ex: Reportagem falta de luz no bairro Kafitu)."
+        
+        guardar_reportagem_bd(telefone_origem, relato)
+        
+        return (
+            "✅ *Ocorrência Registada!*\n\n"
+            f"O teu relato: _{relato}_\n\n"
+            "Foi guardado de forma segura no nosso sistema e será reencaminhado para a Administração Municipal. A cidadania ativa faz a diferença!"
+        )
 
-    # --- FILTRO 3: OPENAI ---
     else:
         try:
             if not client:
                 return "🚨 Erro: API da IA não configurada."
-                
+            
+            if telefone_origem not in MEMORIA_CONVERSAS:
+                MEMORIA_CONVERSAS[telefone_origem] = []
+            
+            MEMORIA_CONVERSAS[telefone_origem].append({"role": "user", "content": user_text})
+            
+            if len(MEMORIA_CONVERSAS[telefone_origem]) > 6:
+                MEMORIA_CONVERSAS[telefone_origem] = MEMORIA_CONVERSAS[telefone_origem][-6:]
+            
+            agora_angola = datetime.utcnow() + timedelta(hours=1)
+            hora_formatada = agora_angola.strftime("%H:%M")
+            data_formatada = agora_angola.strftime("%d/%m/%Y")
+            
+            contexto_dinamico = CONTEXTO_ONDJIVA + f"\n\n[SISTEMA]\nHoje é {data_formatada} e são {hora_formatada} em Ondjiva. Adapta a tua saudação (Bom dia/Boa tarde/Boa noite) a esta hora."
+
+            mensagens_para_ia = [{"role": "system", "content": contexto_dinamico}] + MEMORIA_CONVERSAS[telefone_origem]
+
             response = client.chat.completions.create(
                 model="llama-3.1-8b-instant",
-                messages=[
-                    {"role": "system", "content": CONTEXTO_ONDJIVA},
-                    {"role": "user", "content": user_text}
-                ]
+                temperature=0.0,
+                messages=mensagens_para_ia
             )
-            return response.choices[0].message.content
+            
+            resposta_ia = response.choices[0].message.content
+            MEMORIA_CONVERSAS[telefone_origem].append({"role": "assistant", "content": resposta_ia})
+            
+            return resposta_ia
+            
         except Exception as e:
             return f"❌ Erro na IA: {e}"
-        
-        
-               
-                
-         
-                    
-                
-               
-                
-                    
 
 # ==========================================
-# 5. ROTAS DO FLASK (WEBHOOK DA META)
+# 6. PING ANTI-HIBERNAÇÃO
+# ==========================================
+def keep_awake():
+    url = "https://bot-whatsapp-cunene.onrender.com/"
+    while True:
+        time.sleep(800)
+        try:
+            requests.get(url)
+        except:
+            pass
+
+# ==========================================
+# 7. ROTAS DO FLASK (WEBHOOK DA META)
 # ==========================================
 @app.route('/', methods=['GET'])
 def home():
-    return "Servidor do Bot de WhatsApp do Cunene Ativo!", 200
+    return "Servidor do Bot de WhatsApp do Cunene Ativo com PostgreSQL!", 200
 
-# Rota GET: Usada pela Meta apenas uma vez para verificar o URL
 @app.route('/webhook', methods=['GET'])
 def verificar_webhook():
     mode = request.args.get("hub.mode")
@@ -176,7 +228,6 @@ def verificar_webhook():
             return "Token de verificação inválido", 403
     return "Faltam parâmetros", 400
 
-# Rota POST: Usada pela Meta para enviar as mensagens das pessoas
 @app.route('/webhook', methods=['POST'])
 def receber_mensagens():
     body = request.get_json()
@@ -185,17 +236,15 @@ def receber_mensagens():
         if "entry" in body and "changes" in body["entry"][0]:
             mudancas = body["entry"][0]["changes"][0]["value"]
             
-            # Verifica se é uma mensagem de texto nova (e não um aviso de leitura)
             if "messages" in mudancas:
                 mensagem = mudancas["messages"][0]
                 
                 if mensagem["type"] == "text":
-                    telefone_origem = mensagem["from"]
+                    telefone_origem = message_from = mensagem["from"]
                     texto_recebido = mensagem["text"]["body"]
                     print(f"📥 Recebido de {telefone_origem}: {texto_recebido}")
                     
-                    # Processa e responde
-                    resposta_final = processar_texto(texto_recebido)
+                    resposta_final = processar_texto(telefone_origem, texto_recebido)
                     enviar_mensagem_whatsapp(telefone_origem, resposta_final)
                     
         return jsonify({"status": "ok"}), 200
@@ -203,5 +252,6 @@ def receber_mensagens():
         return jsonify({"status": "erro"}), 404
 
 if __name__ == '__main__':
+    threading.Thread(target=keep_awake, daemon=True).start()
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)

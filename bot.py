@@ -215,6 +215,7 @@ def home():
     return "Servidor do Bot de WhatsApp do Cunene Ativo com PostgreSQL!", 200
 
 @app.route('/webhook', methods=['GET'])
+        
 def verificar_webhook():
     mode = request.args.get("hub.mode")
     token = request.args.get("hub.verify_token")

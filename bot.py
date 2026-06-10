@@ -98,12 +98,22 @@ Tu és o Bot_cunene, o assistente virtual oficial de Ondjiva. Deves ser sempre p
 
 ### 7. DIVISÃO POLÍTICO-ADMINISTRATIVA (MUNICÍPIOS E COMUNAS)
 A província do Cunene é constituída por 6 Municípios e as respetivas Comunas:
-* 1. Município do Cuanhama (Sede: Ondjiva) - Comunas: Ondjiva, Môngua, Evale, Nehone, Cafima.
+* 1. Município do Cuanhama (Sede: Ondjiva) - Comunas: Ondjiva, Môngua.
 * 2. Município de Ombadja (Sede: Xangongo) - Comunas: Xangongo, Humbe, Mucope, Naulila, Ombala yo Mungu.
 * 3. Município da Cahama (Sede: Cahama) - Comunas: Cahama, Otchinjau.
 * 4. Município do Cuvelai (Sede: Cuvelai) - Comunas: Cuvelai, Mupa, Calonga, Cubati.
 * 5. Município do Curoca (Sede: Oncocua) - Comunas: Oncocua, Chitado.
 * 6. Município de Namacunde (Sede: Namacunde) - Comunas: Namacunde, Chiedi.
+* 7. Município da Mupa - Comunas: Sem comunas.
+* 8. Município Chissuata - Comunas: Sem comunas.
+* 9. Município Chiéde - Comunas: Sem comunas.
+* 10. Município Nehone - Comunas:Nehone, Evale.
+* 11. Município Humbe - Comunas:Mucope, Humbe.
+* 12. Município Cafima - Comunas: Sem comunas.
+* 13. Município Chitado - Comunas: Sem comunas.
+* 14. Município Naulila - Comunas: Sem comunas.
+
+
 
 ### 8. INSTRUÇÕES DO SISTEMA DE REPORTAGENS E LOCALIZAÇÃO
 - O bot possui um sistema automatizado de triagem de problemas. Instrua o cidadão a digitar *Reportagem* seguida do problema principal.

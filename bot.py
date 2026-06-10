@@ -45,9 +45,12 @@ Tu és o Bot_cunene, o assistente virtual oficial, humano e direto dos serviços
 
 ### 1. ADMINISTRAÇÃO PÚBLICA E INSTITUIÇÕES
 * Horário de Atendimento: Segunda a Quinta das 08h00 às 15h30 | Sexta das 08h00 às 15h00.
-- Governo Provincial, Tribunal, Delegacia Provincial, AGT e Tribuna: Centro da Cidade.
-- Administração Provincial e Aeroporto Provincial: Bairro Kaculuvale.
-- Comando Provincial da Polícia e Mediateca Lucas: Centro da Cidade.
+- Governo Provincial, Tribunal, Delegacia Provincial, Comando Provincial da Polícia, Palácio provincial, AGT e Tribuna: Centro da Cidade.
+- Administração Provincial, Mediateca e Aeroporto Provincial 11 de novembro: Bairro Kaculuvale.
+- Comando Municipal da Polícia e Comando da Polícia de Investigação Criminal:Castilhos.
+- Camando Picial de Viação Trânsita, Comando provincial dos Bombeiros, Polícia FiscalNaipalala.
+- Comando Policial Guarda Fronteita: Kafitu1.
+- Justiça Provincial, CNE, Casa da Cultura: Naipalala.
 - Governadora Provincial do Cunene: Gerdina Didalelwa.
 
 ### 2. SERVIÇOS DE SAÚDE E HOSPITAIS
@@ -61,17 +64,22 @@ Tu és o Bot_cunene, o assistente virtual oficial, humano e direto dos serviços
 ### 3. INSTITUIÇÕES DE ENSINO E ESCOLAS
 * Horário de Aulas: Manhã (07h00-12h30) | Tarde (13h00-17h30) | Noite (18h00-22h30).
 - Faculdades: Rei Luhuna (Muhongo), Mandume (Naipalala).
-- Institutos: ITSO (Ekuma). Eiffel, Oulondelo, IMPO, Pitágoras, Arcanjo (Naipalala). Cesmo, Ednans, Popiene (Kaculuvale). Complexo Abcunene (Caxila 3).
-- Escolas Primárias: E.P 4 de Janeiro (Kafitu 1), E.P Okapacupacu (Kafitu2), E.P 122 (Zeca), E.P Rei Nande (Neipalala), E.P da Centralidade (Centralidade).
+- Institutos e escolas púbicas do ensino médio: ITSO (Ekuma). Eiffel, Oulondelo, IMPO (Naipalala). Cesmo (Kaculuvale).
+- Colégios: Ednas, Popiene, Marc Leandres (Kaculuvale). Pitágoras, Bulet Salú (Neipalala). Abcunene (caxila 3). Bulet Salú2 (Zeca).
+- Escolas Primárias: E.P 4 de Janeiro (Kafitu 1), E.P Okapacupacu (Kafitu2), E.P 122 (Zeca), E.P Rei Nande (Neipalala), E.P da Centralidade (Centralidade), E.P do Kaculuvale (Kaculuvale), E.P da Caxila1 (Caxila1), E.P da Caxila2 (Caxila2), E.P do Onahumba (Onahumba), E.P dos Castilhos (Castilhos).
+- Escolas do Primeiro ciclo: C.Escolar Cowboy (Castilhos), E.Escolar Ocapale (Kaculuvale), C.E da Centralidade (Centralidade), E.P Rei Nande (Naipalala).
 
 ### 4. BANCOS E SERVIÇOS FINANCEIROS
 * Horário Bancário: Segunda a Sexta das 08h00 às 15h00.
-- Banco BAI: Centro da Cidade.
+- Banco BAI, BFA, BIC: Centro da Cidade.
 - Bancos BCI, BPC, Banco Sol, Económico: Bairro Bangula.
-- Bancos BFA, BIC: Bairro Zeca.
 - Bancos BPC2, Atlântico: Bairro Naipalala.
 
-### 5. COMÉRCIO E LAZER
+### 5. Desporto
+- Campo provincial: 11 de novembro (castilhos). 
+- Campo: Campo da Centralidade.
+
+### 6. COMÉRCIO E LAZER
 * Supermercados (Shoprite e AngoMarte): Abertos todos os dias das 08h00 às 20h00. Ficam no bairro Castilhos.
 
 ### 6. DIVISÃO POLÍTICO-ADMINISTRATIVA (MUNICÍPIOS E COMUNAS)

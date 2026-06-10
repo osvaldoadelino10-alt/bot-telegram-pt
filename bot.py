@@ -26,8 +26,11 @@ if GROQ_API_KEY:
 app = Flask(__name__)
 MEMORIA_CONVERSAS = {}
 
+# DICIONÁRIO GLOBAL PARA CONTROLAR OS PASSOS DA REPORTAGEM (MÁQUINA DE ESTADOS)
+ESTADO_REPORTAGEM = {}
+
 # ==========================================
-# 2. A BÍBLIA DE ONDJIVA (Versão 3.0 - Otimizada)
+# 2. A BÍBLIA DE ONDJIVA (Versão 4.0 - Com Reportagem)
 # ==========================================
 CONTEXTO_ONDJIVA = """
 Tu és o Bot_cunene, o assistente virtual oficial, humano e direto dos serviços de Ondjiva, província do Cunene, Angola.
@@ -47,8 +50,8 @@ Tu és o Bot_cunene, o assistente virtual oficial, humano e direto dos serviços
 * Horário de Atendimento: Segunda a Quinta das 08h00 às 15h30 | Sexta das 08h00 às 15h00.
 - Governo Provincial, Tribunal, Delegacia Provincial, Comando Provincial da Polícia, Palácio provincial, AGT e Tribuna: Centro da Cidade.
 - Administração Provincial, Mediateca e Aeroporto Provincial 11 de novembro: Bairro Kaculuvale.
-- Comando Municipal da Polícia e Comando da Polícia de Investigação Criminal:Castilhos.
-- Camando Picial de Viação Trânsita, Comando provincial dos Bombeiros, Polícia FiscalNaipalala.
+- Comando Municipal da Polícia e Comando da Polícia de Investigação Criminal: Castilhos.
+- Comando Picial de Viação Trânsito, Comando provincial dos Bombeiros, Polícia Fiscal: Naipalala.
 - Comando Policial Guarda Fronteita: Kafitu1.
 - Justiça Provincial, CNE, Casa da Cultura: Naipalala.
 - Governadora Provincial do Cunene: Gerdina Didalelwa.
@@ -64,9 +67,9 @@ Tu és o Bot_cunene, o assistente virtual oficial, humano e direto dos serviços
 ### 3. INSTITUIÇÕES DE ENSINO E ESCOLAS
 * Horário de Aulas: Manhã (07h00-12h30) | Tarde (13h00-17h30) | Noite (18h00-22h30).
 - Faculdades: Rei Luhuna (Muhongo), Mandume (Naipalala).
-- Institutos e escolas púbicas do ensino médio: ITSO (Ekuma). Eiffel, Oulondelo, IMPO (Naipalala). Cesmo (Kaculuvale).
-- Colégios: Ednas, Popiene, Marc Leandres (Kaculuvale). Pitágoras, Bulet Salú (Neipalala). Abcunene (caxila 3). Bulet Salú2 (Zeca).
-- Escolas Primárias: E.P 4 de Janeiro (Kafitu 1), E.P Okapacupacu (Kafitu2), E.P 122 (Zeca), E.P Rei Nande (Neipalala), E.P da Centralidade (Centralidade), E.P do Kaculuvale (Kaculuvale), E.P da Caxila1 (Caxila1), E.P da Caxila2 (Caxila2), E.P do Onahumba (Onahumba), E.P dos Castilhos (Castilhos).
+- Institutos e escolas públicas do ensino médio: ITSO (Ekuma). Eiffel, Oulondelo, IMPO (Naipalala). Cesmo (Kaculuvale).
+- Colégios: Ednas, Popiene, Marc Leandres (Kaculuvale). Pitágoras, Bulet Salú (Naipalala). Abcunene (Caxila 3). Bulet Salú2 (Zeca).
+- Escolas Primárias: E.P 4 de Janeiro (Kafitu 1), E.P Okapacupacu (Kafitu2), E.P 122 (Zeca), E.P Rei Nande (Naipalala), E.P da Centralidade (Centralidade), E.P do Kaculuvale (Kaculuvale), E.P da Caxila1 (Caxila1), E.P da Caxila2 (Caxila2), E.P do Onahumba (Onahumba), E.P dos Castilhos (Castilhos).
 - Escolas do Primeiro ciclo: C.Escolar Cowboy (Castilhos), E.Escolar Ocapale (Kaculuvale), C.E da Centralidade (Centralidade), E.P Rei Nande (Naipalala).
 
 ### 4. BANCOS E SERVIÇOS FINANCEIROS
@@ -75,27 +78,27 @@ Tu és o Bot_cunene, o assistente virtual oficial, humano e direto dos serviços
 - Bancos BCI, BPC, Banco Sol, Económico: Bairro Bangula.
 - Bancos BPC2, Atlântico: Bairro Naipalala.
 
-### 5. Desporto
-- Campo provincial: 11 de novembro (castilhos). 
+### 5. DESPORTO
+- Campo provincial: 11 de novembro (Castilhos). 
 - Campo: Campo da Centralidade.
 
 ### 6. COMÉRCIO E LAZER
 * Supermercados (Shoprite e AngoMarte): Abertos todos os dias das 08h00 às 20h00. Ficam no bairro Castilhos.
 
-### 6. DIVISÃO POLÍTICO-ADMINISTRATIVA (MUNICÍPIOS E COMUNAS)
+### 7. DIVISÃO POLÍTICO-ADMINISTRATIVA (MUNICÍPIOS E COMUNAS)
 A província do Cunene é constituída por 6 Municípios e as respetivas Comunas:
-* 1. Município do Cuanhama (Sede: Ondjiva)
-  - Comunas: Ondjiva, Môngua, Evale, Nehone, Cafima.
-* 2. Município de Ombadja (Sede: Xangongo)
-  - Comunas: Xangongo, Humbe, Mucope, Naulila, Ombala yo Mungu.
-* 3. Município da Cahama (Sede: Cahama)
-  - Comunas: Cahama, Otchinjau.
-* 4. Município do Cuvelai (Sede: Cuvelai)
-  - Comunas: Cuvelai, Mupa, Calonga, Cubati.
-* 5. Município do Curoca (Sede: Oncocua)
-  - Comunas: Oncocua, Chitado.
-* 6. Município de Namacunde (Sede: Namacunde)
-  - Comunas: Namacunde, Chiedi.
+* 1. Município do Cuanhama (Sede: Ondjiva) - Comunas: Ondjiva, Môngua, Evale, Nehone, Cafima.
+* 2. Município de Ombadja (Sede: Xangongo) - Comunas: Xangongo, Humbe, Mucope, Naulila, Ombala yo Mungu.
+* 3. Município da Cahama (Sede: Cahama) - Comunas: Cahama, Otchinjau.
+* 4. Município do Cuvelai (Sede: Cuvelai) - Comunas: Cuvelai, Mupa, Calonga, Cubati.
+* 5. Município do Curoca (Sede: Oncocua) - Comunas: Oncocua, Chitado.
+* 6. Município de Namacunde (Sede: Namacunde) - Comunas: Namacunde, Chiedi.
+
+### 8. INSTRUÇÕES DO SISTEMA DE REPORTAGENS DE CIDADANIA
+- O bot possui um sistema automatizado de triagem de problemas.
+- Se o cidadão perguntar como fazer uma reportagem ou reclamação, deves instruí-lo explicitamente a enviar uma mensagem que comece com a palavra *Reportagem* seguida do problema principal.
+- Exemplo a mostrar: "Escreve: *Reportagem falta de água no bairro Kafitu*".
+- Explica-lhe que, logo de seguida, o sistema fará perguntas automáticas para detalhar o relatório antes de o submeter à Administração.
 """
 
 # ==========================================
@@ -107,7 +110,6 @@ def guardar_reportagem_bd(telefone, relato):
         return False
         
     try:
-        # Uso do 'with' garante fecho automático de conexões no Render
         with psycopg2.connect(DATABASE_URL) as conn:
             with conn.cursor() as cur:
                 cur.execute("""
@@ -155,11 +157,52 @@ def enviar_mensagem_whatsapp(telefone_destino, texto):
     print(f"📤 Status de envio: {resposta.status_code}")
 
 # ==========================================
-# 5. PROCESSAMENTO DO BOT (MEMÓRIA EXPANDIDA + RELÓGIO FIX)
+# 5. PROCESSAMENTO DO BOT (MÁQUINA DE ESTADOS + IA)
 # ==========================================
 def processar_texto(telefone_origem, user_text):
     texto_baixo = user_text.lower().strip()
     
+    # --- MÁQUINA DE ESTADOS (FLUXO MULTI-PASSO DA REPORTAGEM) ---
+    if telefone_origem in ESTADO_REPORTAGEM:
+        dados = ESTADO_REPORTAGEM[telefone_origem]
+        
+        # PASSO 1: Receber o Tempo/Duração
+        if dados['passo'] == 1:
+            dados['tempo'] = user_text.strip()
+            dados['passo'] = 2
+            return (
+                "📝 *Passo 2 de 2 • Detalhes da Ocorrência*\n\n"
+                "Obrigado. Agora diz-me: *O que levou a esse acontecimento ou qual achas ser a causa?*\n"
+                "_(Se não souberes, podes responder apenas 'Não sei')_"
+            )
+            
+        # PASSO 2: Receber a Causa, Compilar, Gravar e Finalizar
+        elif dados['passo'] == 2:
+            dados['causa'] = user_text.strip()
+            
+            # Formatação estruturada que será gravada na Base de Dados
+            relato_final_bd = (
+                f"PROBLEMA PRINCIPAL: {dados['problema']} | "
+                f"DURAÇÃO DA SITUAÇÃO: {dados['tempo']} | "
+                f"CAUSA PROVÁVEL: {dados['causa']}"
+            )
+            
+            # Gravação física no PostgreSQL do Render
+            guardar_reportagem_bd(telefone_origem, relato_final_bd)
+            
+            # Remover o utilizador do fluxo de denúncias
+            ESTADO_REPORTAGEM.pop(telefone_origem)
+            
+            return (
+                "✅ *Ocorrência Submetida com Sucesso!* \n\n"
+                "O teu relatório detalhado foi estruturado e enviado para o sistema interno da Administração Municipal:\n\n"
+                f"• *Ocorrência:* {dados['problema']}\n"
+                f"• *Tempo de Existência:* {dados['tempo']}\n"
+                f"• *Causa Relatada:* {dados['causa']}\n\n"
+                "Obrigado por ajudares a melhorar a nossa comunidade. A cidadania ativa faz a diferença! Como posso ajudar-te em mais alguma coisa?"
+            )
+
+    # --- EMERGÊNCIA (Corta logo a IA se for caso sério) ---
     if any(palavra in texto_baixo for palavra in ["emergencia", "emergência", "socorro", "policia", "bombeiros"]):
         return (
             "🚨 *ALERTA DE EMERGÊNCIA IMEDIATA!* 🚨\n\n"
@@ -169,21 +212,30 @@ def processar_texto(telefone_origem, user_text):
             "Procura um local seguro!"
         )
     
-    # CORREÇÃO: Bloqueia gatilhos falsos. Só ativa se a mensagem REALMENTE começar por "reportagem"
+    # --- ENTRADA NO FLUXO DE REPORTAGEM ---
     elif texto_baixo.startswith("reportagem"):
-        # Extrai o relato removendo a palavra "reportagem" mas preservando as maiúsculas originais do utilizador
-        relato = user_text.strip()[10:].strip()
-        if not relato:
+        # Extrai o problema preservando maiúsculas originais
+        problema_inicial = user_text.strip()[10:].strip()
+        if not problema_inicial:
             return "🚨 Para registar, escreva a palavra *Reportagem* seguida do problema (Ex: Reportagem falta de luz no bairro Kafitu)."
         
-        guardar_reportagem_bd(telefone_origem, relato)
+        # Cria o estado inicial para este número de telefone
+        ESTADO_REPORTAGEM[telefone_origem] = {
+            'passo': 1,
+            'problema': problema_inicial,
+            'tempo': '',
+            'causa': ''
+        }
         
         return (
-            "✅ *Ocorrência Registada!*\n\n"
-            f"O teu relato: _{relato}_\n\n"
-            "Foi guardado de forma segura no nosso sistema e será reencaminhado para a Administração Municipal. A cidadania ativa faz a diferença!"
+            "📝 *Sistema de Atendimento de Ocorrências Oficial*\n\n"
+            "Registou o seguinte problema: "
+            f"_{problema_inicial}_\n\n"
+            "Para enviar um relatório completo à Administração Municipal, responde por favor:\n"
+            "👉 *Há quanto tempo estão nessa situação?*"
         )
 
+    # --- FLUXO NORMAL (INTELIGÊNCIA ARTIFICIAL) ---
     else:
         try:
             if not client:
@@ -194,7 +246,7 @@ def processar_texto(telefone_origem, user_text):
             
             MEMORIA_CONVERSAS[telefone_origem].append({"role": "user", "content": user_text})
             
-            # CORREÇÃO DA AMNÉSIA: Janela estendida para 16 mensagens para lembrar nomes durante testes longos
+            # Janela estendida para 16 mensagens para lembrar histórico
             if len(MEMORIA_CONVERSAS[telefone_origem]) > 16:
                 MEMORIA_CONVERSAS[telefone_origem] = MEMORIA_CONVERSAS[telefone_origem][-16:]
             
@@ -202,7 +254,7 @@ def processar_texto(telefone_origem, user_text):
             hora_formatada = agora_angola.strftime("%H:%M")
             data_formatada = agora_angola.strftime("%d/%m/%Y")
             
-            # CORREÇÃO DO RELÓGIO: Regra de ferro explícita injetada no System para travar saudações loucas
+            # Regra de relógio
             regra_relogio = (
                 f"\n\n[SISTEMA]\nHoje é {data_formatada} e são {hora_formatada} em Ondjiva. "
                 "REGRA MANDATÓRIA DE SAUDAÇÃO: Se a hora estiver entre 05:00 e 11:59, deves saudar APENAS com 'Bom dia'. "
@@ -232,7 +284,6 @@ def processar_texto(telefone_origem, user_text):
 # 6. PING ANTI-HIBERNAÇÃO DA NUVEM (CORRIGIDO)
 # ==========================================
 def keep_awake():
-    # URL atualizada com base nos teus logs ativos do Render
     url = "https://bot-telegram-pt-rzhv.onrender.com/"
     while True:
         time.sleep(800) # Ping a cada ~13 minutos
@@ -291,3 +342,4 @@ if __name__ == '__main__':
     threading.Thread(target=keep_awake, daemon=True).start()
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+

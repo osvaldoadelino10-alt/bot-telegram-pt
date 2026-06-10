@@ -25,12 +25,23 @@ if GROQ_API_KEY:
 
 app = Flask(__name__)
 MEMORIA_CONVERSAS = {}
-
-# DICIONÁRIO GLOBAL PARA CONTROLAR OS PASSOS DA REPORTAGEM (MÁQUINA DE ESTADOS)
 ESTADO_REPORTAGEM = {}
 
+# BASE DE DADOS GEOGRÁFICA INTERNA DE ONDJIVA (Coordenadas reais para o GPS)
+COORDENADAS_ONDJIVA = {
+    "hospital ekuma": {"lat": -17.0612, "lon": 15.7425, "nome": "Hospital Provincial da Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
+    "simeone mucunde": {"lat": -17.0721, "lon": 15.7284, "nome": "Hospital Central Simeone Mucunde", "endereco": "Bairro Naipalala, Ondjiva"},
+    "hospital municipal": {"lat": -17.0655, "lon": 15.7321, "nome": "Hospital Municipal de Ondjiva", "endereco": "Centro da Cidade, Ondjiva"},
+    "shoprite": {"lat": -17.0688, "lon": 15.7195, "nome": "Supermercado Shoprite Ondjiva", "endereco": "Bairro Castilhos, Ondjiva"},
+    "angomarte": {"lat": -17.0675, "lon": 15.7180, "nome": "Supermercado AngoMarte", "endereco": "Bairro Castilhos, Ondjiva"},
+    "mediateca": {"lat": -17.0595, "lon": 15.7450, "nome": "Mediateca Lucas Damba", "endereco": "Bairro Kaculuvale, Ondjiva"},
+    "aeroporto": {"lat": -17.0422, "lon": 15.7511, "nome": "Aeroporto Provincial 11 de Novembro", "endereco": "Bairro Kaculuvale, Ondjiva"},
+    "campo provincial": {"lat": -17.0699, "lon": 15.7165, "nome": "Campo Provincial 11 de Novembro", "endereco": "Bairro Castilhos, Ondjiva"},
+    "centralidade": {"lat": -17.0850, "lon": 15.7010, "nome": "Centralidade de Ondjiva", "endereco": "Ondjiva, Cunene"}
+}
+
 # ==========================================
-# 2. A BÍBLIA DE ONDJIVA (Versão 4.0 - Com Reportagem)
+# 2. A BÍBLIA DE ONDJIVA (Versão 5.0 - Com Mapas e Relógio)
 # ==========================================
 CONTEXTO_ONDJIVA = """
 Tu és o Bot_cunene, o assistente virtual oficial de Ondjiva. Deves ser sempre prestativo, caloroso, humano e usar uma linguagem natural de Angola, evitando responder como um robô que apenas lista dados.
@@ -51,8 +62,8 @@ Tu és o Bot_cunene, o assistente virtual oficial de Ondjiva. Deves ser sempre p
 - Governo Provincial, Tribunal, Delegacia Provincial, Comando Provincial da Polícia, Palácio provincial, AGT e Tribuna: Centro da Cidade.
 - Administração Provincial, Mediateca e Aeroporto Provincial 11 de novembro: Bairro Kaculuvale.
 - Comando Municipal da Polícia e Comando da Polícia de Investigação Criminal: Castilhos.
-- Comando Picial de Viação Trânsito, Comando provincial dos Bombeiros, Polícia Fiscal: Naipalala.
-- Comando Policial Guarda Fronteita: Kafitu1.
+- Comando Policial de Viação Trânsito, Comando provincial dos Bombeiros, Polícia Fiscal: Naipalala.
+- Comando Policial Guarda Fronteira: Kafitu1.
 - Justiça Provincial, CNE, Casa da Cultura: Naipalala.
 - Governadora Provincial do Cunene: Gerdina Didalelwa.
 
@@ -94,11 +105,10 @@ A província do Cunene é constituída por 6 Municípios e as respetivas Comunas
 * 5. Município do Curoca (Sede: Oncocua) - Comunas: Oncocua, Chitado.
 * 6. Município de Namacunde (Sede: Namacunde) - Comunas: Namacunde, Chiedi.
 
-### 8. INSTRUÇÕES DO SISTEMA DE REPORTAGENS DE CIDADANIA
-- O bot possui um sistema automatizado de triagem de problemas.
-- Se o cidadão perguntar como fazer uma reportagem ou reclamação, deves instruí-lo explicitamente a enviar uma mensagem que comece com a palavra *Reportagem* seguida do problema principal.
+### 8. INSTRUÇÕES DO SISTEMA DE REPORTAGENS E LOCALIZAÇÃO
+- O bot possui um sistema automatizado de triagem de problemas. Instrua o cidadão a digitar *Reportagem* seguida do problema principal.
 - Exemplo a mostrar: "Escreve: *Reportagem falta de água no bairro Kafitu*".
-- Explica-lhe que, logo de seguida, o sistema fará perguntas automáticas para detalhar o relatório antes de o submeter à Administração.
+- O bot também consegue enviar mapas de localização em tempo real. Se o utilizador quiser saber a rota ou localização de locais (Ex: Shoprite, Mediateca, Ekuma), diga-lhe que basta pedir explicitamente a localização desses sítios (Ex: "Onde fica a Shoprite?").
 """
 
 # ==========================================
@@ -132,7 +142,7 @@ def guardar_reportagem_bd(telefone, relato):
         return False
 
 # ==========================================
-# 4. FUNÇÃO DE ENVIAR MENSAGEM (META API)
+# 4. FUNÇÕES DE ENVIAR MENSAGENS (META API)
 # ==========================================
 def enviar_mensagem_whatsapp(telefone_destino, texto):
     if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_ID:
@@ -155,6 +165,30 @@ def enviar_mensagem_whatsapp(telefone_destino, texto):
     
     resposta = requests.post(url, headers=headers, json=payload)
     print(f"📤 Status de envio: {resposta.status_code}")
+
+def enviar_localizacao_whatsapp(telefone_destino, latitude, longitude, nome_local, endereco):
+    if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_ID:
+        print("🚨 Faltam credenciais para envio de localização.")
+        return
+        
+    url = f"https://graph.facebook.com/v19.0/{WHATSAPP_PHONE_ID}/messages"
+    headers = {
+        "Authorization": f"Bearer {WHATSAPP_TOKEN}",
+        "Content-Type": "application/json"
+    }
+    payload = {
+        "messaging_product": "whatsapp",
+        "to": telefone_destino,
+        "type": "location",
+        "location": {
+            "latitude": latitude,
+            "longitude": longitude,
+            "name": nome_local,
+            "address": endereco
+        }
+    }
+    resposta = requests.post(url, headers=headers, json=payload)
+    print(f"📍 Status de envio do Pin de Mapa: {resposta.status_code}")
 
 # ==========================================
 # 5. PROCESSAMENTO DO BOT (MÁQUINA DE ESTADOS + IA)
@@ -180,17 +214,13 @@ def processar_texto(telefone_origem, user_text):
         elif dados['passo'] == 2:
             dados['causa'] = user_text.strip()
             
-            # Formatação estruturada que será gravada na Base de Dados
             relato_final_bd = (
                 f"PROBLEMA PRINCIPAL: {dados['problema']} | "
                 f"DURAÇÃO DA SITUAÇÃO: {dados['tempo']} | "
                 f"CAUSA PROVÁVEL: {dados['causa']}"
             )
             
-            # Gravação física no PostgreSQL do Render
             guardar_reportagem_bd(telefone_origem, relato_final_bd)
-            
-            # Remover o utilizador do fluxo de denúncias
             ESTADO_REPORTAGEM.pop(telefone_origem)
             
             return (
@@ -213,13 +243,11 @@ def processar_texto(telefone_origem, user_text):
         )
     
     # --- ENTRADA NO FLUXO DE REPORTAGEM ---
-    elif texto_baixo.startswith("reportagem"):
-        # Extrai o problema preservando maiúsculas originais
+    if texto_baixo.startswith("reportagem"):
         problema_inicial = user_text.strip()[10:].strip()
         if not problema_inicial:
             return "🚨 Para registar, escreva a palavra *Reportagem* seguida do problema (Ex: Reportagem falta de luz no bairro Kafitu)."
         
-        # Cria o estado inicial para este número de telefone
         ESTADO_REPORTAGEM[telefone_origem] = {
             'passo': 1,
             'problema': problema_inicial,
@@ -235,53 +263,73 @@ def processar_texto(telefone_origem, user_text):
             "👉 *Há quanto tempo estão nessa situação?*"
         )
 
-    # --- FLUXO NORMAL (INTELIGÊNCIA ARTIFICIAL) ---
-    else:
-        try:
-            if not client:
-                return "🚨 Erro: API da IA não configurada."
-            
-            if telefone_origem not in MEMORIA_CONVERSAS:
-                MEMORIA_CONVERSAS[telefone_origem] = []
-            
-            MEMORIA_CONVERSAS[telefone_origem].append({"role": "user", "content": user_text})
-            
-            # Janela estendida para 16 mensagens para lembrar histórico
-            if len(MEMORIA_CONVERSAS[telefone_origem]) > 16:
-                MEMORIA_CONVERSAS[telefone_origem] = MEMORIA_CONVERSAS[telefone_origem][-16:]
-            
-            agora_angola = datetime.utcnow() + timedelta(hours=1)
-            hora_formatada = agora_angola.strftime("%H:%M")
-            data_formatada = agora_angola.strftime("%d/%m/%Y")
-            
-            # Regra de relógio
-            regra_relogio = (
-                f"\n\n[SISTEMA]\nHoje é {data_formatada} e são {hora_formatada} em Ondjiva. "
-                "REGRA MANDATÓRIA DE SAUDAÇÃO: Se a hora estiver entre 05:00 e 11:59, deves saudar APENAS com 'Bom dia'. "
-                "Entre 12:00 e 17:59, saúda APENAS com 'Boa tarde'. Entre 18:00 e 04:59, saúda APENAS com 'Boa noite'. "
-                "Se o utilizador repetir saudações seguidas, mantém rigidamente a mesma saudação baseada na hora real."
+    # --- INTERCETOR DE LOCALIZAÇÃO (SISTEMA DE MAPAS NATIVOS) ---
+    for chave, dados in COORDENADAS_ONDJIVA.items():
+        if chave in texto_baixo and any(p in texto_baixo for p in ["localização", "localizacao", "onde fica", "onde esta", "onde está", "mapa", "rota"]):
+            enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
+            return (
+                f"📍 *Mapa de Localização Gerado!*\n\n"
+                f"Enviei-te mesmo acima o pin oficial do(a) *{dados['nome']}*.\n"
+                "Clica no quadrado do mapa para abrires o teu GPS e veres a rota exata a partir do teu local atual!"
             )
-            
-            contexto_dinamico = CONTEXTO_ONDJIVA + regra_relogio
 
-            mensagens_para_ia = [{"role": "system", "content": contexto_dinamico}] + MEMORIA_CONVERSAS[telefone_origem]
+    # --- FLUXO NORMAL (INTELIGÊNCIA ARTIFICIAL CONTEXTUAL E BLINDADA) ---
+    try:
+        if not client:
+            return "🚨 Erro: API da IA não configurada."
+        
+        if telefone_origem not in MEMORIA_CONVERSAS:
+            MEMORIA_CONVERSAS[telefone_origem] = []
+        
+        MEMORIA_CONVERSAS[telefone_origem].append({"role": "user", "content": user_text})
+        
+        if len(MEMORIA_CONVERSAS[telefone_origem]) > 16:
+            MEMORIA_CONVERSAS[telefone_origem] = MEMORIA_CONVERSAS[telefone_origem][-16:]
+        
+        # --- CÁLCULO INFALÍVEL DA HORA E SAUDAÇÃO PELO PYTHON ---
+        agora_angola = datetime.utcnow() + timedelta(hours=1)
+        hora_formatada = agora_angola.strftime("%H:%M")
+        data_formatada = agora_angola.strftime("%d/%m/%Y")
+        
+        hora_atual = agora_angola.hour
+        if 5 <= hora_atual < 12:
+            saudacao_correta = "Bom dia"
+            periodo = "da manhã"
+        elif 12 <= hora_atual < 18:
+            saudacao_correta = "Boa tarde"
+            periodo = "da tarde"
+        else:
+            saudacao_correta = "Boa noite"
+            periodo = "da noite"
+        
+        regra_relogio = (
+            f"\n\n[SISTEMA - INFORMAÇÃO TEMPORAL INFALÍVEL]\n"
+            f"Hoje é dia {data_formatada}.\n"
+            f"Agora são exatamente {hora_formatada} {periodo} em Ondjiva (Formato 24h: {hora_formatada}).\n"
+            f"DIRETIVA CRÍTICA DE SAUDAÇÃO: Tu deves saudar o utilizador OBRIGATORIAMENTE com '{saudacao_correta}'. Nunca uses outra saudação.\n"
+            f"DIRETIVA DE RESPOSTA HORÁRIA: Se o utilizador perguntar que horas são, responde estritamente que são {hora_formatada}."
+        )
+        
+        contexto_dinamico = CONTEXTO_ONDJIVA + regra_relogio
 
-            response = client.chat.completions.create(
-                model="llama-3.1-8b-instant",
-                temperature=0.0,
-                messages=mensagens_para_ia
-            )
-            
-            resposta_ia = response.choices[0].message.content
-            MEMORIA_CONVERSAS[telefone_origem].append({"role": "assistant", "content": resposta_ia})
-            
-            return resposta_ia
-            
-        except Exception as e:
-            return f"❌ Erro na IA: {e}"
+        mensagens_para_ia = [{"role": "system", "content": contexto_dinamico}] + MEMORIA_CONVERSAS[telefone_origem]
+
+        response = client.chat.completions.create(
+            model="llama-3.1-8b-instant",
+            temperature=0.0,
+            messages=mensagens_para_ia
+        )
+        
+        resposta_ia = response.choices[0].message.content
+        MEMORIA_CONVERSAS[telefone_origem].append({"role": "assistant", "content": resposta_ia})
+        
+        return resposta_ia
+        
+    except Exception as e:
+        return f"❌ Erro na IA: {e}"
 
 # ==========================================
-# 6. PING ANTI-HIBERNAÇÃO DA NUVEM (CORRIGIDO)
+# 6. PING ANTI-HIBERNAÇÃO DA NUVEM
 # ==========================================
 def keep_awake():
     url = "https://bot-telegram-pt-rzhv.onrender.com/"
@@ -299,7 +347,7 @@ def keep_awake():
 # ==========================================
 @app.route('/', methods=['GET'])
 def home():
-    return "Servidor do Bot de WhatsApp do Cunene Ativo com PostgreSQL!", 200
+    return "Servidor do Bot de WhatsApp do Cunene Ativo com PostgreSQL e Mapas!", 200
 
 @app.route('/webhook', methods=['GET'])
 def verificar_webhook():

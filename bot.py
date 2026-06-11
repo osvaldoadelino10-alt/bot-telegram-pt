@@ -392,7 +392,7 @@ def processar_texto(telefone_origem, user_text):
             "3️⃣ Informações oficiais\n"
             "4️⃣ Emergências\n\n"
             "Responde apenas com o número."
-            "Obs: Ou podes fazer perguntas abertas com o bot.✨
+            "Obs: Ou podes fazer perguntas abertas com o bot.✨"
         )
 
     # --- REPORTAGEM ---

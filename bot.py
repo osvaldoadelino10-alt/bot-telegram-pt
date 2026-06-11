@@ -1,15 +1,3 @@
-Tens toda a razão, peço desculpa pelo corte! Para tentar focar apenas na correção do bug da saudação e nas coordenadas, acabei por remover a tua base de conhecimento completa (`CONTEXTO_ONDJIVA`), o teu menu interativo e a ligação à base de dados PostgreSQL para as reportagens. Em ambiente de produção, precisas de tudo isso a funcionar em conjunto.
-
-Fiz agora a integração completa. Este código abaixo contém **tudo**:
-
-1. A tua base de dados completa de locais e regras no `CONTEXTO_ONDJIVA`.
-2. O teu sistema de navegação (Menu, Sub-menus, Reportagem com gravação na BD).
-3. A lista completa de **todas as tuas coordenadas**, mas atualizada com as localizações exatas que ajustei no passo anterior (para o Governo, Hospitais, Shoprite, etc.).
-4. **A correção do bug da saudação** na secção da IA.
-
-Aqui tens o código completo e definitivo:
-
-```python
 import os
 import time
 import threading

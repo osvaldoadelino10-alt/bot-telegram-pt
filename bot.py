@@ -13,9 +13,8 @@ from openai import OpenAI
 GROQ_API_KEY = os.environ.get("GROQ_API_KEY")
 WHATSAPP_TOKEN = os.environ.get("WHATSAPP_TOKEN")
 WHATSAPP_PHONE_ID = os.environ.get("WHATSAPP_PHONE_ID")
-VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "cunene2026")  # em produção, remover fallback
+VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "cunene2026")  # em produção remove o fallback
 DATABASE_URL = os.environ.get("DATABASE_URL")
-APP_URL = os.environ.get("APP_URL", "http://localhost:5000")
 
 client = None
 if GROQ_API_KEY:
@@ -24,14 +23,14 @@ if GROQ_API_KEY:
 
 app = Flask(__name__)
 
-# Memória das conversas (com timestamp para limpeza)
+# Estruturas de memória
 MEMORIA_CONVERSAS = {}
-MEMORIA_TIMESTAMPS = {}       # última actividade
+MEMORIA_TIMESTAMPS = {}
 ESTADO_REPORTAGEM = {}
-ESTADO_NAVEGACAO = {}         # para menu e sub-menus
+ESTADO_NAVEGACAO = {}
 
 # ==========================================
-# COORDENADAS DE ONDJIVA (VERIFICAR COM GPS REAL)
+# COORDENADAS DE ONDJIVA (verificar com GPS real)
 # ==========================================
 COORDENADAS_ONDJIVA = {
     "hospital municipal": {"lat": -17.0660, "lon": 15.7350, "nome": "Hospital Municipal de Ondjiva", "endereco": "Centro da Cidade, Ondjiva"},
@@ -98,7 +97,7 @@ COORDENADAS_ONDJIVA = {
 }
 
 # ==========================================
-# 2. BASE DE CONHECIMENTO BLINDADA
+# 2. BASE DE CONHECIMENTO PARA A IA
 # ==========================================
 CONTEXTO_ONDJIVA = """
 Tu és o Bot_cunene, assistente oficial de Ondjiva. Usa linguagem natural de Angola, calorosa e directa.
@@ -160,20 +159,34 @@ BAI, BFA, BIC (Centro); BCI, BPC, Sol, Económico (Bangula); BPC2, Atlântico (N
 ### COMÉRCIO
 Shoprite e AngoMarte (Castilhos) abertos todos os dias 08h-20h.
 
-### DIVISÃO ADMINISTRATIVA (municípios e comunas)
-(Cópia exacta da fornecida pelo utilizador)
+### DIVISÃO ADMINISTRATIVA (14 MUNICÍPIOS OFICIAIS)
+A província do Cunene tem 14 municípios:
+
+1. **Cahama** – comunas: Cahama, Otchinjau. Administrador: José Mário Katiti.
+2. **Cuanhama** – comunas: Ondjiva, Môngua. Administrador: José Felisberto Kalomo.
+3. **Curoca** – comunas: Oncócua, Chitado. Administrador: António Dos Santos Luepo.
+4. **Cuvelai** – comunas: Mupa, Mukolongodjo, Calonga, Cubati. Administrador: Germano Baptista Nambalo.
+5. **Namacunde** – comunas: Namacunde, Chiede. Administrador: Cristuiana Nameomunu.
+6. **Ombadja** – comunas: Humpe, Mucope, Naulila, Ombala yo Mungu, Xangongo. Administrador: Hilario Sikalepo.
+7. **Chiéde** – sem comunas. Sem administrador.
+8. **Nehone** – comunas: Nehone, Evale. Sem administrador.
+9. **Humbe** – comunas: Mucope, Humbe. Sem administrador.
+10. **Mupa** – sem comunas. Sem administrador.
+11. **Naulila** – sem comunas. Sem administrador.
+12. **Chitado** – sem comunas. Sem administrador.
+13. **Cafima** – sem comunas. Sem administrador.
+14. **Chissuata** – sem comunas. Sem administrador.
 """
 
 # ==========================================
-# 3. FUNÇÕES AUXILIARES
+# 3. FUNÇÕES DE ENVIO E BASE DE DADOS
 # ==========================================
 def enviar_mensagem_whatsapp(telefone_destino, texto):
     if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_ID:
         return
-    texto_formatado = texto.replace("**", "*")
-    # Se a mensagem for muito longa, partir em várias
-    if len(texto_formatado) > 3800:
-        enviar_mensagens_partidas(telefone_destino, texto_formatado)
+    texto = texto.replace("**", "*")
+    if len(texto) > 3800:
+        enviar_mensagens_partidas(telefone_destino, texto)
         return
     url = f"https://graph.facebook.com/v19.0/{WHATSAPP_PHONE_ID}/messages"
     headers = {
@@ -184,22 +197,20 @@ def enviar_mensagem_whatsapp(telefone_destino, texto):
         "messaging_product": "whatsapp",
         "to": telefone_destino,
         "type": "text",
-        "text": {"body": texto_formatado}
+        "text": {"body": texto}
     }
     requests.post(url, headers=headers, json=payload)
 
 def enviar_mensagens_partidas(telefone_destino, texto):
-    """Divide texto em blocos de até 3800 caracteres, mantendo palavras inteiras."""
     max_len = 3800
     while len(texto) > max_len:
-        # Encontrar o último espaço antes do limite
         corte = texto.rfind(' ', 0, max_len)
         if corte == -1:
             corte = max_len
         bloco = texto[:corte].strip()
         enviar_mensagem_whatsapp(telefone_destino, bloco)
         texto = texto[corte:].strip()
-        time.sleep(0.5)  # pequeno intervalo para não sobrecarregar
+        time.sleep(0.5)
     if texto:
         enviar_mensagem_whatsapp(telefone_destino, texto)
 
@@ -250,13 +261,10 @@ def guardar_reportagem_bd(telefone, relato):
 # ==========================================
 def limpar_memoria_antiga():
     while True:
-        time.sleep(600)  # a cada 10 minutos
+        time.sleep(600)
         agora = datetime.utcnow()
-        chaves_a_remover = []
-        for telefone, ts in MEMORIA_TIMESTAMPS.items():
-            if (agora - ts).total_seconds() > 3600:
-                chaves_a_remover.append(telefone)
-        for tel in chaves_a_remover:
+        chaves = [tel for tel, ts in MEMORIA_TIMESTAMPS.items() if (agora - ts).total_seconds() > 3600]
+        for tel in chaves:
             MEMORIA_CONVERSAS.pop(tel, None)
             MEMORIA_TIMESTAMPS.pop(tel, None)
             ESTADO_REPORTAGEM.pop(tel, None)
@@ -265,33 +273,27 @@ def limpar_memoria_antiga():
 threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
 
 # ==========================================
-# 5. PROCESSAMENTO PRINCIPAL (MÁQUINA DE ESTADOS + MENU)
+# 5. PROCESSAMENTO PRINCIPAL
 # ==========================================
 def processar_texto(telefone_origem, user_text):
     texto_baixo = user_text.lower().strip()
-    
-    # Actualizar timestamp da última interacção
     MEMORIA_TIMESTAMPS[telefone_origem] = datetime.utcnow()
 
-    # --- VERIFICAR SE ESTÁ EM MODO DE NAVEGAÇÃO (MENU) ---
+    # --- NAVEGAÇÃO (MENU) ---
     if telefone_origem in ESTADO_NAVEGACAO:
         estado = ESTADO_NAVEGACAO[telefone_origem]
         nivel = estado.get("nivel", "menu")
 
         if nivel == "menu":
-            # Menu principal activo, espera número 1-4
             if texto_baixo in ["1", "2", "3", "4"]:
                 opcao = texto_baixo
                 if opcao == "1":
-                    # Reportagem
                     ESTADO_NAVEGACAO.pop(telefone_origem)
                     return "Escreve *Reportagem* seguido do problema (ex: Reportagem falta de água no Kafitu)."
                 elif opcao == "2":
-                    # Localização – pedir nome do local
                     ESTADO_NAVEGACAO[telefone_origem]["nivel"] = "localizacao_pedido"
                     return "📍 Diz-me o nome do local que queres localizar (ex: Shoprite, Hospital Ekuma, Mediateca…)."
                 elif opcao == "3":
-                    # Informações oficiais – sub‑menu
                     ESTADO_NAVEGACAO[telefone_origem]["nivel"] = "info_submenu"
                     return (
                         "📋 *Informações oficiais – escolhe a categoria:*\n"
@@ -304,35 +306,19 @@ def processar_texto(telefone_origem, user_text):
                     )
                 elif opcao == "4":
                     ESTADO_NAVEGACAO.pop(telefone_origem)
-                    return (
-                        "🚨 *Emergências:*\n"
-                        "Polícia Nacional: 113\n"
-                        "Bombeiros: 115\n"
-                        "Procura um local seguro."
-                    )
+                    return "🚨 *Emergências:* Polícia 113, Bombeiros 115. Procura um local seguro."
             else:
-                # Se não é número válido, cancelar navegação
                 ESTADO_NAVEGACAO.pop(telefone_origem)
-                # deixar cair na IA
 
         elif nivel == "info_submenu":
-            # O utilizador deve digitar uma letra de A a F
             opcao = texto_baixo.upper().strip()
-            categorias = {
-                "A": "administração pública",
-                "B": "saúde",
-                "C": "ensino",
-                "D": "bancos",
-                "E": "comércio e lazer",
-                "F": "divisão administrativa"
-            }
+            categorias = {"A": "adm", "B": "saude", "C": "ensino", "D": "bancos", "E": "comercio", "F": "divisao"}
             if opcao in categorias:
                 ESTADO_NAVEGACAO.pop(telefone_origem)
-                # Retornamos uma resposta rápida, sem detalhes excessivos
                 if opcao == "A":
-                    return "Horário: Seg‑Qui 08h‑15h30, Sex 08h‑15h. Repartições principais no Centro, Kaculuvale, Castilhos, Naipalala. Queres saber algo mais específico?"
+                    return "Horário: Seg‑Qui 08h‑15h30, Sex 08h‑15h. Repartições no Centro, Kaculuvale, Castilhos, Naipalala. Precisas de algo específico?"
                 elif opcao == "B":
-                    return "Urgências 24h. Consultas externas: Seg‑Sex 08h‑15h. Hospitais: Ekuma (Ekuma), Simeone Mucunde (Naipalala), Municipal (Centro). Precisas de mais detalhes?"
+                    return "Urgências 24h. Consultas Seg‑Sex 08h‑15h. Hospitais: Ekuma, Simeone Mucunde, Municipal. Mais detalhes?"
                 elif opcao == "C":
                     return (
                         "Escolas públicas: ITSO (saúde), Oulondelo, IMPO (pedagogia), Cesmo, ITAS, Eiffel, várias primárias.\n"
@@ -340,34 +326,32 @@ def processar_texto(telefone_origem, user_text):
                         "Posso detalhar cursos de uma escola específica. Qual te interessa?"
                     )
                 elif opcao == "D":
-                    return "Bancos funcionam Seg‑Sex 08h‑15h. BAI, BFA, BIC no Centro; BCI, BPC, Sol, Económico em Bangula; BPC2 e Atlântico em Naipalala."
+                    return "Bancos Seg‑Sex 08h‑15h. BAI, BFA, BIC no Centro; BCI, BPC, Sol, Económico em Bangula; BPC2 e Atlântico em Naipalala."
                 elif opcao == "E":
-                    return "Shoprite e AngoMarte (Castilhos) abertos todos os dias 08h‑20h. Campo Provincial 11 de Novembro e Campo da Centralidade para desporto."
+                    return "Shoprite e AngoMarte (Castilhos) abertos todos os dias 08h‑20h. Campo Provincial e da Centralidade para desporto."
                 elif opcao == "F":
-                    # Resumo administrativo
-                    return "Província do Cunene: 6 municípios. Para lista completa, pede 'lista de municípios e comunas'. Queres que envie?"
+                    return (
+                        "A província do Cunene é formada por *14 municípios*:\n"
+                        "Cahama, Cuanhama, Curoca, Cuvelai, Namacunde, Ombadja, Chiéde, Nehone, Humbe, Mupa, Naulila, Chitado, Cafima, Chissuata.\n\n"
+                        "Se quiseres a lista completa com comunas e administradores, escreve: *lista completa dos municípios*."
+                    )
             else:
                 ESTADO_NAVEGACAO.pop(telefone_origem)
-                # se a opção for inválida, sair do modo navegação
 
         elif nivel == "localizacao_pedido":
-            # O utilizador enviou o nome do local
             local_desejado = texto_baixo
             ESTADO_NAVEGACAO.pop(telefone_origem)
-            # Tentar encontrar nas coordenadas
             for chave, dados in COORDENADAS_ONDJIVA.items():
                 if chave in local_desejado:
                     enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
-                    return f"📍 *{dados['nome']}*: enviei o pin. Clica no mapa para abrir o GPS."
-            return "Não encontrei esse local. Verifica o nome e tenta novamente (ex: Shoprite, Hospital Ekuma)."
+                    return f"📍 *{dados['nome']}*: pin enviado. Clica no mapa para abrir GPS."
+            return "Não encontrei esse local. Tenta novamente com o nome correcto (ex: Shoprite, Hospital Ekuma)."
 
     # --- EMERGÊNCIA DIRECTA ---
     if any(p in texto_baixo for p in ["emergencia", "emergência", "socorro"]):
-        return (
-            "🚨 *Emergência:* Polícia 113 | Bombeiros 115. Se estiveres em perigo, liga já!"
-        )
+        return "🚨 *Emergência:* Polícia 113 | Bombeiros 115. Se estiveres em perigo, liga já!"
 
-    # --- ACTIVAÇÃO DO MENU (palavras‑chave) ---
+    # --- ACTIVAÇÃO DO MENU ---
     if texto_baixo in ["menu", "ajuda", "help", "guia", "opções", "opcoes"] or "como usar" in texto_baixo:
         ESTADO_NAVEGACAO[telefone_origem] = {"nivel": "menu"}
         return (
@@ -382,28 +366,24 @@ def processar_texto(telefone_origem, user_text):
 
     # --- REPORTAGEM ---
     if texto_baixo.startswith("reportagem"):
-        problema_inicial = user_text.strip()[10:].strip()
-        if not problema_inicial:
+        problema = user_text.strip()[10:].strip()
+        if not problema:
             return "Escreve *Reportagem* seguido do problema (ex: Reportagem falta de água no Kafitu)."
         ESTADO_REPORTAGEM[telefone_origem] = {
             'passo': 1,
-            'problema': problema_inicial,
+            'problema': problema,
             'tempo': '',
             'causa': '',
             'inicio': datetime.utcnow()
         }
-        return (
-            "📝 *Ocorrência registada:* " + problema_inicial + "\n"
-            "Há quanto tempo estão nessa situação?"
-        )
+        return f"📝 *Ocorrência registada:* {problema}\nHá quanto tempo estão nessa situação?"
 
     # --- MÁQUINA DE ESTADOS DA REPORTAGEM ---
     if telefone_origem in ESTADO_REPORTAGEM:
         dados = ESTADO_REPORTAGEM[telefone_origem]
-        # Timeout após 15 min
         if (datetime.utcnow() - dados['inicio']).total_seconds() > 900:
             ESTADO_REPORTAGEM.pop(telefone_origem)
-            return "⏳ A tua reportagem anterior foi cancelada por inatividade. Podes começar de novo com *Reportagem …*."
+            return "⏳ A tua reportagem foi cancelada por inatividade. Começa de novo com *Reportagem …*."
         if dados['passo'] == 1:
             dados['tempo'] = user_text.strip()
             dados['passo'] = 2
@@ -418,16 +398,16 @@ def processar_texto(telefone_origem, user_text):
                 f"• {dados['problema']}\n"
                 f"• Duração: {dados['tempo']}\n"
                 f"• Causa: {dados['causa']}\n\n"
-                "Obrigado por ajudares Ondjiva! Se precisares de mais alguma coisa, escreve *menu*."
+                "Obrigado por ajudares Ondjiva! Escreve *menu* para outras opções."
             )
 
-    # --- LOCALIZAÇÃO DIRECTA (sem estar no menu) ---
+    # --- LOCALIZAÇÃO DIRECTA ---
     for chave, dados in COORDENADAS_ONDJIVA.items():
         if chave in texto_baixo and any(p in texto_baixo for p in ["localização", "localizacao", "onde fica", "onde esta", "mapa", "rota"]):
             enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
             return f"📍 *{dados['nome']}*: pin enviado. Clica no mapa para abrir GPS."
 
-    # --- INTELIGÊNCIA ARTIFICIAL (RESPOSTA NATURAL) ---
+    # --- IA ---
     try:
         if not client:
             return "Serviço temporariamente indisponível. Tenta mais tarde."
@@ -439,10 +419,10 @@ def processar_texto(telefone_origem, user_text):
         if len(MEMORIA_CONVERSAS[telefone_origem]) > 16:
             MEMORIA_CONVERSAS[telefone_origem] = MEMORIA_CONVERSAS[telefone_origem][-16:]
 
-        agora_angola = datetime.utcnow() + timedelta(hours=1)
-        hora_formatada = agora_angola.strftime("%H:%M")
-        data_formatada = agora_angola.strftime("%d/%m/%Y")
-        hora_atual = agora_angola.hour
+        agora = datetime.utcnow() + timedelta(hours=1)
+        hora_formatada = agora.strftime("%H:%M")
+        data_formatada = agora.strftime("%d/%m/%Y")
+        hora_atual = agora.hour
         if 5 <= hora_atual < 12:
             saudacao = "Bom dia"
             periodo = "da manhã"
@@ -470,18 +450,17 @@ def processar_texto(telefone_origem, user_text):
         resposta_ia = response.choices[0].message.content.strip()
         MEMORIA_CONVERSAS[telefone_origem].append({"role": "assistant", "content": resposta_ia})
 
-        # Se a resposta for muito grande, parti-la (já que o envio virá daqui)
         if len(resposta_ia) > 3800:
             enviar_mensagens_partidas(telefone_origem, resposta_ia)
-            return ""  # as mensagens já foram enviadas, não duplicar
+            return ""  # já enviado
         return resposta_ia
 
     except Exception as e:
         print(f"Erro IA: {e}")
-        return "Peço imensa desculpa, estou com uma pequena dificuldade técnica. Tenta novamente daqui a pouco. Se for urgente, liga 113 ou 115."
+        return "Peço desculpa, estou com uma dificuldade técnica. Tenta mais tarde. Se for urgente, liga 113 ou 115."
 
 # ==========================================
-# 6. ROTAS FLASK
+# 6. ROTAS DO FLASK
 # ==========================================
 @app.route('/')
 def home():
@@ -514,6 +493,5 @@ def webhook():
     return jsonify({"status": "ok"}), 200
 
 if __name__ == '__main__':
-    threading.Thread(target=keep_awake, daemon=True).start()
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)

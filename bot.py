@@ -28,6 +28,7 @@ MEMORIA_CONVERSAS = {}
 MEMORIA_TIMESTAMPS = {}
 ESTADO_REPORTAGEM = {}
 ESTADO_NAVEGACAO = {}
+ESTADO_ROTA = {}               # NOVO: Guarda o destino da rota
 ULTIMA_MENSAGEM_BOT = {}       # guarda a última resposta enviada a cada telefone
 
 # ==========================================
@@ -50,8 +51,6 @@ COORDENADAS_ONDJIVA = {
     "justiça provincial": {"lat": -17.0722, "lon": 15.7288, "nome": "Justiça Provincial", "endereco": "Bairro Naipalala, Ondjiva"},
     "pitágoras": {"lat": -17.0735, "lon": 15.7255, "nome": "Colégio Pitágoras", "endereco": "Bairro Naipalala, Ondjiva"},
 }
-
-
 
 # ==========================================
 # 2. BASE DE CONHECIMENTO PARA A IA (FUNDIDA E BLINDADA)
@@ -236,6 +235,7 @@ def limpar_memoria_antiga():
             MEMORIA_TIMESTAMPS.pop(tel, None)
             ESTADO_REPORTAGEM.pop(tel, None)
             ESTADO_NAVEGACAO.pop(tel, None)
+            ESTADO_ROTA.pop(tel, None)
             ULTIMA_MENSAGEM_BOT.pop(tel, None)
 
 threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
@@ -398,9 +398,15 @@ def processar_texto(telefone_origem, user_text):
                 "Obrigado por ajudares Ondjiva! Escreve *menu* para outras opções."
             )
 
-    # --- LOCALIZAÇÃO DIRECTA ---
+    # --- ROTA DINÂMICA (NOVO) ---
     for chave, dados in COORDENADAS_ONDJIVA.items():
-        if chave in texto_baixo and any(p in texto_baixo for p in ["localização", "localizacao", "onde fica", "onde esta", "mapa", "rota"]):
+        if chave in texto_baixo and any(p in texto_baixo for p in ["como chegar", "rota", "caminho", "trajeto"]):
+            ESTADO_ROTA[telefone_origem] = dados
+            return f"🗺️ Queres ir para *{dados['nome']}*.\n\n📍 Por favor, partilha a tua *Localização Atual* aqui no WhatsApp (clica no 📎 > Localização) para eu gerar a tua rota exata."
+
+    # --- LOCALIZAÇÃO DIRECTA (PIN ESTÁTICO) ---
+    for chave, dados in COORDENADAS_ONDJIVA.items():
+        if chave in texto_baixo and any(p in texto_baixo for p in ["localização", "localizacao", "onde fica", "onde esta", "mapa"]):
             enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
             return (f"📍 *{dados['nome']}*\n"
                     f"{dados['endereco']}\n\n"
@@ -463,7 +469,29 @@ def processar_texto(telefone_origem, user_text):
         return "Peço desculpa, estou com uma dificuldade técnica. Tenta mais tarde. Se for urgente, liga 113 ou 115."
 
 # ==========================================
-# 6. ROTAS DO FLASK
+# 6. PROCESSAR LOCALIZAÇÃO (NOVO)
+# ==========================================
+def processar_localizacao(telefone_origem, lat_origem, lon_origem):
+    # Verifica se o utilizador já pediu uma rota antes de enviar a localização
+    if telefone_origem in ESTADO_ROTA:
+        destino = ESTADO_ROTA[telefone_origem]
+        lat_dest = destino["lat"]
+        lon_dest = destino["lon"]
+        nome_dest = destino["nome"]
+        
+        # Gera o link direto para o Google Maps
+        link_rota = f"https://www.google.com/maps/dir/?api=1&origin={lat_origem},{lon_origem}&destination={lat_dest},{lon_dest}&travelmode=driving"
+        
+        # Limpa o estado da rota
+        ESTADO_ROTA.pop(telefone_origem, None)
+        
+        return f"🚗 *Rota Calculada para {nome_dest}*\n\nAqui tens o caminho exato a partir de onde estás! Clica no link abaixo para abrir o GPS:\n👉 {link_rota}"
+    
+    # Se receber a localização fora do contexto da rota
+    return "Recebi a tua localização! 📍 Se precisares da rota para algum lugar de Ondjiva, escreve 'Como chegar a [nome do local]'."
+
+# ==========================================
+# 7. ROTAS DO FLASK
 # ==========================================
 @app.route('/')
 def home():
@@ -481,18 +509,31 @@ def verificar():
 @app.route('/webhook', methods=['POST'])
 def webhook():
     body = request.get_json()
-    if body.get("object"):
-        entry = body["entry"][0]
-        if "changes" in entry:
-            value = entry["changes"][0]["value"]
-            if "messages" in value:
-                msg = value["messages"][0]
-                if msg["type"] == "text":
+    if body and body.get("object"):
+        for entry in body.get("entry", []):
+            for change in entry.get("changes", []):
+                value = change.get("value", {})
+                
+                # Verifica se existem mensagens novas
+                if "messages" in value:
+                    msg = value["messages"][0]
                     tel = msg["from"]
-                    texto = msg["text"]["body"]
-                    resposta = processar_texto(tel, texto)
-                    if resposta:
-                        enviar_mensagem_whatsapp(tel, resposta)
+                    
+                    # Interceptar mensagens de texto
+                    if msg["type"] == "text":
+                        texto = msg["text"]["body"]
+                        resposta = processar_texto(tel, texto)
+                        if resposta:
+                            enviar_mensagem_whatsapp(tel, resposta)
+                            
+                    # Interceptar envio de localização (NOVO)
+                    elif msg["type"] == "location":
+                        lat = msg["location"]["latitude"]
+                        lon = msg["location"]["longitude"]
+                        resposta = processar_localizacao(tel, lat, lon)
+                        if resposta:
+                            enviar_mensagem_whatsapp(tel, resposta)
+
     return jsonify({"status": "ok"}), 200
 
 if __name__ == '__main__':

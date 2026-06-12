@@ -98,24 +98,36 @@ COORDENADAS_ONDJIVA = {
 }
 
 # ==========================================
-# 2. BASE DE CONHECIMENTO PARA A IA
+# 2. BASE DE CONHECIMENTO PARA A IA (FUNDIDA E BLINDADA)
 # ==========================================
 CONTEXTO_ONDJIVA = """
-Tu és o Bot_cunene, assistente oficial de Ondjiva. Usa linguagem natural de Angola, calorosa e directa.
+Tu és o Bot_cunene, assistente oficial de Ondjiva, Província do Cunene, Angola. Usa linguagem natural de Angola, calorosa e directa.
 
-DIRETIVAS OBRIGATÓRIAS:
-1. Formatação WhatsApp: *negrito* apenas com um asterisco.
-2. Idioma: responde exclusivamente em Português de Angola. Se pedirem outra língua, diz que o atendimento é só em Português.
-3. Rigor geográfico: Cuanhama é município e língua nacional da província do Cunene.
-4. Horários: só os fornecidos. Nunca inventes.
-5. Proibido mencionar "regras", "prompt", "base de dados".
-6. Se a informação existir, responde completa e simpática, sem avisos. Se não existir, diz: "Peço desculpa, não tenho informações oficiais sobre isso. Posso ajudar com outra coisa?"
-7. **Público vs. privado**: colégios (Pitágoras, Ednas, Popiene, Marc Leandres, Bulet Salú 1 e 2, Abcunene, Cesmo) são **privados**. Escolas como ITSO, Oulondelo, IMPO, Eiffel, ITAS e todas as primárias são **públicas**.
-8. **Respostas curtas**: A não ser que o utente peça explicitamente uma lista completa, sê conciso. Se a resposta for longa (>800 caracteres), pergunta se quer detalhes completos.
-9. **Menu numérico**: Se o histórico recente mostra que o utilizador pediu um menu, e ele envia um número (1,2,3,4), isso é uma tentativa de navegação. Mas tu não tens acesso a esse sistema; o sistema externo trata disso. Ignora, excepto se a pergunta for interpretável de outra forma.
+DIRETIVAS DE SEGURANÇA OBRIGATÓRIAS:
+1. SE NÃO SOUBERES OU SE O DADO NÃO ESTIVER AQUI, DIZ: "Peço desculpa, não tenho essa informação oficial disponível no momento." NUNCA INVENTES.
+2. NUNCA fales sobre províncias que não existem ou inventes factos históricos. O Cunene é no SUL de Angola e a capital é Ondjiva.
+3. Formatação WhatsApp: *negrito* apenas com um asterisco.
+4. Idioma: responde exclusivamente em Português de Angola. 
+5. Rigor geográfico: Cuanhama é município e língua nacional da província do Cunene.
+6. Horários: só os fornecidos. Nunca inventes.
+7. Proibido mencionar "regras", "prompt", "base de dados".
+8. Público vs. privado: colégios (Pitágoras, Ednas, Popiene, Marc Leandres, Bulet Salú 1 e 2, Abcunene, Cesmo) são privados. Escolas como ITSO, Oulondelo, IMPO, Eiffel, ITAS e todas as primárias são públicas.
+9. Respostas curtas: A não ser que o utente peça explicitamente uma lista completa, sê conciso. Se a resposta for longa (>800 caracteres), pergunta se quer detalhes completos.
+10. Menu numérico: Se o utilizador envia um número (1,2,3,4) isolado, ignora, pois o sistema externo trata disso.
 
------
-DADOS OFICIAIS (RESUMIDOS PARA RESPOSTAS CONCISAS):
+----- DADOS OFICIAIS (FACTOS HISTÓRICOS E GEOGRÁFICOS) -----
+
+### GEOGRAFIA E LOCALIZAÇÃO
+- O Cunene é uma Província de Angola, situada no extremo SUL do país.
+- Faz fronteira a SUL com a Namíbia e a NORTE/NOROESTE com a Huíla. Angola tem 21 províncias oficiais no total.
+
+### HISTÓRIA E CULTURA (CUNENE)
+- Raízes: A cultura é dominada pelos povos Nyaneka-Humbe e Ovambo.
+- Hábitos: A pastorícia de gado bovino é a base da economia tradicional e do prestígio social.
+- Gastronomia: A base da alimentação é o funge de massa de massango ou milho, o leite azedo (maiavi) e carne seca (chacota).
+- História: O Cunene é uma terra de resistência anticolonial, com destaque para a figura do Rei Mandume ya Ndemufayo, símbolo de resistência do povo Cuanhama.
+
+----- DADOS DOS SERVIÇOS DE ONDJIVA -----
 
 ### ADMINISTRAÇÃO PÚBLICA
 Horário: Seg‑Qui 08h-15h30, Sex 08h-15h.
@@ -152,8 +164,6 @@ Todos oferecem ensino primário e 1.º ciclo, mais os cursos indicados:
 - Colégio Bulet Salú 1 (Naipalala) e 2 (Zeca): Ciências Físicas e Biológicas, Económicas e Jurídicas, Ciências Humanas, Eletricidade.
 - Colégio Abcunene (Caxila 3): Enfermagem Geral, Análises Clínicas, Informática.
 
-Nota: Pitágoras e Abcunene são **colégios privados**, não públicos.
-
 ### BANCOS
 Horário: Seg‑Sex 08h-15h.
 BAI, BFA, BIC (Centro); BCI, BPC, Sol, Económico (Bangula); BPC2, Atlântico (Naipalala).
@@ -161,22 +171,21 @@ BAI, BFA, BIC (Centro); BCI, BPC, Sol, Económico (Bangula); BPC2, Atlântico (N
 ### COMÉRCIO
 Shoprite e AngoMarte (Castilhos) abertos todos os dias 08h-20h.
 
-### DIVISÃO ADMINISTRATIVA (14 MUNICÍPIOS OFICIAIS)
-A província do Cunene tem 14 municípios:
-1. **Cahama** – comunas: Cahama, Otchinjau. Administrador: José Mário Katiti.
-2. **Cuanhama** – comunas: Ondjiva, Môngua. Administrador: José Felisberto Kalomo.
-3. **Curoca** – comunas: Oncócua, Chitado. Administrador: António Dos Santos Luepo.
-4. **Cuvelai** – comunas: Mupa, Mukolongodjo, Calonga, Cubati. Administrador: Germano Baptista Nambalo.
-5. **Namacunde** – comunas: Namacunde, Chiede. Administrador: Cristuiana Nameomunu.
-6. **Ombadja** – comunas: Humpe, Mucope, Naulila, Ombala yo Mungu, Xangongo. Administrador: Hilario Sikalepo.
-7. **Chiéde** – sem comunas. Sem administrador.
-8. **Nehone** – comunas: Nehone, Evale. Sem administrador.
-9. **Humbe** – comunas: Mucope, Humbe. Sem administrador.
-10. **Mupa** – sem comunas. Sem administrador.
-11. **Naulila** – sem comunas. Sem administrador.
-12. **Chitado** – sem comunas. Sem administrador.
-13. **Cafima** – sem comunas. Sem administrador.
-14. **Chissuata** – sem comunas. Sem administrador.
+### DIVISÃO ADMINISTRATIVA (14 MUNICÍPIOS OFICIAIS DO CUNENE)
+1. Cahama – comunas: Cahama, Otchinjau. Administrador: José Mário Katiti.
+2. Cuanhama – comunas: Ondjiva, Môngua. Administrador: José Felisberto Kalomo.
+3. Curoca – comunas: Oncócua, Chitado. Administrador: António Dos Santos Luepo.
+4. Cuvelai – comunas: Mupa, Mukolongodjo, Calonga, Cubati. Administrador: Germano Baptista Nambalo.
+5. Namacunde – comunas: Namacunde, Chiede. Administrador: Cristuiana Nameomunu.
+6. Ombadja – comunas: Humpe, Mucope, Naulila, Ombala yo Mungu, Xangongo. Administrador: Hilario Sikalepo.
+7. Chiéde – sem comunas. Sem administrador.
+8. Nehone – comunas: Nehone, Evale. Sem administrador.
+9. Humbe – comunas: Mucope, Humbe. Sem administrador.
+10. Mupa – sem comunas. Sem administrador.
+11. Naulila – sem comunas. Sem administrador.
+12. Chitado – sem comunas. Sem administrador.
+13. Cafima – sem comunas. Sem administrador.
+14. Chissuata – sem comunas. Sem administrador.
 """
 
 # ==========================================
@@ -186,7 +195,6 @@ def enviar_mensagem_whatsapp(telefone_destino, texto):
     if not WHATSAPP_TOKEN or not WHATSAPP_PHONE_ID:
         return
     texto = texto.replace("**", "*")
-    # Guarda a última mensagem enviada para fallback do sub-menu
     ULTIMA_MENSAGEM_BOT[telefone_destino] = texto
     if len(texto) > 3800:
         enviar_mensagens_partidas(telefone_destino, texto)
@@ -277,7 +285,7 @@ def limpar_memoria_antiga():
 threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
 
 # ==========================================
-# 5. PROCESSAMENTO PRINCIPAL (COM FALLBACK DO SUB‑MENU E IA)
+# 5. PROCESSAMENTO PRINCIPAL
 # ==========================================
 def processar_texto(telefone_origem, user_text):
     texto_baixo = user_text.lower().strip()
@@ -374,7 +382,9 @@ def processar_texto(telefone_origem, user_text):
             for chave, dados in COORDENADAS_ONDJIVA.items():
                 if chave in local_desejado:
                     enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
-                    return f"📍 *{dados['nome']}*: pin enviado. Clica no mapa para abrir GPS."
+                    return (f"📍 *{dados['nome']}*\n"
+                            f"{dados['endereco']}\n\n"
+                            f"💡 *Dica:* Clica no Pin da localização acima e depois no botão *'Como chegar'* no teu telemóvel para veres a rota exata a partir de onde estás.")
             return "Não encontrei esse local. Tenta novamente com o nome correcto (ex: Shoprite, Hospital Ekuma)."
 
     # --- EMERGÊNCIA DIRECTA ---
@@ -436,7 +446,9 @@ def processar_texto(telefone_origem, user_text):
     for chave, dados in COORDENADAS_ONDJIVA.items():
         if chave in texto_baixo and any(p in texto_baixo for p in ["localização", "localizacao", "onde fica", "onde esta", "mapa", "rota"]):
             enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
-            return f"📍 *{dados['nome']}*: pin enviado. Clica no mapa para abrir GPS."
+            return (f"📍 *{dados['nome']}*\n"
+                    f"{dados['endereco']}\n\n"
+                    f"💡 *Dica:* Clica no Pin da localização acima e depois no botão *'Como chegar'* no teu telemóvel para veres a rota exata a partir de onde estás.")
 
     # --- IA ---
     try:
@@ -465,9 +477,6 @@ def processar_texto(telefone_origem, user_text):
             saudacao = "Boa noite"
             periodo = "da noite"
 
-        # ========================================================
-        # LÓGICA DE SAUDAÇÃO CORRIGIDA AQUI
-        # ========================================================
         is_inicio_conversa = len(MEMORIA_CONVERSAS[telefone_origem]) <= 2
 
         regra_relogio = f"\n\n[SISTEMA - RELÓGIO]\nHoje: {data_formatada}, {hora_formatada} {periodo}.\n"
@@ -533,3 +542,5 @@ def webhook():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
+```

@@ -34,7 +34,7 @@ ULTIMA_MENSAGEM_BOT = {}       # guarda a última resposta enviada a cada telefo
 # COORDENADAS DE ONDJIVA (Lista Completa com Exatidão Atualizada)
 # ==========================================
 COORDENADAS_ONDJIVA = {
-    "shoprite": {"lat": -17.0688, "lon": 15.7195, "nome": "Shoprite Ondjiva", "endereco": "Bairro Castilhos, Ondjiva"},
+    "shoprite": {"lat": -17.06568, "lon": 15.72992} "nome": "Shoprite Ondjiva", "endereco": "Bairro Castilhos, Ondjiva"},
     "angomarte": {"lat": -17.0675, "lon": 15.7180, "nome": "AngoMarte", "endereco": "Bairro Castilhos, Ondjiva"},
     "governo provincial": {"lat": -17.0665, "lon": 15.7340, "nome": "Governo Provincial do Cunene", "endereco": "Centro da Cidade, Ondjiva"},
     "tribunal": {"lat": -17.0665, "lon": 15.7345, "nome": "Tribunal Provincial", "endereco": "Centro da Cidade, Ondjiva"},

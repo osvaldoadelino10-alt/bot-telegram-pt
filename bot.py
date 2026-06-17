@@ -44,7 +44,7 @@ COORDENADAS_ONDJIVA = {
     "aeroporto": {"lat": -17.0422, "lon": 15.7511, "nome": "Aeroporto Provincial 11 de Novembro", "endereco": "Bairro Kaculuvale, Ondjiva"},
     "mediateca": {"lat": -17.0595, "lon": 15.7450, "nome": "Mediateca Lucas Damba", "endereco": "Bairro Kaculuvale, Ondjiva"},
     "administração provincial": {"lat": -17.0598, "lon": 15.7445, "nome": "Administração Provincial", "endereco": "Bairro Kaculuvale, Ondjiva"},
-    "hospital provincial da ekuma": {"lat": -17.0612, "lon": 15.7425, "nome": "Hospital Provincial da Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
+    "hospital provincial ekuma": {"lat": -17.0612, "lon": 15.7425, "nome": "Hospital Provincial Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
     "hospital central simeone mucunde": {"lat": -17.0721, "lon": 15.7284, "nome": "Hospital Central Simeone Mucunde", "endereco": "Bairro Naipalala, Ondjiva"},
     "hospital municipal de ondjiva": {"lat": -17.0660, "lon": 15.7350, "nome": "Hospital Municipal de Ondjiva", "endereco": "Bairro Bangula, Ondjiva"},
     "comando provincial da polícia": {"lat": -17.0662, "lon": 15.7352, "nome": "Comando Provincial da Polícia Nacional", "endereco": "Bairro Bangula, Ondjiva"},
@@ -81,11 +81,16 @@ HOSPITAIS_ONDJIVA = {
 }
 
 ALCUNHAS_HOSPITAIS = {
+    "hospital ekuma": "hospital provincial ekuma",
+    "hospital provincial da ekuma": "hospital provincial ekuma",
+    "hospital provincial do ekuma": "hospital provincial ekuma",
     "ekuma": "hospital provincial ekuma",
+    "hospital do ekuma": "hospital provincial ekuma",
     "simeone mucunde": "hospital central simeone mucunde",
     "hospital central": "hospital central simeone mucunde",
     "hospital municipal": "hospital municipal de ondjiva",
     "hospital do bangula": "hospital municipal de ondjiva",
+    "hospital de ondjiva": "hospital municipal de ondjiva",
 }
 
 # ==========================================
@@ -93,7 +98,7 @@ ALCUNHAS_HOSPITAIS = {
 # ==========================================
 ESCOLAS_PUBLICAS = {
     "instituto de saúde de ondjiva": {
-        "nome": "Instituto de Saúde de Ondjiva (ITSO)",
+        "nome": "Instituto Técnico de Saúde de Ondjiva (ITSO)",
         "tipo": "Pública",
         "bairro": "Ekuma",
         "nivel": "Médio Técnico",
@@ -101,7 +106,7 @@ ESCOLAS_PUBLICAS = {
         "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05", "Noite: 18h-22h30"]
     },
     "eiffel": {
-        "nome": "Instituto Eiffel",
+        "nome": "Colégio Eiffel",
         "tipo": "Pública",
         "bairro": "Naipalala",
         "nivel": "Médio",
@@ -215,8 +220,10 @@ ESCOLAS_PRIVADAS = {
 ESCOLAS_ONDJIVA = {**ESCOLAS_PUBLICAS, **ESCOLAS_PRIVADAS}
 
 ALCUNHAS_ESCOLAS = {
-    "ITSO": "instituto de saúde de ondjiva",
+    "itso": "instituto de saúde de ondjiva",
+    "iso": "instituto de saúde de ondjiva",
     "instituto de saúde": "instituto de saúde de ondjiva",
+    "instituto técnico de saúde": "instituto de saúde de ondjiva",
     "escola de enfermagem": "instituto de saúde de ondjiva",
     "eiffel": "eiffel",
     "oulondelo": "complexo escolar oulondelo",
@@ -325,7 +332,7 @@ MUNICIPIOS_CUNENE = [
 ]
 
 # ==========================================
-# CONTEXTO PARA IA (ENXUTO)
+# CONTEXTO PARA IA
 # ==========================================
 CONTEXTO_ONDJIVA = """
 Tu és o Bot_Cunene, assistente digital oficial da província do Cunene, Angola. Falas Português de Angola, de forma calorosa, direta e curta.
@@ -362,12 +369,12 @@ Naipalala, Kafitu, Onahumba, Pioneiro Zeca, Castilhos, Kaculuvale, Ekuma, Muhong
 - Escolas: Manhã 07h-12h30 | Tarde 13h-18h05 | Noite 18h-22h30.
 
 ### HOSPITAIS:
-- Hospital Provincial da Ekuma (Bairro Ekuma)
+- Hospital Provincial Ekuma (Bairro Ekuma)
 - Hospital Central Simeone Mucunde (Bairro Naipalala)
 - Hospital Municipal de Ondjiva (Bairro Bangula)
 
 ### ESCOLAS PÚBLICAS:
-- ISO (Ekuma): Enfermagem, Fisioterapia, Análises Clínicas
+- ITSO (Ekuma): Enfermagem, Fisioterapia, Análises Clínicas
 - IMPO (Naipalala): Pedagogia, Mate-Física, Ensino Primário, EMC, Língua Portuguesa, Bio-Química
 - ITAS (Naipalala): Finanças, Contabilidade, Gestão, RH, Secretariado
 - Oulondelo (Naipalala): Ciências Físicas/Biológicas, Económicas/Jurídicas
@@ -504,8 +511,35 @@ def limpar_memoria_antiga():
 threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
 
 # ==========================================
-# HANDLERS BLINDADOS
+# HANDLERS
 # ==========================================
+
+# --- CONVERSA CASUAL ---
+def handler_conversa_casual(texto_baixo, telefone_origem):
+    if texto_baixo in ["oi", "olá", "ola", "oie", "hey", "ei", "bom dia", "boa tarde", "boa noite"]:
+        agora = datetime.utcnow() + timedelta(hours=1)
+        hora = agora.hour
+        if 5 <= hora < 12:
+            saudacao = "Bom dia"
+        elif 12 <= hora < 18:
+            saudacao = "Boa tarde"
+        else:
+            saudacao = "Boa noite"
+        return f"{saudacao}! 👋 Sou o *Bot Cunene*, assistente digital de Ondjiva. Como posso ajudar? Escreve *menu* para veres as opções."
+    
+    if any(p in texto_baixo for p in ["como estás", "como estas", "tudo bem", "como vai", "tudo bom"]):
+        return "Estou bem, obrigado! 😊 Estou sempre pronto para ajudar. Escreve *menu* para veres o que posso fazer por ti."
+    
+    if any(p in texto_baixo for p in ["obrigado", "obrigada", "valeu", "brigado", "obg"]):
+        return "De nada! 😊 Se precisares de mais alguma coisa, escreve *menu*."
+    
+    if texto_baixo in ["sim", "s", "yes", "y"]:
+        return "Sim! 😊 Como posso ajudar? Escreve *menu* para veres as opções disponíveis."
+    
+    if texto_baixo in ["não", "nao", "n", "no"]:
+        return "Tudo bem! Se mudares de ideias, escreve *menu* para veres como posso ajudar."
+    
+    return None
 
 # --- HOSPITAIS ---
 def pesquisar_hospital(texto_usuario):
@@ -518,7 +552,7 @@ def pesquisar_hospital(texto_usuario):
             return HOSPITAIS_ONDJIVA[chave_oficial]
     if "hospital" in texto:
         if "ekuma" in texto:
-            return HOSPITAIS_ONDJIVA["hospital provincial da ekuma"]
+            return HOSPITAIS_ONDJIVA["hospital provincial ekuma"]
         elif "simeone" in texto or "mucunde" in texto or "central" in texto:
             return HOSPITAIS_ONDJIVA["hospital central simeone mucunde"]
         elif "municipal" in texto or "bangula" in texto:
@@ -657,24 +691,27 @@ def listar_escolas_por_tipo(tipo=None, bairro=None):
     return resposta
 
 def handler_escolas(texto_baixo, telefone=None):
-    if "pública" in texto_baixo or "publica" in texto_baixo:
+    if any(p in texto_baixo for p in ["pública", "publica", "públicas", "publicas"]):
         chaves = list(ESCOLAS_PUBLICAS.keys())
         if telefone:
             ESTADO_LISTA[telefone] = {"tipo": "escolas", "dados": chaves}
         return listar_escolas_por_tipo(tipo="Pública")
-    if "privada" in texto_baixo or "particular" in texto_baixo:
+    
+    if any(p in texto_baixo for p in ["privada", "privadas", "privado", "privados", "particular", "particulares"]):
         chaves = list(ESCOLAS_PRIVADAS.keys())
         if telefone:
             ESTADO_LISTA[telefone] = {"tipo": "escolas", "dados": chaves}
         return listar_escolas_por_tipo(tipo="Privada")
+    
     bairros_ondjiva = ["ekuma", "naipalala", "kaculuvale", "castilhos", "caxila", "zeca", "muhongo", "bangula", "kafitu", "onahumba", "pioneiro zeca"]
     for bairro in bairros_ondjiva:
         if bairro in texto_baixo:
             return listar_escolas_por_tipo(bairro=bairro.capitalize())
+    
     if "enfermagem" in texto_baixo:
         return (
             "📖 *Escolas com Enfermagem Geral:*\n"
-            "🏫 ISO - Instituto de Saúde (Pública - Ekuma)\n"
+            "🏫 ITSO - Instituto Técnico de Saúde (Pública - Ekuma)\n"
             "🎓 Colégio Pitágoras (Privada - Naipalala)\n"
             "🎓 Colégio Arcanjo (Privada - Naipalala)\n"
             "🎓 Colégio Abcunene (Privada - Caxila 3)"
@@ -687,15 +724,17 @@ def handler_escolas(texto_baixo, telefone=None):
         )
     if "contabilidade" in texto_baixo or "finanças" in texto_baixo or "financas" in texto_baixo:
         return "📖 *Escola com Finanças/Contabilidade:*\n🏫 ITAS (Pública - Naipalala)"
+    
     escola = pesquisar_escola(texto_baixo)
     if escola:
         if any(p in texto_baixo for p in ["completo", "detalhes", "todos", "tudo"]):
             return formatar_resposta_escola(escola, completo=True)
         return formatar_resposta_escola(escola)
+    
     if any(p in texto_baixo for p in ["escola", "colégio", "colegio", "liceu", "instituto"]):
         return (
             "📚 *Escolas em Ondjiva*\n\n"
-            "🏫 *Públicas:* ISO, Eiffel, Oulondelo, IMPO, CESMO, ITAS\n"
+            "🏫 *Públicas:* ITSO, Eiffel, Oulondelo, IMPO, CESMO, ITAS\n"
             "🎓 *Privadas:* Pitágoras, Ednas, Popiene, Arcanjo, Marc Leandres, Bulet Salú, Abcunene\n\n"
             "Diga 'escolas públicas', 'colégios privados' ou o nome da escola para detalhes."
         )
@@ -1022,6 +1061,13 @@ def processar_texto(telefone_origem, user_text):
         return "🚨 *Emergência:* Polícia 113 | Bombeiros 115. Se estiveres em perigo, abriga-se em um lugar seguro e ligue para os serviços de emergência!"
 
     # ==========================================
+    # 0.3 CONVERSA CASUAL
+    # ==========================================
+    resposta_casual = handler_conversa_casual(texto_baixo, telefone_origem)
+    if resposta_casual:
+        return resposta_casual
+
+    # ==========================================
     # 1. NAVEGAÇÃO (MENU) - PRIORIDADE ALTA
     # ==========================================
     if telefone_origem in ESTADO_NAVEGACAO:
@@ -1098,7 +1144,7 @@ def processar_texto(telefone_origem, user_text):
                     return listar_todos_hospitais()
                 elif opcao == "C":
                     return (
-                        "Escolas públicas: ISO, Oulondelo, IMPO, CESMO, ITAS, Eiffel.\n"
+                        "Escolas públicas: ITSO, Oulondelo, IMPO, CESMO, ITAS, Eiffel.\n"
                         "Colégios privados: Pitágoras, Ednas, Popiene, Arcanjo, Marc Leandres, Bulet Salú 1/2, Abcunene.\n\n"
                         "Digite 'escolas públicas' ou 'colégios privados' para ver a lista completa.\n"
                         "Ou diga o nome da escola para detalhes."
@@ -1121,11 +1167,22 @@ def processar_texto(telefone_origem, user_text):
             local_desejado = texto_baixo
             ESTADO_NAVEGACAO.pop(telefone_origem)
             
+            # 1. Pesquisa nas coordenadas
             for chave, dados in COORDENADAS_ONDJIVA.items():
                 if chave in local_desejado:
                     enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
                     return f"📍 *{dados['nome']}*\n{dados['endereco']}\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
             
+            # 2. Pesquisa por alcunhas de hospitais
+            for alcunha, chave_oficial in ALCUNHAS_HOSPITAIS.items():
+                if alcunha in local_desejado:
+                    dados = HOSPITAIS_ONDJIVA[chave_oficial]
+                    for ck, cv in COORDENADAS_ONDJIVA.items():
+                        if chave_oficial in ck:
+                            enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
+                            return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
+            
+            # 3. Pesquisa direta nos hospitais
             for chave, dados in HOSPITAIS_ONDJIVA.items():
                 if chave in local_desejado or dados["nome"].lower() in local_desejado:
                     for ck, cv in COORDENADAS_ONDJIVA.items():
@@ -1139,11 +1196,22 @@ def processar_texto(telefone_origem, user_text):
     # 2. PESQUISA DE LOCALIZAÇÃO ("onde fica", "localização de")
     # ==========================================
     if any(p in texto_baixo for p in ["onde fica", "localização de", "localizacao de", "localização do", "localizacao do"]):
+        # 1. Coordenadas diretas
         for chave, dados in COORDENADAS_ONDJIVA.items():
             if chave in texto_baixo:
                 enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
                 return f"📍 *{dados['nome']}*\n{dados['endereco']}\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
         
+        # 2. Pesquisa por alcunhas de hospitais
+        for alcunha, chave_oficial in ALCUNHAS_HOSPITAIS.items():
+            if alcunha in texto_baixo:
+                dados = HOSPITAIS_ONDJIVA[chave_oficial]
+                for ck, cv in COORDENADAS_ONDJIVA.items():
+                    if chave_oficial in ck:
+                        enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
+                        return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
+        
+        # 3. Pesquisa direta nos hospitais
         for chave, dados in HOSPITAIS_ONDJIVA.items():
             if chave in texto_baixo or dados["nome"].lower() in texto_baixo:
                 for ck, cv in COORDENADAS_ONDJIVA.items():
@@ -1151,6 +1219,7 @@ def processar_texto(telefone_origem, user_text):
                         enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
                         return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
         
+        # 4. Escolas
         for chave, dados in ESCOLAS_ONDJIVA.items():
             if chave in texto_baixo or dados["nome"].lower() in texto_baixo:
                 for ck, cv in COORDENADAS_ONDJIVA.items():
@@ -1158,6 +1227,7 @@ def processar_texto(telefone_origem, user_text):
                         enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
                         return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
         
+        # 5. Mercados
         for chave, dados in MERCADOS_ONDJIVA.items():
             if chave in texto_baixo:
                 for ck, cv in COORDENADAS_ONDJIVA.items():
@@ -1165,7 +1235,7 @@ def processar_texto(telefone_origem, user_text):
                         enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
                         return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
         
-        return "❌ Não encontrei esse local. Tenta com o nome completo (ex: Hospital Provincial da Ekuma, Shoprite Ondjiva)."
+        return "❌ Não encontrei esse local. Tenta com o nome completo (ex: Hospital Provincial Ekuma, Shoprite Ondjiva)."
 
     # ==========================================
     # 3. ROTA ("como chegar", "rota", "caminho", "trajeto")
@@ -1180,7 +1250,7 @@ def processar_texto(telefone_origem, user_text):
     # 4. HANDLERS BLINDADOS
     # ==========================================
     
-    if "hospital" in texto_baixo:
+    if "hospital" in texto_baixo or "ekuma" in texto_baixo or "simeone" in texto_baixo or "mucunde" in texto_baixo:
         resposta = handler_hospitais(texto_baixo, telefone_origem)
         if resposta:
             return resposta

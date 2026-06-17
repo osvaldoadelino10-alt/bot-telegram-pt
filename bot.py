@@ -33,24 +33,43 @@ ESTADO_LISTA = {}
 ULTIMA_MENSAGEM_BOT = {}
 
 # ==========================================
-# COORDENADAS DE ONDJIVA
+# COORDENADAS DE ONDJIVA (ATUALIZADAS)
 # ==========================================
 COORDENADAS_ONDJIVA = {
+    # COMÉRCIO
     "shoprite": {"lat": -17.06568, "lon": 15.72992, "nome": "Shoprite Ondjiva", "endereco": "Bairro Castilhos, Ondjiva"},
-    "angomarte": {"lat": -17.0675, "lon": 15.7180, "nome": "AngoMarte", "endereco": "Bairro Castilhos, Ondjiva"},
-    "governo provincial": {"lat": -17.0665, "lon": 15.7340, "nome": "Governo Provincial do Cunene", "endereco": "Bairro Bangula, Ondjiva"},
-    "tribunal": {"lat": -17.0665, "lon": 15.7345, "nome": "Tribunal Provincial", "endereco": "Bairro Bangula, Ondjiva"},
-    "agt": {"lat": -17.0670, "lon": 15.7348, "nome": "AGT", "endereco": "Bairro Bangula, Ondjiva"},
-    "aeroporto": {"lat": -17.0422, "lon": 15.7511, "nome": "Aeroporto Provincial 11 de Novembro", "endereco": "Bairro Kaculuvale, Ondjiva"},
-    "mediateca": {"lat": -17.0595, "lon": 15.7450, "nome": "Mediateca Lucas Damba", "endereco": "Bairro Kaculuvale, Ondjiva"},
-    "administração provincial": {"lat": -17.0598, "lon": 15.7445, "nome": "Administração Provincial", "endereco": "Bairro Kaculuvale, Ondjiva"},
-    "hospital provincial ekuma": {"lat": -17.0612, "lon": 15.7425, "nome": "Hospital Provincial Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
-    "hospital central simeone mucunde": {"lat": -17.0721, "lon": 15.7284, "nome": "Hospital Central Simeone Mucunde", "endereco": "Bairro Naipalala, Ondjiva"},
-    "hospital municipal de ondjiva": {"lat": -17.0660, "lon": 15.7350, "nome": "Hospital Municipal de Ondjiva", "endereco": "Bairro Bangula, Ondjiva"},
-    "comando provincial da polícia": {"lat": -17.0662, "lon": 15.7352, "nome": "Comando Provincial da Polícia Nacional", "endereco": "Bairro Bangula, Ondjiva"},
-    "colégio pitágoras": {"lat": -17.0735, "lon": 15.7255, "nome": "Colégio Pitágoras", "endereco": "Bairro Naipalala, Ondjiva"},
-    "praça da lemanha": {"lat": -17.0580, "lon": 15.7430, "nome": "Praça da Lemanha", "endereco": "Bairro Kaculuvale, Ondjiva"},
-    "praça do xomucuio": {"lat": -17.0700, "lon": 15.7300, "nome": "Praça do Xomucuio", "endereco": "Ondjiva"},
+    "angomarte": {"lat": -17.06482, "lon": 15.72898, "nome": "AngoMarte", "endereco": "Bairro Castilhos, Ondjiva"},
+    
+    # ADMINISTRAÇÃO PÚBLICA - BANGULA
+    "governo provincial": {"lat": -17.06658, "lon": 15.72728, "nome": "Governo Provincial do Cunene", "endereco": "Bairro Bangula, Ondjiva"},
+    "tribunal": {"lat": -17.06699, "lon": 15.72536, "nome": "Tribunal Provincial", "endereco": "Bairro Bangula, Ondjiva"},
+    "agt": {"lat": -17.06763, "lon": 15.72551, "nome": "AGT", "endereco": "Bairro Bangula, Ondjiva"},
+    
+    # ADMINISTRAÇÃO PÚBLICA - KACULUVALE
+    "aeroporto": {"lat": -17.04766, "lon": 15.68880, "nome": "Aeroporto Provincial 11 de Novembro", "endereco": "Bairro Kaculuvale, Ondjiva"},
+    "mediateca": {"lat": -17.06604, "lon": 15.70646, "nome": "Mediateca Lucas Damba", "endereco": "Bairro Kaculuvale, Ondjiva"},
+    "administração provincial": {"lat": -17.06510, "lon": 15.70547, "nome": "Administração Provincial", "endereco": "Bairro Kaculuvale, Ondjiva"},
+    
+    # SAÚDE
+    "hospital provincial ekuma": {"lat": -17.03817, "lon": 15.73281, "nome": "Hospital Provincial Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
+    "hospital central simeone mucunde": {"lat": -17.09499, "lon": 15.74985, "nome": "Hospital Central Simeone Mucunde", "endereco": "Bairro Naipalala, Ondjiva"},
+    "hospital municipal de ondjiva": {"lat": -17.06815, "lon": 15.72368, "nome": "Hospital Municipal de Ondjiva", "endereco": "Bairro Bangula, Ondjiva"},
+    
+    # SEGURANÇA
+    "comando provincial da polícia": {"lat": -17.06797, "lon": 15.72263, "nome": "Comando Provincial da Polícia Nacional", "endereco": "Bairro Bangula, Ondjiva"},
+    
+    # ENSINO
+    "colégio pitágoras": {"lat": -17.08893, "lon": 15.74526, "nome": "Colégio Pitágoras", "endereco": "Bairro Naipalala, Ondjiva"},
+    "oulondelo": {"lat": -17.09357, "lon": 15.74791, "nome": "Complexo Escolar Oulondelo", "endereco": "Bairro Naipalala, Ondjiva"},
+    "itas": {"lat": -17.08755, "lon": 15.74177, "nome": "Instituto Técnico de Administração e Serviços (ITAS)", "endereco": "Bairro Naipalala, Ondjiva"},
+    
+    # MERCADOS
+    "praça da lemanha": {"lat": -17.07664, "lon": 15.70469, "nome": "Praça da Lemanha", "endereco": "Bairro Kaculuvale, Ondjiva"},
+    "praça do xomucuio": {"lat": -17.03899, "lon": 15.75077, "nome": "Praça do Xomucuio", "endereco": "Ondjiva"},
+    
+    # NOVOS LOCAIS
+    "centralidade do ekuma": {"lat": -17.04533, "lon": 15.74135, "nome": "Centralidade do Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
+    "jardim provincial": {"lat": -17.06622, "lon": 15.72806, "nome": "Jardim Provincial", "endereco": "Bairro Bangula, Ondjiva"},
 }
 
 # ==========================================
@@ -277,7 +296,7 @@ CHEIAS_ALERTAS = {
     },
     "estacao_chuvosa": {
         "periodo": "Novembro a Fevereiro",
-        "descricao": "Chuvas mais frequentes e intensas, trazendo alívio para a seca do verão. As cheias do Rio Cunene são recorrentes nesta época.",
+        "descricao": "Chuvas mais frequentes e intensas. As cheias do Rio Cunene são recorrentes nesta época.",
         "temperatura": "Média diária entre 20°C e 25°C"
     },
     "areas_risco": [
@@ -296,7 +315,6 @@ CHEIAS_ALERTAS = {
         "Esteja atento às previsões meteorológicas",
         "Siga as instruções da Protecção Civil em caso de cheias",
         "Verifique as previsões antes de planear atividades",
-        "As condições climáticas podem variar de ano para ano",
         "Evite construir em zonas baixas ou próximas de linhas de água",
         "Tenha um plano de evacuação familiar",
         "Guarde documentos importantes em local seguro e elevado",
@@ -332,6 +350,43 @@ MUNICIPIOS_CUNENE = [
 ]
 
 # ==========================================
+# BASE DE DADOS - HISTÓRIA E CULTURA
+# ==========================================
+HISTORIA_CUNENE = """
+🏛️ *História da Província do Cunene*
+
+🗿 *Raízes:* A região é historicamente habitada pelos povos Nyaneka-Humbe e Ovambo (Cuanhama).
+
+👑 *Rei Mandume ya Ndemufayo:* Figura central da resistência anticolonial do povo Cuanhama. Lutou contra a ocupação colonial portuguesa no início do século XX. É um símbolo de coragem e resistência para todo o Cunene.
+
+🐄 *Pastorícia:* A criação de gado bovino é a base da economia tradicional e símbolo de prestígio social.
+
+🍽️ *Gastronomia típica:*
+• Funge - massa de massango ou milho
+• Maiavi - leite azedo
+• Chacota - carne seca
+
+🏛️ *Capital:* Ondjiva, município de Cuanhama.
+
+📜 *Província:* O Cunene é uma das 21 províncias de Angola, situada no extremo SUL do país, fazendo fronteira com a Namíbia.
+"""
+
+CULTURA_CUNENE = """
+🎭 *Cultura do Cunene*
+
+🗣️ *Línguas:* O Cuanhama (dialeto Ovambo) é a língua nacional predominante, além do Português.
+
+👥 *Povos:* Nyaneka-Humbe e Ovambo (Cuanhama).
+
+🐄 *Pastorícia:* Atividade central na cultura local. O gado representa riqueza e status social.
+
+🍽️ *Pratos típicos:*
+• Funge de massango/milho
+• Maiavi (leite azedo)
+• Chacota (carne seca)
+"""
+
+# ==========================================
 # CONTEXTO PARA IA
 # ==========================================
 CONTEXTO_ONDJIVA = """
@@ -339,68 +394,17 @@ Tu és o Bot_Cunene, assistente digital oficial da província do Cunene, Angola.
 
 ## REGRAS DE OURO (OBRIGATÓRIAS):
 1. Se não tiveres a certeza de um dado, diz APENAS: "Não tenho essa informação oficial. Sugiro contactar o Governo Provincial."
-2. NUNCA inventes nomes, números, horários ou factos.
+2. NUNCA inventes nomes, números, horários ou factos históricos.
 3. Usa *apenas um asterisco* para negrito no WhatsApp.
-4. Mantém as respostas com menos de 500 caracteres, a menos que o utente peça explicitamente detalhes completos.
-5. Se a pergunta for vaga, pede esclarecimento educadamente.
-6. NUNCA digas "de acordo com a base de dados", "segundo o prompt", "no contexto fornecido" ou qualquer menção ao teu funcionamento interno.
+4. Mantém as respostas com menos de 500 caracteres.
+5. NUNCA digas "de acordo com a base de dados", "segundo o prompt" ou mencione o teu funcionamento interno.
 
-## DADOS OFICIAIS DE ONDJIVA E CUNENE:
-
-### GEOGRAFIA:
-- Cunene: Província no SUL de Angola. Capital: Ondjiva. Fronteira sul com a Namíbia, norte/noroeste com a Huíla.
-- Angola tem 21 províncias oficiais.
-- Clima: Árido a semi-árido. Estação seca: Março a Outubro (até 30°C). Estação chuvosa: Novembro a Fevereiro (20°C a 25°C).
-- 14 municípios: Cahama, Cuanhama, Curoca, Cuvelai, Namacunde, Ombadja, Chiéde, Nehone, Humbe, Mupa, Naulila, Chitado, Cafima, Chissuata.
-
-### CULTURA LOCAL:
-- Povos: Nyaneka-Humbe e Ovambo.
-- Gastronomia: Funge (massa de massango ou milho), maiavi (leite azedo), chacota (carne seca).
-- Figura histórica: Rei Mandume ya Ndemufayo (resistência anticolonial Cuanhama).
-
-### BAIRROS DE ONDJIVA:
-Naipalala, Kafitu, Onahumba, Pioneiro Zeca, Castilhos, Kaculuvale, Ekuma, Muhongo, Bangula.
-
-### HORÁRIOS PADRÃO:
-- Administração Pública: Segunda a Quinta 08h-15h30 | Sexta 08h-15h.
-- Saúde (consultas externas): Segunda a Sexta 08h-15h. Urgências: 24h.
-- Bancos: Segunda a Sexta 08h-15h.
-- Comércio (Shoprite, AngoMarte): Segunda a Sábado 08h-20h | Domingo 08h-13h30.
-- Escolas: Manhã 07h-12h30 | Tarde 13h-18h05 | Noite 18h-22h30.
-
-### HOSPITAIS:
-- Hospital Provincial Ekuma (Bairro Ekuma)
-- Hospital Central Simeone Mucunde (Bairro Naipalala)
-- Hospital Municipal de Ondjiva (Bairro Bangula)
-
-### ESCOLAS PÚBLICAS:
-- ITSO (Ekuma): Enfermagem, Fisioterapia, Análises Clínicas
-- IMPO (Naipalala): Pedagogia, Mate-Física, Ensino Primário, EMC, Língua Portuguesa, Bio-Química
-- ITAS (Naipalala): Finanças, Contabilidade, Gestão, RH, Secretariado
-- Oulondelo (Naipalala): Ciências Físicas/Biológicas, Económicas/Jurídicas
-- Eiffel (Naipalala): Ciências Físicas e Biológicas
-- CESMO (Kaculuvale): Ciências Físicas/Biológicas, Económicas/Jurídicas
-
-### COLÉGIOS PRIVADOS:
-- Pitágoras (Naipalala): Farmácia, Informática, Eletricidade, Enfermagem
-- Ednas (Kaculuvale): Ciências Físicas/Biológicas, Económicas/Jurídicas
-- Popiene (Kaculuvale): Só ensino primário
-- Arcanjo (Naipalala): Enfermagem, Análises Clínicas
-- Marc Leandres (Kaculuvale): Só primário e 1º ciclo
-- Bulet Salú 1 (Naipalala) e 2 (Zeca): Ciências Humanas, Eletricidade
-- Abcunene (Caxila 3): Enfermagem, Análises Clínicas, Informática
-
-### MERCADOS:
-- Praça da Lemanha (Bairro Kaculuvale)
-- Praça do Xomucuio
-- Preços: Variam. Para preços exatos, visitar a praça.
-
-### EMERGÊNCIAS:
-- Polícia: 113
-- Bombeiros: 115
-
-### GOVERNADORA:
-- Gerdina Didalelwa
+## DADOS OFICIAIS:
+- Cunene: Província no SUL de Angola. Capital: Ondjiva.
+- Clima: Árido a semi-árido. Estação seca: Março a Outubro. Estação chuvosa: Novembro a Fevereiro.
+- 14 municípios. Governadora: Gerdina Didalelwa.
+- Hospitais: Hospital Provincial Ekuma (Ekuma), Hospital Central Simeone Mucunde (Naipalala), Hospital Municipal de Ondjiva (Bangula).
+- Emergências: Polícia 113, Bombeiros 115.
 """
 
 # ==========================================
@@ -514,9 +518,42 @@ threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
 # HANDLERS
 # ==========================================
 
+# --- CUANHAMA ---
+def handler_cuanhama(texto_baixo):
+    """Responde a saudações e frases básicas em Cuanhama"""
+    
+    if texto_baixo in ["wa aluka", "wa aluka po", "aluka"]:
+        agora = datetime.utcnow() + timedelta(hours=1)
+        hora = agora.hour
+        if 5 <= hora < 12:
+            return "Wa aluka! ☀️ *Bot Cunene* ove li po. (Bom dia! Bot Cunene está aqui. Escreve *menu* para ver as opções.)"
+        elif 12 <= hora < 18:
+            return "Wa aluka! 🌤️ *Bot Cunene* ove li po. (Boa tarde! Bot Cunene está aqui. Escreve *menu* para ver as opções.)"
+        else:
+            return "Wa aluka! 🌙 *Bot Cunene* ove li po. (Boa noite! Bot Cunene está aqui. Escreve *menu* para ver as opções.)"
+    
+    if "ame ove" in texto_baixo or "ou li tutu" in texto_baixo:
+        return "Ondei! 😊 *Tangi* (Estou bem! Obrigado. Escreve *menu* para ver como posso ajudar.)"
+    
+    if texto_baixo in ["tangi", "nda pandula"]:
+        return "Ka li na shilwe! 🙏 (De nada! Escreve *menu* se precisares de algo.)"
+    
+    if texto_baixo in ["eeno", "eyo"]:
+        return "Eeno! 😊 Como posso ajudar? Escreve *menu*."
+    
+    if texto_baixo in ["ahawe", "kawe"]:
+        return "Ahawe, tudo bem! Escreve *menu* se precisares."
+    
+    if texto_baixo in ["ka kala po nawa", "shilwe"]:
+        return "Ka kala po nawa! 👋 (Adeus! Volta sempre.)"
+    
+    return None
+
 # --- CONVERSA CASUAL ---
-def handler_conversa_casual(texto_baixo, telefone_origem):
-    if texto_baixo in ["oi", "olá", "ola", "oie", "hey", "ei", "bom dia", "boa tarde", "boa noite"]:
+def handler_conversa_casual(texto_baixo):
+    """Responde a cumprimentos e conversa fiada em Português"""
+    
+    if texto_baixo in ["oi", "olá", "ola", "oie", "hey", "ei"]:
         agora = datetime.utcnow() + timedelta(hours=1)
         hora = agora.hour
         if 5 <= hora < 12:
@@ -526,6 +563,9 @@ def handler_conversa_casual(texto_baixo, telefone_origem):
         else:
             saudacao = "Boa noite"
         return f"{saudacao}! 👋 Sou o *Bot Cunene*, assistente digital de Ondjiva. Como posso ajudar? Escreve *menu* para veres as opções."
+    
+    if texto_baixo in ["bom dia", "boa tarde", "boa noite"]:
+        return f"{texto_baixo.capitalize()}! 👋 Sou o *Bot Cunene*. Escreve *menu* para veres as opções disponíveis."
     
     if any(p in texto_baixo for p in ["como estás", "como estas", "tudo bem", "como vai", "tudo bom"]):
         return "Estou bem, obrigado! 😊 Estou sempre pronto para ajudar. Escreve *menu* para veres o que posso fazer por ti."
@@ -538,6 +578,48 @@ def handler_conversa_casual(texto_baixo, telefone_origem):
     
     if texto_baixo in ["não", "nao", "n", "no"]:
         return "Tudo bem! Se mudares de ideias, escreve *menu* para veres como posso ajudar."
+    
+    return None
+
+# --- HISTÓRIA E CULTURA ---
+def handler_historia_cultura(texto_baixo):
+    """Responde a perguntas sobre história e cultura do Cunene"""
+    
+    if any(p in texto_baixo for p in ["história", "historia", "origem", "passado", "antigamente", "colonial"]):
+        if "mandume" in texto_baixo or "rei" in texto_baixo:
+            return (
+                "👑 *Rei Mandume ya Ndemufayo*\n\n"
+                "Grande líder do povo Cuanhama, símbolo da resistência anticolonial no Cunene. "
+                "Lutou contra a ocupação colonial portuguesa no início do século XX.\n\n"
+                "A sua coragem e determinação fazem dele uma figura central na história e identidade do povo do Cunene."
+            )
+        return HISTORIA_CUNENE
+    
+    if any(p in texto_baixo for p in ["cultura", "tradição", "tradicao", "costume", "hábito", "habito"]):
+        return CULTURA_CUNENE
+    
+    if any(p in texto_baixo for p in ["gastronomia", "comida", "prato", "alimentação", "alimentacao", "funge", "maiavi", "chacota"]):
+        return (
+            "🍽️ *Gastronomia do Cunene*\n\n"
+            "• *Funge:* Massa feita de farinha de massango ou milho, base da alimentação local.\n"
+            "• *Maiavi:* Leite azedo tradicional.\n"
+            "• *Chacota:* Carne seca ao sol, muito consumida na região.\n\n"
+            "Estes pratos fazem parte da identidade cultural dos povos Nyaneka-Humbe e Ovambo."
+        )
+    
+    if "mandume" in texto_baixo:
+        return (
+            "👑 *Rei Mandume ya Ndemufayo*\n\n"
+            "Grande líder do povo Cuanhama, símbolo da resistência anticolonial no Cunene. "
+            "Lutou contra a ocupação colonial portuguesa no início do século XX."
+        )
+    
+    if any(p in texto_baixo for p in ["gado", "boi", "pastorícia", "pastoricia", "pastor"]):
+        return (
+            "🐄 *Pastorícia no Cunene*\n\n"
+            "A criação de gado bovino é a base da economia tradicional e um símbolo de prestígio social. "
+            "O gado está profundamente ligado à identidade cultural dos povos Nyaneka-Humbe e Ovambo."
+        )
     
     return None
 
@@ -788,7 +870,7 @@ def handler_mercados(texto_baixo, telefone=None):
             f"Para localização, diga 'onde fica a Praça da Lemanha'.\n"
             f"💰 Para preços, diga 'preços da Lemanha'."
         )
-    if "xomucuio" in texto_baixo:
+    if "xomucuio" in texto_baixo or "xamucuio" in texto_baixo:
         mercado = MERCADOS_ONDJIVA["praça do xomucuio"]
         produtos_str = ", ".join(mercado["produtos"])
         return (
@@ -1010,27 +1092,22 @@ def processar_texto(telefone_origem, user_text):
     texto_baixo = user_text.lower().strip()
     MEMORIA_TIMESTAMPS[telefone_origem] = datetime.utcnow()
 
-    # ==========================================
     # 0. CAPTURAR NÚMERO QUANDO HÁ LISTA ATIVA
-    # ==========================================
     if texto_baixo.isdigit() and telefone_origem in ESTADO_LISTA:
         numero = int(texto_baixo)
         ctx = ESTADO_LISTA[telefone_origem]
-        
         if ctx["tipo"] == "escolas":
             chaves = ctx["dados"]
             if 1 <= numero <= len(chaves):
                 escola = ESCOLAS_ONDJIVA[chaves[numero - 1]]
                 ESTADO_LISTA.pop(telefone_origem)
                 return formatar_resposta_escola(escola, completo=False)
-        
         elif ctx["tipo"] == "hospitais":
             chaves = ctx["dados"]
             if 1 <= numero <= len(chaves):
                 hospital = HOSPITAIS_ONDJIVA[chaves[numero - 1]]
                 ESTADO_LISTA.pop(telefone_origem)
                 return formatar_resposta_hospital(hospital)
-        
         elif ctx["tipo"] == "mercados":
             chaves = ctx["dados"]
             if 1 <= numero <= len(chaves):
@@ -1043,46 +1120,39 @@ def processar_texto(telefone_origem, user_text):
                     f"📦 Produtos: {', '.join(mercado['produtos'])}\n\n"
                     f"💰 Para preços, diga 'preços da {mercado['nome'].lower()}'."
                 )
-        
         ESTADO_LISTA.pop(telefone_origem)
         return "❌ Número inválido. Escreve *menu* para voltar ao início."
 
-    # ==========================================
     # 0.1 RESPOSTAS DIRETAS
-    # ==========================================
     for pergunta, resposta in RESPOSTAS_DIRETAS.items():
         if pergunta in texto_baixo:
             return resposta
 
-    # ==========================================
     # 0.2 EMERGÊNCIA DIRECTA
-    # ==========================================
     if any(p in texto_baixo for p in ["emergencia", "emergência", "socorro"]):
         return "🚨 *Emergência:* Polícia 113 | Bombeiros 115. Se estiveres em perigo, abriga-se em um lugar seguro e ligue para os serviços de emergência!"
 
-    # ==========================================
-    # 0.3 CONVERSA CASUAL
-    # ==========================================
-    resposta_casual = handler_conversa_casual(texto_baixo, telefone_origem)
+    # 0.3 CUANHAMA
+    resposta_cuanhama = handler_cuanhama(texto_baixo)
+    if resposta_cuanhama:
+        return resposta_cuanhama
+
+    # 0.4 CONVERSA CASUAL
+    resposta_casual = handler_conversa_casual(texto_baixo)
     if resposta_casual:
         return resposta_casual
 
-    # ==========================================
-    # 1. NAVEGAÇÃO (MENU) - PRIORIDADE ALTA
-    # ==========================================
+    # 1. NAVEGAÇÃO (MENU)
     if telefone_origem in ESTADO_NAVEGACAO:
         estado = ESTADO_NAVEGACAO[telefone_origem]
         nivel = estado.get("nivel", "menu")
 
-        # --- MENU PRINCIPAL ---
         if nivel == "menu":
             if texto_baixo in ["1", "2", "3", "4", "5", "6"]:
                 opcao = texto_baixo
                 if opcao == "1":
                     ESTADO_NAVEGACAO.pop(telefone_origem)
-                    ESTADO_REPORTAGEM[telefone_origem] = {
-                        'passo': 1, 'problema': '', 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()
-                    }
+                    ESTADO_REPORTAGEM[telefone_origem] = {'passo': 1, 'problema': '', 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()}
                     return "📝 *Reportagem de Problema*\n\nDescreve o problema que queres reportar.\nExemplos:\n• Falta de água no Kafitu\n• Medicamentos em falta no hospital\n• Estrada esburacada em Naipalala"
                 elif opcao == "2":
                     ESTADO_NAVEGACAO[telefone_origem]["nivel"] = "localizacao_pedido"
@@ -1131,13 +1201,20 @@ def processar_texto(telefone_origem, user_text):
             else:
                 ESTADO_NAVEGACAO.pop(telefone_origem)
 
-        # --- SUBMENU INFORMAÇÕES ---
         elif nivel == "info_submenu":
             opcao = texto_baixo.upper().strip()
             if opcao in ["A", "B", "C", "D", "E", "F"]:
                 ESTADO_NAVEGACAO.pop(telefone_origem)
                 if opcao == "A":
-                    return "Horário: Seg‑Qui 08h‑15h30, Sex 08h‑15h. Repartições no Bangula, Kaculuvale, Castilhos, Naipalala. Precisas de algo específico?"
+                    return (
+                        "🏛️ *Administração Pública*\n\n"
+                        "🕐 Horário: Seg‑Qui 08h‑15h30 | Sex 08h‑15h\n\n"
+                        "📍 *Bangula:* Governo Provincial, Tribunal, AGT\n"
+                        "📍 *Kaculuvale:* Administração Provincial, Mediateca, Aeroporto\n"
+                        "📍 *Castilhos:* Comando Municipal da Polícia, SIC\n"
+                        "📍 *Naipalala:* Viação e Trânsito, Bombeiros, Polícia Fiscal\n\n"
+                        "Diga o nome da repartição para mais detalhes."
+                    )
                 elif opcao == "B":
                     chaves = list(HOSPITAIS_ONDJIVA.keys())
                     ESTADO_LISTA[telefone_origem] = {"tipo": "hospitais", "dados": chaves}
@@ -1162,18 +1239,13 @@ def processar_texto(telefone_origem, user_text):
             else:
                 ESTADO_NAVEGACAO.pop(telefone_origem)
 
-        # --- LOCALIZAÇÃO (OPÇÃO 2) ---
         elif nivel == "localizacao_pedido":
             local_desejado = texto_baixo
             ESTADO_NAVEGACAO.pop(telefone_origem)
-            
-            # 1. Pesquisa nas coordenadas
             for chave, dados in COORDENADAS_ONDJIVA.items():
                 if chave in local_desejado:
                     enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
                     return f"📍 *{dados['nome']}*\n{dados['endereco']}\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-            
-            # 2. Pesquisa por alcunhas de hospitais
             for alcunha, chave_oficial in ALCUNHAS_HOSPITAIS.items():
                 if alcunha in local_desejado:
                     dados = HOSPITAIS_ONDJIVA[chave_oficial]
@@ -1181,28 +1253,14 @@ def processar_texto(telefone_origem, user_text):
                         if chave_oficial in ck:
                             enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
                             return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-            
-            # 3. Pesquisa direta nos hospitais
-            for chave, dados in HOSPITAIS_ONDJIVA.items():
-                if chave in local_desejado or dados["nome"].lower() in local_desejado:
-                    for ck, cv in COORDENADAS_ONDJIVA.items():
-                        if chave in ck:
-                            enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
-                            return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-            
             return "❌ Não encontrei esse local. Tenta novamente com o nome correcto (ex: Shoprite, Hospital Ekuma, Mediateca)."
 
-    # ==========================================
-    # 2. PESQUISA DE LOCALIZAÇÃO ("onde fica", "localização de")
-    # ==========================================
+    # 2. PESQUISA DE LOCALIZAÇÃO
     if any(p in texto_baixo for p in ["onde fica", "localização de", "localizacao de", "localização do", "localizacao do"]):
-        # 1. Coordenadas diretas
         for chave, dados in COORDENADAS_ONDJIVA.items():
             if chave in texto_baixo:
                 enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
                 return f"📍 *{dados['nome']}*\n{dados['endereco']}\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-        
-        # 2. Pesquisa por alcunhas de hospitais
         for alcunha, chave_oficial in ALCUNHAS_HOSPITAIS.items():
             if alcunha in texto_baixo:
                 dados = HOSPITAIS_ONDJIVA[chave_oficial]
@@ -1210,51 +1268,26 @@ def processar_texto(telefone_origem, user_text):
                     if chave_oficial in ck:
                         enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
                         return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-        
-        # 3. Pesquisa direta nos hospitais
-        for chave, dados in HOSPITAIS_ONDJIVA.items():
-            if chave in texto_baixo or dados["nome"].lower() in texto_baixo:
-                for ck, cv in COORDENADAS_ONDJIVA.items():
-                    if chave in ck:
-                        enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
-                        return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-        
-        # 4. Escolas
-        for chave, dados in ESCOLAS_ONDJIVA.items():
-            if chave in texto_baixo or dados["nome"].lower() in texto_baixo:
-                for ck, cv in COORDENADAS_ONDJIVA.items():
-                    if chave in ck or dados["nome"].lower() in cv["nome"].lower():
-                        enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
-                        return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-        
-        # 5. Mercados
-        for chave, dados in MERCADOS_ONDJIVA.items():
-            if chave in texto_baixo:
-                for ck, cv in COORDENADAS_ONDJIVA.items():
-                    if chave in ck:
-                        enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
-                        return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
-        
         return "❌ Não encontrei esse local. Tenta com o nome completo (ex: Hospital Provincial Ekuma, Shoprite Ondjiva)."
 
-    # ==========================================
-    # 3. ROTA ("como chegar", "rota", "caminho", "trajeto")
-    # ==========================================
+    # 3. ROTA
     if any(p in texto_baixo for p in ["como chegar", "rota", "caminho", "trajeto"]):
         for chave, dados in COORDENADAS_ONDJIVA.items():
             if chave in texto_baixo:
                 ESTADO_ROTA[telefone_origem] = dados
                 return f"🗺️ Queres ir para *{dados['nome']}*.\n\n📍 Partilha a tua *Localização Atual* aqui no WhatsApp (clica no 📎 > Localização) para eu gerar a tua rota."
 
-    # ==========================================
     # 4. HANDLERS BLINDADOS
-    # ==========================================
-    
+    if any(p in texto_baixo for p in ["história", "historia", "cultura", "tradição", "tradicao", "gastronomia", "comida", "prato", "mandume", "gado", "pastor", "funge", "maiavi", "chacota", "origem", "colonial"]):
+        resposta = handler_historia_cultura(texto_baixo)
+        if resposta:
+            return resposta
+
     if "hospital" in texto_baixo or "ekuma" in texto_baixo or "simeone" in texto_baixo or "mucunde" in texto_baixo:
         resposta = handler_hospitais(texto_baixo, telefone_origem)
         if resposta:
             return resposta
-    
+
     if any(p in texto_baixo for p in ["escola", "colégio", "colegio", "liceu", "instituto", "curso", "estudar", "aula", "ensino"]):
         resposta = handler_escolas(texto_baixo, telefone_origem)
         if resposta:
@@ -1262,35 +1295,33 @@ def processar_texto(telefone_origem, user_text):
         resposta = handler_faculdades(texto_baixo)
         if resposta:
             return resposta
-    
+
     if any(p in texto_baixo for p in ["governo", "tribunal", "agt", "administração", "mediateca", "aeroporto", "comando", "sic", "viação", "bombeiros", "fiscal", "guarda", "fronteira"]):
         resposta = handler_administracao(texto_baixo)
         if resposta:
             return resposta
-    
+
     if any(p in texto_baixo for p in ["shoprite", "angomarte", "comércio", "comercio", "supermercado"]):
         resposta = handler_comercio(texto_baixo)
         if resposta:
             return resposta
-    
-    if any(p in texto_baixo for p in ["mercado", "praça", "praca", "feira", "lemanha", "xomucuio", "preço", "preco", "preços", "precos", "fuba", "milho"]):
+
+    if any(p in texto_baixo for p in ["mercado", "praça", "praca", "feira", "lemanha", "xomucuio", "xamucuio", "preço", "preco", "preços", "precos", "fuba", "milho"]):
         resposta = handler_mercados(texto_baixo, telefone_origem)
         if resposta:
             return resposta
-    
+
     if any(p in texto_baixo for p in ["cheia", "cheias", "inundação", "inundacao", "alagamento", "alerta", "chuva", "chuvosa", "temporal", "tempestade", "meteorologia", "clima", "seca", "seco"]):
         resposta = handler_cheias_alertas(texto_baixo)
         if resposta:
             return resposta
-    
+
     if any(p in texto_baixo for p in ["município", "municipio", "municípios", "municipios", "comuna", "comunas", "cahama", "cuanhama", "curoca", "cuvelai", "namacunde", "ombadja", "chiéde", "nehone", "humbe", "mupa", "naulila", "chitado", "cafima", "chissuata"]):
         resposta = handler_municipios(texto_baixo)
         if resposta:
             return resposta
 
-    # ==========================================
     # 5. ACTIVAÇÃO DO MENU
-    # ==========================================
     if texto_baixo in ["menu", "ajuda", "help", "guia", "opções", "opcoes", "início", "inicio"] or "como usar" in texto_baixo:
         ESTADO_NAVEGACAO[telefone_origem] = {"nivel": "menu"}
         ESTADO_LISTA.pop(telefone_origem, None)
@@ -1307,22 +1338,15 @@ def processar_texto(telefone_origem, user_text):
             "Ou faz uma pergunta directa. ✨"
         )
 
-    # ==========================================
     # 6. REPORTAGEM
-    # ==========================================
     if texto_baixo.startswith("reportagem") or any(p in texto_baixo for p in ["quero reportar", "quero fazer uma reportagem", "reportar um problema", "fazer uma reportagem", "reportar problema"]):
         if not texto_baixo.startswith("reportagem"):
-            ESTADO_REPORTAGEM[telefone_origem] = {
-                'passo': 1, 'problema': '', 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()
-            }
+            ESTADO_REPORTAGEM[telefone_origem] = {'passo': 1, 'problema': '', 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()}
             return "📝 *Reportagem de Problema*\n\nDescreve o problema que queres reportar.\nExemplos:\n• Falta de água no Kafitu\n• Medicamentos em falta no hospital\n• Estrada esburacada em Naipalala"
-        
         problema = user_text.strip()[10:].strip()
         if not problema:
             return "Escreve *Reportagem* seguido do problema (ex: Reportagem falta de água no Kafitu)."
-        ESTADO_REPORTAGEM[telefone_origem] = {
-            'passo': 1, 'problema': problema, 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()
-        }
+        ESTADO_REPORTAGEM[telefone_origem] = {'passo': 1, 'problema': problema, 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()}
         return f"📝 *Ocorrência registada:* {problema}\nHá quanto tempo estão nessa situação?"
 
     if telefone_origem in ESTADO_REPORTAGEM:
@@ -1347,9 +1371,7 @@ def processar_texto(telefone_origem, user_text):
                 "Obrigado por ajudares Ondjiva! Escreve *menu* para outras opções."
             )
 
-    # ==========================================
     # 7. IA (FALLBACK)
-    # ==========================================
     try:
         if not client:
             return "Serviço temporariamente indisponível. Tenta mais tarde."
@@ -1383,7 +1405,7 @@ def processar_texto(telefone_origem, user_text):
         if is_inicio_conversa:
             regra_relogio += f"DIRETIVA STRICT: Começa a tua resposta OBRIGATORIAMENTE com '{saudacao}, '."
         else:
-            regra_relogio += "DIRETIVA STRICT: É ESTRITAMENTE PROIBIDO usar saudações (Bom dia/Boa tarde/Boa noite) nesta resposta. Vai direto ao assunto e responde à pergunta."
+            regra_relogio += "DIRETIVA STRICT: É ESTRITAMENTE PROIBIDO usar saudações (Bom dia/Boa tarde/Boa noite) nesta resposta. Vai direto ao assunto."
 
         contexto = CONTEXTO_ONDJIVA + regra_relogio
         mensagens_ia = [{"role": "system", "content": contexto}] + MEMORIA_CONVERSAS[telefone_origem]

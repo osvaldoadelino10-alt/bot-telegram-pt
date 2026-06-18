@@ -32,48 +32,37 @@ ESTADO_ROTA = {}
 ESTADO_LISTA = {}
 ULTIMA_MENSAGEM_BOT = {}
 
+# Controlo de mensagens duplicadas e cold start
+MENSAGENS_PROCESSADAS = {}
+ULTIMA_ATIVIDADE = datetime.utcnow()
+
 # ==========================================
 # COORDENADAS DE ONDJIVA (VERIFICADAS)
 # ==========================================
 COORDENADAS_ONDJIVA = {
-    # COMÉRCIO
     "shoprite": {"lat": -17.06568, "lon": 15.72992, "nome": "Shoprite Ondjiva", "endereco": "Bairro Castilhos, Ondjiva"},
     "angomarte": {"lat": -17.06482, "lon": 15.72898, "nome": "AngoMarte", "endereco": "Bairro Castilhos, Ondjiva"},
-    
-    # ADMINISTRAÇÃO PÚBLICA - BANGULA
     "governo provincial": {"lat": -17.06658, "lon": 15.72728, "nome": "Governo Provincial do Cunene", "endereco": "Bairro Bangula, Ondjiva"},
     "tribunal": {"lat": -17.06699, "lon": 15.72536, "nome": "Tribunal Provincial", "endereco": "Bairro Bangula, Ondjiva"},
     "agt": {"lat": -17.06763, "lon": 15.72551, "nome": "AGT", "endereco": "Bairro Bangula, Ondjiva"},
-    
-    # ADMINISTRAÇÃO PÚBLICA - KACULUVALE
     "aeroporto": {"lat": -17.04766, "lon": 15.68880, "nome": "Aeroporto Provincial 11 de Novembro", "endereco": "Bairro Kaculuvale, Ondjiva"},
     "mediateca": {"lat": -17.06604, "lon": 15.70646, "nome": "Mediateca Lucas Damba", "endereco": "Bairro Kaculuvale, Ondjiva"},
     "administração provincial": {"lat": -17.06510, "lon": 15.70547, "nome": "Administração Provincial", "endereco": "Bairro Kaculuvale, Ondjiva"},
-    
-    # SAÚDE
     "hospital provincial ekuma": {"lat": -17.03817, "lon": 15.73281, "nome": "Hospital Provincial Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
     "hospital central simeone mucunde": {"lat": -17.09499, "lon": 15.74985, "nome": "Hospital Central Simeone Mucunde", "endereco": "Bairro Naipalala, Ondjiva"},
     "hospital municipal de ondjiva": {"lat": -17.06815, "lon": 15.72368, "nome": "Hospital Municipal de Ondjiva", "endereco": "Bairro Bangula, Ondjiva"},
-    
-    # SEGURANÇA
     "comando provincial da polícia": {"lat": -17.06797, "lon": 15.72263, "nome": "Comando Provincial da Polícia Nacional", "endereco": "Bairro Bangula, Ondjiva"},
-    
-    # ENSINO
     "colégio pitágoras": {"lat": -17.08893, "lon": 15.74526, "nome": "Colégio Pitágoras", "endereco": "Bairro Naipalala, Ondjiva"},
     "oulondelo": {"lat": -17.09357, "lon": 15.74791, "nome": "Complexo Escolar Oulondelo", "endereco": "Bairro Naipalala, Ondjiva"},
     "itas": {"lat": -17.08755, "lon": 15.74177, "nome": "Instituto Técnico de Administração e Serviços (ITAS)", "endereco": "Bairro Naipalala, Ondjiva"},
-    
-    # MERCADOS
     "praça da lemanha": {"lat": -17.07664, "lon": 15.70469, "nome": "Praça da Lemanha", "endereco": "Bairro Kaculuvale, Ondjiva"},
     "praça do xomucuio": {"lat": -17.03899, "lon": 15.75077, "nome": "Praça do Xomucuio", "endereco": "Ondjiva"},
-    
-    # NOVOS LOCAIS
     "centralidade do ekuma": {"lat": -17.04533, "lon": 15.74135, "nome": "Centralidade do Ekuma", "endereco": "Bairro Ekuma, Ondjiva"},
     "jardim provincial": {"lat": -17.06622, "lon": 15.72806, "nome": "Jardim Provincial", "endereco": "Bairro Bangula, Ondjiva"},
 }
 
 # ==========================================
-# BASE DE DADOS - HOSPITAIS (VERIFICADO)
+# BASE DE DADOS - HOSPITAIS
 # ==========================================
 HOSPITAIS_ONDJIVA = {
     "hospital provincial ekuma": {
@@ -113,7 +102,7 @@ ALCUNHAS_HOSPITAIS = {
 }
 
 # ==========================================
-# BASE DE DADOS - ESCOLAS PÚBLICAS (VERIFICADO)
+# BASE DE DADOS - ESCOLAS PÚBLICAS
 # ==========================================
 ESCOLAS_PUBLICAS = {
     "instituto de saúde de ondjiva": {
@@ -167,7 +156,7 @@ ESCOLAS_PUBLICAS = {
 }
 
 # ==========================================
-# BASE DE DADOS - ESCOLAS PRIVADAS (VERIFICADO)
+# BASE DE DADOS - ESCOLAS PRIVADAS
 # ==========================================
 ESCOLAS_PRIVADAS = {
     "colégio pitágoras": {
@@ -266,7 +255,7 @@ ALCUNHAS_ESCOLAS = {
 }
 
 # ==========================================
-# BASE DE DADOS - MERCADOS (VERIFICADO)
+# BASE DE DADOS - MERCADOS
 # ==========================================
 MERCADOS_ONDJIVA = {
     "praça da lemanha": {
@@ -286,7 +275,7 @@ MERCADOS_ONDJIVA = {
 }
 
 # ==========================================
-# BASE DE DADOS - CHEIAS E ALERTAS (VERIFICADO)
+# BASE DE DADOS - CHEIAS E ALERTAS
 # ==========================================
 CHEIAS_ALERTAS = {
     "estacao_seca": {
@@ -330,7 +319,7 @@ CLIMA_CUNENE = {
 }
 
 # ==========================================
-# BASE DE DADOS - MUNICÍPIOS DO CUNENE (VERIFICADO)
+# BASE DE DADOS - MUNICÍPIOS DO CUNENE
 # ==========================================
 MUNICIPIOS_CUNENE = [
     {"numero": 1, "nome": "Cahama", "comunas": ["Cahama", "Otchinjau"], "administrador": "José Mário Katiti"},
@@ -350,7 +339,7 @@ MUNICIPIOS_CUNENE = [
 ]
 
 # ==========================================
-# BASE DE DADOS - HISTÓRIA E CULTURA (VERIFICADO)
+# BASE DE DADOS - HISTÓRIA E CULTURA
 # ==========================================
 HISTORIA_CUNENE = """
 🏛️ *História da Província do Cunene*
@@ -387,7 +376,7 @@ CULTURA_CUNENE = """
 """
 
 # ==========================================
-# CONTEXTO PARA IA (RESTRITO)
+# CONTEXTO PARA IA
 # ==========================================
 CONTEXTO_ONDJIVA = """
 Tu és o Bot_Cunene, assistente digital oficial da província do Cunene, Angola. Falas Português de Angola, de forma calorosa e direta.
@@ -501,6 +490,7 @@ def guardar_reportagem_bd(telefone, relato):
 # LIMPEZA DE MEMÓRIA
 # ==========================================
 def limpar_memoria_antiga():
+    global MENSAGENS_PROCESSADAS
     while True:
         time.sleep(600)
         agora = datetime.utcnow()
@@ -513,6 +503,8 @@ def limpar_memoria_antiga():
             ESTADO_ROTA.pop(tel, None)
             ESTADO_LISTA.pop(tel, None)
             ULTIMA_MENSAGEM_BOT.pop(tel, None)
+        if len(MENSAGENS_PROCESSADAS) > 500:
+            MENSAGENS_PROCESSADAS.clear()
 
 threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
 
@@ -520,7 +512,6 @@ threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
 # HANDLERS
 # ==========================================
 
-# --- CUANHAMA ---
 def handler_cuanhama(texto_baixo):
     if texto_baixo in ["wa aluka", "wa aluka po", "aluka"]:
         agora = datetime.utcnow() + timedelta(hours=1)
@@ -543,7 +534,6 @@ def handler_cuanhama(texto_baixo):
         return "Ka kala po nawa! 👋 (Adeus! Volta sempre.)"
     return None
 
-# --- CONVERSA CASUAL ---
 def handler_conversa_casual(texto_baixo):
     if texto_baixo in ["oi", "olá", "ola", "oie", "hey", "ei"]:
         agora = datetime.utcnow() + timedelta(hours=1)
@@ -567,7 +557,6 @@ def handler_conversa_casual(texto_baixo):
         return "Tudo bem! Se mudares de ideias, escreve *menu*."
     return None
 
-# --- HISTÓRIA E CULTURA ---
 def handler_historia_cultura(texto_baixo):
     if any(p in texto_baixo for p in ["história", "historia", "origem", "passado", "antigamente", "colonial"]):
         if "mandume" in texto_baixo or "rei" in texto_baixo:
@@ -583,7 +572,6 @@ def handler_historia_cultura(texto_baixo):
         return "🐄 *Pastorícia no Cunene*\n\nA criação de gado bovino é a base da economia tradicional e símbolo de prestígio social dos povos Nyaneka-Humbe e Ovambo."
     return None
 
-# --- HOSPITAIS ---
 def pesquisar_hospital(texto_usuario):
     texto = texto_usuario.lower().strip()
     for chave, dados in HOSPITAIS_ONDJIVA.items():
@@ -643,7 +631,6 @@ def handler_hospitais(texto_baixo, telefone=None):
         return listar_todos_hospitais()
     return None
 
-# --- ESCOLAS ---
 def pesquisar_escola(texto_usuario):
     texto = texto_usuario.lower().strip()
     for chave, dados in ESCOLAS_ONDJIVA.items():
@@ -771,7 +758,6 @@ def handler_faculdades(texto_baixo):
         return "🏛️ *Faculdades em Ondjiva:*\n• Faculdade Rei Luhuna (Bairro Muhongo)\n• Faculdade Mandume (Bairro Naipalala)\n\nPara mais detalhes sobre cursos, contacte diretamente as instituições."
     return None
 
-# --- MERCADOS ---
 def handler_mercados(texto_baixo, telefone=None):
     if any(p in texto_baixo for p in ["preço", "preco", "preços", "precos", "custa", "custo", "valor", "quanto"]):
         mercado_encontrado = None
@@ -800,7 +786,6 @@ def handler_mercados(texto_baixo, telefone=None):
         return "🛒 *Mercados e Praças de Ondjiva*\n\n1. *Praça da Lemanha*\n   📍 Bairro Kaculuvale\n\n2. *Praça do Xomucuio*\n   📍 Ondjiva\n\n📦 Produtos: Fuba, milho, arroz, massa, frango, peixe, tomate, cebola e muito mais.\n💰 Para preços atualizados, visite a praça.\n\nResponda com o número (1 ou 2) para detalhes."
     return None
 
-# --- CHEIAS E ALERTAS ---
 def handler_cheias_alertas(texto_baixo):
     if any(p in texto_baixo for p in ["clima", "climático", "climatico"]):
         return f"🌍 *Clima do Cunene*\n\n📋 Tipo: {CLIMA_CUNENE['tipo']}\n📅 Estações: {CLIMA_CUNENE['estacoes']}\n\n☀️ *Estação seca:* Março a Outubro (até 30°C)\n🌧️ *Estação chuvosa:* Novembro a Fevereiro (20°C a 25°C)\n\n⚠️ As cheias do Rio Cunene são recorrentes na estação chuvosa."
@@ -827,9 +812,7 @@ def handler_cheias_alertas(texto_baixo):
         return f"⚠️ *Cheias e Clima — Cunene*\n\n🌍 Clima: {CLIMA_CUNENE['tipo']}\n☀️ Seca: Março a Outubro (até 30°C)\n🌧️ Chuvosa: Novembro a Fevereiro (20°C a 25°C)\n\n⚠️ Cheias do Rio Cunene recorrentes na estação chuvosa.\n🆘 Emergência: Bombeiros 115 | Polícia 113"
     return None
 
-# --- MUNICÍPIOS ---
 def handler_municipios(texto_baixo):
-    # Capturar qualquer pergunta sobre municípios
     if "lista completa" in texto_baixo or "completo" in texto_baixo:
         resposta = "🏛️ *14 Municípios da Província do Cunene*\n\n"
         for m in MUNICIPIOS_CUNENE:
@@ -837,13 +820,9 @@ def handler_municipios(texto_baixo):
             admin_str = m["administrador"] if m["administrador"] else "Sem administrador"
             resposta += f"{m['numero']}. *{m['nome']}*\n   📍 Comunas: {comunas_str}\n   👤 Administrador: {admin_str}\n\n"
         return resposta
-    
-    # Capturar "quais são os municípios", "municípios do cunene", etc.
     if any(p in texto_baixo for p in ["quais", "quantos", "nome", "municípios do cunene", "municipios do cunene"]):
         nomes = [m["nome"] for m in MUNICIPIOS_CUNENE]
         return f"A província do Cunene tem *14 municípios*:\n\n{', '.join(nomes)}.\n\nSe quiseres a lista completa com comunas e administradores, escreve: *lista completa dos municípios*."
-    
-    # Capturar "administrador" ou "administradores"
     if "administrador" in texto_baixo:
         if "quem" in texto_baixo or "qual" in texto_baixo:
             for m in MUNICIPIOS_CUNENE:
@@ -858,15 +837,11 @@ def handler_municipios(texto_baixo):
                 resposta += f"• *{m['nome']}*: {m['administrador']}\n"
         resposta += "\nOs restantes municípios ainda não têm administrador nomeado."
         return resposta
-    
-    # Pesquisar município específico
     for m in MUNICIPIOS_CUNENE:
         if m["nome"].lower() in texto_baixo:
             comunas_str = ", ".join(m["comunas"]) if m["comunas"] else "Sem comunas"
             admin_str = m["administrador"] if m["administrador"] else "Sem administrador nomeado"
             return f"🏛️ *Município de {m['nome']}*\n🔢 Nº {m['numero']} de 14\n📍 Comunas: {comunas_str}\n👤 Administrador: {admin_str}"
-    
-    # Pesquisar sem acentos
     for m in MUNICIPIOS_CUNENE:
         nome_sem_acento = m["nome"].lower().replace("é", "e").replace("ô", "o").replace("ã", "a").replace("í", "i")
         texto_sem_acento = texto_baixo.replace("é", "e").replace("ô", "o").replace("ã", "a").replace("í", "i")
@@ -874,10 +849,8 @@ def handler_municipios(texto_baixo):
             comunas_str = ", ".join(m["comunas"]) if m["comunas"] else "Sem comunas"
             admin_str = m["administrador"] if m["administrador"] else "Sem administrador nomeado"
             return f"🏛️ *Município de {m['nome']}*\n🔢 Nº {m['numero']} de 14\n📍 Comunas: {comunas_str}\n👤 Administrador: {admin_str}"
-    
     return None
 
-# --- ADMINISTRAÇÃO PÚBLICA ---
 def handler_administracao(texto_baixo):
     if any(p in texto_baixo for p in ["governo provincial", "tribunal", "agt", "palácio"]):
         locais = {"governo provincial": "Governo Provincial do Cunene", "tribunal": "Tribunal Provincial", "agt": "AGT", "palácio": "Palácio do Governo"}
@@ -897,7 +870,6 @@ def handler_administracao(texto_baixo):
         return "🛡️ *Guarda Fronteira*\n📍 Bairro Kafitu 1"
     return None
 
-# --- COMÉRCIO ---
 def handler_comercio(texto_baixo):
     if "shoprite" in texto_baixo:
         if "horário" in texto_baixo or "horario" in texto_baixo or "hora" in texto_baixo or "aberto" in texto_baixo:
@@ -911,7 +883,6 @@ def handler_comercio(texto_baixo):
         return "🛒 *Comércio em Ondjiva*\n\n• *Shoprite* - Bairro Castilhos\n• *AngoMarte* - Bairro Castilhos\n\n🕐 Segunda a Sábado 08h-20h | Domingo 08h-13h30"
     return None
 
-# --- RESPOSTAS DIRETAS ---
 RESPOSTAS_DIRETAS = {
     "governadora": "A Governadora da Província do Cunene é *Gerdina Didalelwa*.",
     "quem é a governadora": "A Governadora da Província do Cunene é *Gerdina Didalelwa*.",
@@ -928,7 +899,6 @@ def processar_texto(telefone_origem, user_text):
     texto_baixo = user_text.lower().strip()
     MEMORIA_TIMESTAMPS[telefone_origem] = datetime.utcnow()
 
-    # 0. CAPTURAR NÚMERO QUANDO HÁ LISTA ATIVA
     if texto_baixo.isdigit() and telefone_origem in ESTADO_LISTA:
         numero = int(texto_baixo)
         ctx = ESTADO_LISTA[telefone_origem]
@@ -953,26 +923,21 @@ def processar_texto(telefone_origem, user_text):
         ESTADO_LISTA.pop(telefone_origem)
         return "❌ Número inválido. Escreve *menu* para voltar ao início."
 
-    # 0.1 RESPOSTAS DIRETAS
     for pergunta, resposta in RESPOSTAS_DIRETAS.items():
         if pergunta in texto_baixo:
             return resposta
 
-    # 0.2 EMERGÊNCIA DIRECTA
     if any(p in texto_baixo for p in ["emergencia", "emergência", "socorro"]):
         return "🚨 *Emergência:* Polícia 113 | Bombeiros 115. Procure um local seguro e ligue para os serviços de emergência!"
 
-    # 0.3 CUANHAMA
     resposta_cuanhama = handler_cuanhama(texto_baixo)
     if resposta_cuanhama:
         return resposta_cuanhama
 
-    # 0.4 CONVERSA CASUAL
     resposta_casual = handler_conversa_casual(texto_baixo)
     if resposta_casual:
         return resposta_casual
 
-    # 1. NAVEGAÇÃO (MENU)
     if telefone_origem in ESTADO_NAVEGACAO:
         estado = ESTADO_NAVEGACAO[telefone_origem]
         nivel = estado.get("nivel", "menu")
@@ -1042,7 +1007,6 @@ def processar_texto(telefone_origem, user_text):
                             return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
             return "❌ Não encontrei esse local. Tenta novamente com o nome correcto (ex: Shoprite, Hospital Ekuma, Mediateca)."
 
-    # 2. PESQUISA DE LOCALIZAÇÃO
     if any(p in texto_baixo for p in ["onde fica", "localização de", "localizacao de", "localização do", "localizacao do"]):
         for chave, dados in COORDENADAS_ONDJIVA.items():
             if chave in texto_baixo:
@@ -1057,14 +1021,12 @@ def processar_texto(telefone_origem, user_text):
                         return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva\n\n💡 Clica no Pin acima e depois em *'Como chegar'* para veres a rota."
         return "❌ Não encontrei esse local. Tenta com o nome completo (ex: Hospital Provincial Ekuma, Shoprite Ondjiva)."
 
-    # 3. ROTA
     if any(p in texto_baixo for p in ["como chegar", "rota", "caminho", "trajeto"]):
         for chave, dados in COORDENADAS_ONDJIVA.items():
             if chave in texto_baixo:
                 ESTADO_ROTA[telefone_origem] = dados
                 return f"🗺️ Queres ir para *{dados['nome']}*.\n\n📍 Partilha a tua *Localização Atual* aqui no WhatsApp (clica no 📎 > Localização) para eu gerar a tua rota."
 
-    # 4. HANDLERS BLINDADOS
     if any(p in texto_baixo for p in ["história", "historia", "cultura", "tradição", "tradicao", "gastronomia", "comida", "prato", "mandume", "gado", "pastor", "funge", "maiavi", "chacota", "origem", "colonial"]):
         resposta = handler_historia_cultura(texto_baixo)
         if resposta:
@@ -1103,25 +1065,22 @@ def processar_texto(telefone_origem, user_text):
         if resposta:
             return resposta
 
-    # MUNICÍPIOS - CAPTURA AMPLA (CORRIGIDO)
     palavras_municipios = ["município", "municipio", "municípios", "municipios", "comuna", "comunas",
                            "cahama", "cuanhama", "curoca", "cuvelai", "namacunde", "ombadja",
                            "chiéde", "nehone", "humbe", "mupa", "naulila", "chitado", "cafima", "chissuata",
                            "administrador", "administradores"]
-    palavras_lingua = ["língua", "lingua", "falar", "dizer", "como", "olá", "ola", "idioma", "dialeto", "aprender", "traduzir", "significa"]
+    palavras_lingua = ["língua", "lingua", "falar", "dizer", "olá", "ola", "idioma", "dialeto", "aprender", "traduzir", "significa"]
     
     if any(p in texto_baixo for p in palavras_municipios) and not any(p in texto_baixo for p in palavras_lingua):
         resposta = handler_municipios(texto_baixo)
         if resposta:
             return resposta
 
-    # 5. ACTIVAÇÃO DO MENU
     if texto_baixo in ["menu", "ajuda", "help", "guia", "opções", "opcoes", "início", "inicio"] or "como usar" in texto_baixo:
         ESTADO_NAVEGACAO[telefone_origem] = {"nivel": "menu"}
         ESTADO_LISTA.pop(telefone_origem, None)
         return "📋 *Menu Principal — Bot Cunene*\n\nEscolhe o número:\n1️⃣ Reportar um problema\n2️⃣ Localização de locais\n3️⃣ Informações oficiais\n4️⃣ Emergências\n5️⃣ Mercado\n6️⃣ Cheias e alertas\n\nResponde apenas com o número.\nOu faz uma pergunta directa. ✨"
 
-    # 6. REPORTAGEM
     if texto_baixo.startswith("reportagem") or any(p in texto_baixo for p in ["quero reportar", "quero fazer uma reportagem", "reportar um problema", "fazer uma reportagem", "reportar problema"]):
         if not texto_baixo.startswith("reportagem"):
             ESTADO_REPORTAGEM[telefone_origem] = {'passo': 1, 'problema': '', 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()}
@@ -1148,7 +1107,6 @@ def processar_texto(telefone_origem, user_text):
             ESTADO_REPORTAGEM.pop(telefone_origem)
             return f"✅ *Ocorrência enviada com sucesso!*\n• {dados['problema']}\n• Duração: {dados['tempo']}\n• Causa: {dados['causa']}\n\nObrigado por ajudares Ondjiva! Escreve *menu* para outras opções."
 
-    # 7. IA (FALLBACK - ÚLTIMO RECURSO)
     try:
         if not client:
             return "Serviço temporariamente indisponível. Tenta mais tarde."
@@ -1204,9 +1162,6 @@ def processar_texto(telefone_origem, user_text):
         print(f"Erro IA: {e}")
         return "Peço desculpa, estou com uma dificuldade técnica. Tenta mais tarde. Se for urgente, liga 113 ou 115."
 
-# ==========================================
-# PROCESSAR LOCALIZAÇÃO
-# ==========================================
 def processar_localizacao(telefone_origem, lat_origem, lon_origem):
     if telefone_origem in ESTADO_ROTA:
         destino = ESTADO_ROTA[telefone_origem]
@@ -1225,6 +1180,10 @@ def processar_localizacao(telefone_origem, lat_origem, lon_origem):
 def home():
     return "Bot Cunene operacional.", 200
 
+@app.route('/health')
+def health():
+    return "OK", 200
+
 @app.route('/webhook', methods=['GET'])
 def verificar():
     mode = request.args.get("hub.mode")
@@ -1236,25 +1195,62 @@ def verificar():
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
+    global ULTIMA_ATIVIDADE, MENSAGENS_PROCESSADAS
+    
+    agora = datetime.utcnow()
+    tempo_inativo = (agora - ULTIMA_ATIVIDADE).total_seconds()
+    
+    # Cold start: se esteve inativo mais de 30 segundos, aguarda para evitar duplicados
+    if tempo_inativo > 30:
+        print(f"⚠️ Possível cold start detectado ({tempo_inativo:.0f}s inativo). Aguardando 2s...")
+        time.sleep(2)
+        ULTIMA_ATIVIDADE = datetime.utcnow()
+    
     body = request.get_json()
     if body and body.get("object"):
         for entry in body.get("entry", []):
             for change in entry.get("changes", []):
                 value = change.get("value", {})
                 if "messages" in value:
-                    msg = value["messages"][0]
-                    tel = msg["from"]
-                    if msg["type"] == "text":
-                        texto = msg["text"]["body"]
-                        resposta = processar_texto(tel, texto)
-                        if resposta:
-                            enviar_mensagem_whatsapp(tel, resposta)
-                    elif msg["type"] == "location":
-                        lat = msg["location"]["latitude"]
-                        lon = msg["location"]["longitude"]
-                        resposta = processar_localizacao(tel, lat, lon)
-                        if resposta:
-                            enviar_mensagem_whatsapp(tel, resposta)
+                    for msg in value["messages"]:
+                        msg_id = msg.get("id", "")
+                        timestamp = msg.get("timestamp", "")
+                        
+                        # Chave única para esta mensagem
+                        chave_unica = f"{msg_id}_{timestamp}"
+                        
+                        # Verificar se já foi processada nos últimos 30 segundos
+                        agora = datetime.utcnow()
+                        if chave_unica in MENSAGENS_PROCESSADAS:
+                            tempo_passado = (agora - MENSAGENS_PROCESSADAS[chave_unica]).total_seconds()
+                            if tempo_passado < 30:
+                                print(f"⏭️ Mensagem duplicada ignorada: {chave_unica}")
+                                continue
+                        
+                        # Marcar como processada
+                        MENSAGENS_PROCESSADAS[chave_unica] = agora
+                        
+                        # Limpar mensagens antigas
+                        chaves_antigas = [k for k, v in MENSAGENS_PROCESSADAS.items() if (agora - v).total_seconds() > 300]
+                        for k in chaves_antigas:
+                            del MENSAGENS_PROCESSADAS[k]
+                        
+                        ULTIMA_ATIVIDADE = agora
+                        
+                        tel = msg["from"]
+                        if msg["type"] == "text":
+                            texto = msg["text"]["body"]
+                            print(f"📩 Mensagem: {tel} -> {texto}")
+                            resposta = processar_texto(tel, texto)
+                            if resposta:
+                                enviar_mensagem_whatsapp(tel, resposta)
+                        elif msg["type"] == "location":
+                            lat = msg["location"]["latitude"]
+                            lon = msg["location"]["longitude"]
+                            resposta = processar_localizacao(tel, lat, lon)
+                            if resposta:
+                                enviar_mensagem_whatsapp(tel, resposta)
+    
     return jsonify({"status": "ok"}), 200
 
 if __name__ == '__main__':

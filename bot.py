@@ -114,7 +114,7 @@ ESCOLAS_PUBLICAS = {
         "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05", "Noite: 18h-22h30"]
     },
     "eiffel": {
-        "nome": "Colégio Eiffel",
+        "nome": "Instituto Eiffel",
         "tipo": "Pública",
         "bairro": "Naipalala",
         "nivel": "Médio",
@@ -127,7 +127,7 @@ ESCOLAS_PUBLICAS = {
         "bairro": "Naipalala",
         "nivel": "Médio + 1º Ciclo",
         "cursos": ["Ciências Físicas e Biológicas", "Ciências Económicas e Jurídicas"],
-        "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05"]
+        "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05", "18h-22:30h"]
     },
     "instituto médio de pedagogia de ondjiva": {
         "nome": "Instituto Médio de Pedagogia de Ondjiva (IMPO)",
@@ -135,7 +135,7 @@ ESCOLAS_PUBLICAS = {
         "bairro": "Naipalala",
         "nivel": "Médio Técnico",
         "cursos": ["Matemática e Física", "Ensino Primário", "Educação Moral e Cívica", "Língua Portuguesa", "Bio-Química"],
-        "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05", "Noite: 18h-22h30"]
+        "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05"]
     },
     "complexo escolar cesmo": {
         "nome": "Complexo Escolar CESMO",
@@ -220,7 +220,7 @@ ESCOLAS_PRIVADAS = {
         "tipo": "Privada",
         "bairro": "Caxila 3",
         "nivel": "Primário + 1º Ciclo + Médio",
-        "cursos": ["Enfermagem Geral", "Análises Clínicas", "Informática"],
+        "cursos": ["Enfermagem Geral", "Análises Clínicas"],
         "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05"]
     },
 }
@@ -229,11 +229,10 @@ ESCOLAS_ONDJIVA = {**ESCOLAS_PUBLICAS, **ESCOLAS_PRIVADAS}
 
 ALCUNHAS_ESCOLAS = {
     "itso": "instituto de saúde de ondjiva",
-    "iso": "instituto de saúde de ondjiva",
     "instituto de saúde": "instituto de saúde de ondjiva",
     "instituto técnico de saúde": "instituto de saúde de ondjiva",
     "escola de enfermagem": "instituto de saúde de ondjiva",
-    "eiffel": "eiffel",
+    "Instituto Eiffel": "Eiffel",
     "oulondelo": "complexo escolar oulondelo",
     "impo": "instituto médio de pedagogia de ondjiva",
     "pedagogia": "instituto médio de pedagogia de ondjiva",
@@ -269,7 +268,7 @@ MERCADOS_ONDJIVA = {
         "nome": "Praça do Xomucuio",
         "bairro": "Ondjiva",
         "tipo": "Mercado/Praça",
-        "produtos": ["Fuba", "Milho", "Arroz", "Massa", "Frango", "Peixe", "Tomate", "Cebola", "Alho", "Batata", "Feijão", "Óleo", "Sal", "Açúcar"],
+        "produtos": ["Fuba", "Milho", "Arroz", "Massa", "Frango", "Peixe", "Tomate", "Cebola", "Alho", "Batata", "Feijão", "Óleo", "Sal", "Açúcar", "entre outros produtos"],
         "horario": "Todos os dias, das primeiras horas da manhã até ao final da tarde"
     }
 }
@@ -351,7 +350,7 @@ HISTORIA_CUNENE = """
 🐄 *Pastorícia:* A criação de gado bovino é a base da economia tradicional e símbolo de prestígio social.
 
 🍽️ *Gastronomia típica:*
-• Funge - massa de massango ou milho
+• Funge - massango ou milho
 • Maiavi - leite azedo
 • Chacota - carne seca
 

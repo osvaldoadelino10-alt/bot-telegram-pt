@@ -40,7 +40,6 @@ ULTIMA_ATIVIDADE = datetime.utcnow()
 CACHE_TEMPO = {"dados": None, "timestamp": None}
 CACHE_CAMBIO = {"dados": None, "timestamp": None}
 CACHE_NOTICIAS = {"dados": None, "timestamp": None}
-CACHE_OSM = {}
 
 # ==========================================
 # COORDENADAS DE ONDJIVA
@@ -782,7 +781,7 @@ def handler_meteorologia(texto_baixo):
     return formatar_tempo_atual(dados)
 
 # ==========================================
-# API DE CÂMBIO - EXCHANGERATE
+# API DE CÂMBIO - EXCHANGERATE (CORRIGIDA)
 # ==========================================
 def obter_cambio():
     global CACHE_CAMBIO
@@ -802,25 +801,25 @@ def obter_cambio():
     return None
 
 def handler_cambio(texto_baixo):
-    palavras_cambio = ["câmbio", "cambio", "dólar", "dolar", "euro", "rand", "kwanza", "moeda", "dinheiro", "conversão", "conversao"]
+    palavras_cambio = ["câmbio", "cambio", "dólar", "dolar", "euro", "rand", "kwanza", "moeda", "conversão", "conversao"]
     if not any(p in texto_baixo for p in palavras_cambio):
         return None
     dados = obter_cambio()
     if not dados:
         return "💱 Serviço de câmbio temporariamente indisponível."
     taxas = dados.get("rates", {})
-    usd = taxas.get("USD", 0)
-    eur = taxas.get("EUR", 0)
-    zar = taxas.get("ZAR", 0)
-    aoa_para_usd = 1 / usd if usd > 0 else 0
-    aoa_para_eur = 1 / eur if eur > 0 else 0
-    aoa_para_zar = 1 / zar if zar > 0 else 0
+    aoa_para_usd = taxas.get("USD", 0)
+    aoa_para_eur = taxas.get("EUR", 0)
+    aoa_para_zar = taxas.get("ZAR", 0)
+    usd_para_aoa = 1 / aoa_para_usd if aoa_para_usd > 0 else 0
+    eur_para_aoa = 1 / aoa_para_eur if aoa_para_eur > 0 else 0
+    zar_para_aoa = 1 / aoa_para_zar if aoa_para_zar > 0 else 0
     return (
-        f"💱 *Câmbio Atual — Kwanza (AOA)*\n\n"
-        f"🇺🇸 1 USD = {aoa_para_usd:,.0f} AOA\n"
-        f"🇪🇺 1 EUR = {aoa_para_eur:,.0f} AOA\n"
-        f"🇿🇦 1 ZAR = {aoa_para_zar:,.0f} AOA\n\n"
-        f"📌 Valores aproximados. Consulte um banco ou casa de câmbio para valores exatos."
+        f"💱 *Câmbio Atual*\n\n"
+        f"🇺🇸 1 USD = {usd_para_aoa:,.0f} AOA\n"
+        f"🇪🇺 1 EUR = {eur_para_aoa:,.0f} AOA\n"
+        f"🇿🇦 1 ZAR = {zar_para_aoa:,.0f} AOA\n\n"
+        f"Fonte: Taxas de referência do Banco Nacional de Angola."
     )
 
 # ==========================================
@@ -860,33 +859,7 @@ def handler_noticias(texto_baixo):
         titulo = artigo.get("title", "Sem título")
         fonte = artigo.get("source", {}).get("name", "Desconhecido")
         resposta += f"{i}. *{titulo}*\n   📰 Fonte: {fonte}\n\n"
-    resposta += "As notícias são de fontes externas. Verifique a veracidade das informações."
     return resposta
-
-# ==========================================
-# API DE LOCALIZAÇÃO - OPENSTREETMAP
-# ==========================================
-def pesquisar_local_openstreetmap(nome_local):
-    global CACHE_OSM
-    chave = nome_local.lower().strip()
-    if chave in CACHE_OSM:
-        return CACHE_OSM[chave]
-    try:
-        url = f"https://nominatim.openstreetmap.org/search?q={nome_local},Ondjiva,Cunene,Angola&format=json&limit=1&addressdetails=1"
-        headers = {"User-Agent": "BotCunene/1.0"}
-        response = requests.get(url, headers=headers, timeout=10)
-        if response.status_code == 200:
-            dados = response.json()
-            if dados:
-                lat = float(dados[0]["lat"])
-                lon = float(dados[0]["lon"])
-                endereco = dados[0].get("display_name", f"Ondjiva, Cunene")
-                resultado = {"lat": lat, "lon": lon, "nome": nome_local, "endereco": endereco[:100]}
-                CACHE_OSM[chave] = resultado
-                return resultado
-    except Exception as e:
-        print(f"Erro OSM: {e}")
-    return None
 
 # ==========================================
 # HANDLERS
@@ -1512,17 +1485,18 @@ def processar_texto(telefone_origem, user_text):
         elif nivel == "localizacao_pedido":
             local_desejado = texto_baixo
             ESTADO_NAVEGACAO.pop(telefone_origem)
-            # 1. Coordenadas manuais
             for chave, dados in COORDENADAS_ONDJIVA.items():
                 if chave in local_desejado:
                     enviar_localizacao_whatsapp(telefone_origem, dados["lat"], dados["lon"], dados["nome"], dados["endereco"])
                     return f"📍 *{dados['nome']}*\n{dados['endereco']}\n\n💡 Clica no Pin e depois em *'Como chegar'*."
-            # 2. OpenStreetMap
-            resultado = pesquisar_local_openstreetmap(local_desejado)
-            if resultado:
-                enviar_localizacao_whatsapp(telefone_origem, resultado["lat"], resultado["lon"], resultado["nome"], resultado["endereco"])
-                return f"📍 *{resultado['nome']}*\n{resultado['endereco']}\n\n💡 Clica no Pin e depois em *'Como chegar'*."
-            return "❌ Não encontrei esse local. Tenta com o nome completo."
+            for alcunha, chave_oficial in ALCUNHAS_HOSPITAIS.items():
+                if alcunha in local_desejado:
+                    dados = HOSPITAIS_ONDJIVA[chave_oficial]
+                    for ck, cv in COORDENADAS_ONDJIVA.items():
+                        if chave_oficial in ck:
+                            enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
+                            return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva"
+            return "❌ Ainda não tenho a localização exata desse local. Tenta perguntar pelo nome completo ou contacta a Administração Municipal."
 
     # ==========================================
     # 2. PESQUISA DE LOCALIZAÇÃO
@@ -1539,11 +1513,7 @@ def processar_texto(telefone_origem, user_text):
                     if chave_oficial in ck:
                         enviar_localizacao_whatsapp(telefone_origem, cv["lat"], cv["lon"], dados["nome"], f"Bairro {dados['bairro']}, Ondjiva")
                         return f"📍 *{dados['nome']}*\nBairro {dados['bairro']}, Ondjiva"
-        resultado = pesquisar_local_openstreetmap(texto_baixo)
-        if resultado:
-            enviar_localizacao_whatsapp(telefone_origem, resultado["lat"], resultado["lon"], resultado["nome"], resultado["endereco"])
-            return f"📍 *{resultado['nome']}*\n{resultado['endereco']}\n\n💡 Clica no Pin e depois em *'Como chegar'*."
-        return "❌ Não encontrei esse local."
+        return "❌ Ainda não tenho a localização exata desse local. Tenta perguntar pelo nome completo ou contacta a Administração Municipal."
 
     # ==========================================
     # 3. ROTA

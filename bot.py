@@ -471,18 +471,24 @@ VIH_INFO = """❤️ *VIH/Sida — Prevenção*
 • Grávidas seropositivas devem fazer acompanhamento médico adequado para evitar a transmissão ao bebé durante a gravidez, parto ou amamentação."""
 
 # ==========================================
-# CONTEXTO PARA IA (COMPLETO COM TODOS OS DADOS)
+# RESPOSTA PADRÃO PARA FORA DO CONTEXTO
+# ==========================================
+RESPOSTA_FORA_CONTEXTO = "Sou o *Bot Cunene*, assistente digital da província do Cunene. 🇦🇴\n\nPosso ajudar com informações sobre:\n• 🏥 Saúde (hospitais, doenças, prevenção)\n• 📚 Educação (escolas, matrículas)\n• 🌾 Agricultura e Pecuária\n• 🛒 Mercados e Comércio\n• 📍 Localização de serviços\n• 🏛️ Administração Pública\n• ⚠️ Cheias e Alertas\n• 📜 História e Cultura\n\nEscreve *menu* para veres todas as opções ou faz uma pergunta directa sobre o Cunene!"
+
+# ==========================================
+# CONTEXTO PARA IA (RESTRITO AO CUNENE)
 # ==========================================
 CONTEXTO_ONDJIVA = """
-Tu és o Bot_Cunene, assistente digital oficial da província do Cunene, Angola. Falas Português de Angola, de forma calorosa, direta e útil.
+Tu és o Bot_Cunene, assistente digital EXCLUSIVO da província do Cunene, Angola. Falas Português de Angola, de forma calorosa, direta e útil.
 
 ## REGRAS DE OURO (OBRIGATÓRIAS):
 1. NUNCA inventes factos históricos, nomes de municípios, números, datas ou dados oficiais.
-2. Se não tiveres a certeza absoluta de um dado, diz APENAS: "Não tenho essa informação oficial. Dirija-se ao hospital ou posto médico mais próximo para questões de saúde, ou à escola mais próxima para questões de ensino."
+2. És EXCLUSIVO do Cunene. Para perguntas fora deste contexto (futebol, tecnologia, biologia, física, celebridades, música, filmes, Android, iPhone, etc.), responde SEMPRE: "Sou o *Bot Cunene*, assistente digital da província do Cunene. Posso ajudar com informações sobre saúde, educação, agricultura, mercados, localização e outros serviços de Ondjiva e do Cunene. Em que posso ajudar?"
 3. Usa *apenas um asterisco* para negrito no WhatsApp.
 4. Mantém as respostas diretas e organizadas.
 5. NUNCA mencione "base de dados", "prompt", "sistema" ou o teu funcionamento interno.
 6. Responde SEMPRE com base nos dados oficiais abaixo. Não improvises.
+7. Não dês opiniões pessoais sobre política, religião ou desporto.
 
 ## DADOS OFICIAIS DO CUNENE:
 
@@ -729,10 +735,36 @@ def handler_conversa_casual(texto_baixo):
         return "Estou bem, obrigado! 😊 Escreve *menu* para veres o que posso fazer por ti."
     if any(p in texto_baixo for p in ["obrigado", "obrigada", "valeu", "brigado", "obg"]):
         return "De nada! 😊 Se precisares de mais alguma coisa, escreve *menu*."
-    if texto_baixo in ["sim", "s", "yes", "y"]:
-        return "Sim! 😊 Como posso ajudar? Escreve *menu*."
+    # Respostas curtas que não são sobre o Cunene
+    if texto_baixo in ["sim", "s", "yes", "y", "sim e você", "sim e voce"]:
+        return "😊 Em que posso ajudar? Escreve *menu* para veres as opções ou faz uma pergunta sobre o Cunene."
     if texto_baixo in ["não", "nao", "n", "no"]:
         return "Tudo bem! Se mudares de ideias, escreve *menu*."
+    return None
+
+def handler_fora_contexto(texto_baixo):
+    """Deteta perguntas fora do contexto do Cunene e responde adequadamente"""
+    # Palavras-chave que indicam conhecimento geral
+    palavras_gerais = [
+        "android", "iphone", "ios", "windows", "linux", "mac", "apple", "samsung",
+        "messi", "ronaldo", "neymar", "futebol", "mundial", "campeonato", "bola", "gol",
+        "biologia", "física", "fisica", "química", "quimica", "matemática", "matematica",
+        "filme", "música", "musica", "cantor", "ator", "celebridade", "famoso",
+        "guerra", "presidente", "política", "politica", "partido",
+        "carro", "moto", "avião", "aviao", "navio",
+        "receita", "bolo", "culinária", "culinaria",
+        "significado", "definição", "definicao", "conceito", "o que é"
+    ]
+    
+    # Se a pergunta é "o que é X" e X não é algo do Cunene
+    if any(p in texto_baixo for p in ["o que é", "o que e", "defina", "conceito", "significado"]) and \
+       not any(p in texto_baixo for p in ["cunene", "ondjiva", "funge", "maiavi", "chacota", "cuanhama", "mandume"]):
+        return RESPOSTA_FORA_CONTEXTO
+    
+    # Se contém palavras de conhecimento geral
+    if any(p in texto_baixo for p in palavras_gerais):
+        return RESPOSTA_FORA_CONTEXTO
+    
     return None
 
 def handler_historia_cultura(texto_baixo):
@@ -765,6 +797,27 @@ def handler_doencas(texto_baixo):
         return VIH_INFO
     if "doença" in texto_baixo or "doenca" in texto_baixo or "prevenção" in texto_baixo or "prevencao" in texto_baixo:
         return "🩺 *Doenças e Prevenção no Cunene*\n\nEscolhe a doença:\n• Malária\n• Doenças Diarreicas e Febre Tifóide\n• Dracunculose (Verme da Guiné)\n• Doenças Respiratórias\n• Malnutrição\n• VIH/Sida\n\nDigite o nome da doença para mais informações."
+    return None
+
+def handler_matricula(texto_baixo):
+    if any(p in texto_baixo for p in ["matrícula", "matricula", "matricular", "documentos necessários", "documentos para", "preciso para matricular", "documentos exigidos", "como matricular", "quero matricular"]):
+        return (
+            "📝 *Matrículas — Ano Letivo*\n\n"
+            "📅 *Período:* As matrículas gerais começam em Julho/Agosto.\n\n"
+            "📋 *Documentos Necessários:*\n\n"
+            "*Iniciação e Ensino Primário:*\n"
+            "• Bilhete de identidade ou cédula de nascimento\n"
+            "• Duas fotos tipo passe\n\n"
+            "*1º Ciclo:*\n"
+            "• Cópia do bilhete de identidade\n"
+            "• Duas fotos tipo passe\n"
+            "• Certificado de conclusão do ensino primário\n\n"
+            "*Ensino Médio:*\n"
+            "• Cópia do bilhete de identidade\n"
+            "• Duas fotos tipo passe\n"
+            "• Certificado de conclusão do 1º ciclo\n\n"
+            "📍 Dirija-se à escola mais próxima para efetuar a matrícula."
+        )
     return None
 
 def pesquisar_hospital(texto_usuario):
@@ -915,6 +968,10 @@ def listar_escolas_por_tipo(tipo=None, bairro=None):
     return resposta
 
 def handler_escolas(texto_baixo, telefone=None):
+    # NÃO ativar se for pergunta de definição ("o que é uma escola")
+    if any(p in texto_baixo for p in ["o que é", "o que e", "defina", "conceito", "significado"]):
+        return None
+    
     if any(p in texto_baixo for p in ["pública", "publica", "públicas", "publicas"]):
         chaves = list(ESCOLAS_PUBLICAS.keys())
         if telefone:
@@ -1138,6 +1195,11 @@ def processar_texto(telefone_origem, user_text):
     if resposta_casual:
         return resposta_casual
 
+    # 0.5 FORA DO CONTEXTO (CONHECIMENTO GERAL)
+    resposta_fora = handler_fora_contexto(texto_baixo)
+    if resposta_fora:
+        return resposta_fora
+
     # ==========================================
     # 1. NAVEGAÇÃO (MENU)
     # ==========================================
@@ -1316,23 +1378,33 @@ def processar_texto(telefone_origem, user_text):
                 return f"🗺️ Queres ir para *{dados['nome']}*.\n\n📍 Partilha a tua *Localização Atual* aqui no WhatsApp (clica no 📎 > Localização) para eu gerar a tua rota."
 
     # ==========================================
-    # 4. HANDLERS BLINDADOS
+    # 4. HANDLERS BLINDADOS (ORDEM CORRIGIDA)
     # ==========================================
+    
+    # 4.1 MATRÍCULA (ANTES DE ESCOLAS!)
+    resposta = handler_matricula(texto_baixo)
+    if resposta:
+        return resposta
+
+    # 4.2 HISTÓRIA E CULTURA
     if any(p in texto_baixo for p in ["história", "historia", "cultura", "tradição", "tradicao", "gastronomia", "comida", "prato", "mandume", "gado", "pastor", "funge", "maiavi", "chacota", "origem", "colonial"]):
         resposta = handler_historia_cultura(texto_baixo)
         if resposta:
             return resposta
 
+    # 4.3 DOENÇAS
     if any(p in texto_baixo for p in ["doença", "doenca", "doenças", "doencas", "prevenção", "prevencao", "malária", "malaria", "diarreica", "tifóide", "tifoide", "dracunculose", "verme", "guiné", "guine", "respiratória", "respiratoria", "pneumonia", "malnutrição", "malnutricao", "desnutrição", "desnutricao", "vih", "sida", "hiv", "preservativo"]):
         resposta = handler_doencas(texto_baixo)
         if resposta:
             return resposta
 
+    # 4.4 HOSPITAIS
     if "hospital" in texto_baixo or "ekuma" in texto_baixo or "simeone" in texto_baixo or "mucunde" in texto_baixo:
         resposta = handler_hospitais(texto_baixo, telefone_origem)
         if resposta:
             return resposta
 
+    # 4.5 ESCOLAS
     if any(p in texto_baixo for p in ["escola", "colégio", "colegio", "liceu", "instituto", "curso", "estudar", "aula", "ensino"]):
         resposta = handler_escolas(texto_baixo, telefone_origem)
         if resposta:
@@ -1341,26 +1413,31 @@ def processar_texto(telefone_origem, user_text):
         if resposta:
             return resposta
 
+    # 4.6 ADMINISTRAÇÃO
     if any(p in texto_baixo for p in ["governo", "tribunal", "agt", "administração", "mediateca", "aeroporto", "comando", "sic", "viação", "bombeiros", "fiscal", "guarda", "fronteira"]):
         resposta = handler_administracao(texto_baixo)
         if resposta:
             return resposta
 
+    # 4.7 COMÉRCIO
     if any(p in texto_baixo for p in ["shoprite", "angomarte", "comércio", "comercio", "supermercado"]):
         resposta = handler_comercio(texto_baixo)
         if resposta:
             return resposta
 
+    # 4.8 MERCADOS
     if any(p in texto_baixo for p in ["mercado", "praça", "praca", "feira", "lemanha", "xomucuio", "xamucuio", "preço", "preco", "preços", "precos", "fuba", "milho"]):
         resposta = handler_mercados(texto_baixo, telefone_origem)
         if resposta:
             return resposta
 
+    # 4.9 CHEIAS
     if any(p in texto_baixo for p in ["cheia", "cheias", "inundação", "inundacao", "alagamento", "alerta", "chuva", "chuvosa", "temporal", "tempestade", "meteorologia", "clima", "seca", "seco"]):
         resposta = handler_cheias_alertas(texto_baixo)
         if resposta:
             return resposta
 
+    # 4.10 MUNICÍPIOS
     palavras_municipios = ["município", "municipio", "municípios", "municipios", "comuna", "comunas",
                            "cahama", "cuanhama", "curoca", "cuvelai", "namacunde", "ombadja",
                            "chiéde", "nehone", "humbe", "mupa", "naulila", "chitado", "cafima", "chissuata",
@@ -1410,7 +1487,7 @@ def processar_texto(telefone_origem, user_text):
             return f"✅ *Ocorrência enviada com sucesso!*\n• {dados['problema']}\n• Duração: {dados['tempo']}\n• Causa: {dados['causa']}\n\nObrigado por ajudares Ondjiva! Escreve *menu* para outras opções."
 
     # ==========================================
-    # 7. IA (FALLBACK)
+    # 7. IA (FALLBACK - ÚLTIMO RECURSO)
     # ==========================================
     try:
         if not client:
@@ -1445,7 +1522,7 @@ def processar_texto(telefone_origem, user_text):
         if is_inicio_conversa:
             regra_relogio += f"Podes usar '{saudacao}' naturalmente se for adequado."
         else:
-            regra_relogio += "Responde diretamente à pergunta, sem saudações repetidas."
+            regra_relogio += "Responde diretamente à pergunta, sem saudações repetidas. Se for pergunta fora do Cunene, usa a resposta padrão."
 
         contexto = CONTEXTO_ONDJIVA + regra_relogio
         mensagens_ia = [{"role": "system", "content": contexto}] + MEMORIA_CONVERSAS[telefone_origem]

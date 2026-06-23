@@ -15,6 +15,7 @@ WHATSAPP_TOKEN = os.environ.get("WHATSAPP_TOKEN")
 WHATSAPP_PHONE_ID = os.environ.get("WHATSAPP_PHONE_ID")
 VERIFY_TOKEN = os.environ.get("VERIFY_TOKEN", "cunene2026")
 DATABASE_URL = os.environ.get("DATABASE_URL")
+OPENWEATHER_API_KEY = os.environ.get("OPENWEATHER_API_KEY")
 
 client = None
 if GROQ_API_KEY:
@@ -35,6 +36,7 @@ ULTIMA_MENSAGEM_BOT = {}
 # Controlo de mensagens duplicadas e cold start
 MENSAGENS_PROCESSADAS = {}
 ULTIMA_ATIVIDADE = datetime.utcnow()
+CACHE_TEMPO = {"dados": None, "timestamp": None}
 
 # ==========================================
 # COORDENADAS DE ONDJIVA
@@ -473,7 +475,7 @@ VIH_INFO = """❤️ *VIH/Sida — Prevenção*
 # ==========================================
 # RESPOSTA PADRÃO PARA FORA DO CONTEXTO
 # ==========================================
-RESPOSTA_FORA_CONTEXTO = "Sou o *Bot Cunene*, assistente digital da província do Cunene. 🇦🇴\n\nPosso ajudar com informações sobre:\n• 🏥 Saúde (hospitais, doenças, prevenção)\n• 📚 Educação (escolas, matrículas)\n• 🌾 Agricultura e Pecuária\n• 🛒 Mercados e Comércio\n• 📍 Localização de serviços\n• 🏛️ Administração Pública\n• ⚠️ Cheias e Alertas\n• 📜 História e Cultura\n\nEscreve *menu* para veres todas as opções ou faz uma pergunta directa sobre o Cunene!"
+RESPOSTA_FORA_CONTEXTO = "Sou o *Bot Cunene*, assistente digital da província do Cunene. 🇦🇴\n\nPosso ajudar com informações sobre:\n• 🏥 Saúde (hospitais, doenças, prevenção)\n• 📚 Educação (escolas, matrículas)\n• 🌾 Agricultura e Pecuária\n• 🛒 Mercados e Comércio\n• 📍 Localização de serviços\n• 🏛️ Administração Pública\n• ⚠️ Cheias e Alertas\n• 🌤️ Meteorologia e Clima\n• 📜 História e Cultura\n\nEscreve *menu* para veres todas as opções ou faz uma pergunta directa sobre o Cunene!"
 
 # ==========================================
 # CONTEXTO PARA IA (RESTRITO AO CUNENE)
@@ -483,7 +485,7 @@ Tu és o Bot_Cunene, assistente digital EXCLUSIVO da província do Cunene, Angol
 
 ## REGRAS DE OURO (OBRIGATÓRIAS):
 1. NUNCA inventes factos históricos, nomes de municípios, números, datas ou dados oficiais.
-2. És EXCLUSIVO do Cunene. Para perguntas fora deste contexto (futebol, tecnologia, biologia, física, celebridades, música, filmes, Android, iPhone, etc.), responde SEMPRE: "Sou o *Bot Cunene*, assistente digital da província do Cunene. Posso ajudar com informações sobre saúde, educação, agricultura, mercados, localização e outros serviços de Ondjiva e do Cunene. Em que posso ajudar?"
+2. És EXCLUSIVO do Cunene. Para perguntas fora deste contexto (futebol, tecnologia, biologia, física, celebridades, música, filmes, Android, iPhone, etc.), responde SEMPRE: "Sou o *Bot Cunene*, assistente digital da província do Cunene. Posso ajudar com informações sobre saúde, educação, agricultura, mercados, localização, meteorologia e outros serviços de Ondjiva e do Cunene. Em que posso ajudar?"
 3. Usa *apenas um asterisco* para negrito no WhatsApp.
 4. Mantém as respostas diretas e organizadas.
 5. NUNCA mencione "base de dados", "prompt", "sistema" ou o teu funcionamento interno.
@@ -693,6 +695,183 @@ def limpar_memoria_antiga():
 threading.Thread(target=limpar_memoria_antiga, daemon=True).start()
 
 # ==========================================
+# API DE METEOROLOGIA - OPENWEATHERMAP
+# ==========================================
+def obter_tempo_ondjiva():
+    """Obtém dados meteorológicos reais de Ondjiva via OpenWeatherMap"""
+    global CACHE_TEMPO
+    
+    if not OPENWEATHER_API_KEY:
+        return None
+    
+    # Usar cache se tiver menos de 30 minutos
+    if CACHE_TEMPO["dados"] and CACHE_TEMPO["timestamp"]:
+        if (datetime.utcnow() - CACHE_TEMPO["timestamp"]).total_seconds() < 1800:
+            return CACHE_TEMPO["dados"]
+    
+    try:
+        # Coordenadas de Ondjiva
+        lat = -17.065
+        lon = 15.730
+        
+        # Obter tempo atual
+        url_atual = f"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}&units=metric&lang=pt"
+        response_atual = requests.get(url_atual, timeout=10)
+        
+        # Obter previsão 5 dias (8 pontos = 24 horas)
+        url_previsao = f"https://api.openweathermap.org/data/2.5/forecast?lat={lat}&lon={lon}&appid={OPENWEATHER_API_KEY}&units=metric&lang=pt&cnt=16"
+        response_previsao = requests.get(url_previsao, timeout=10)
+        
+        if response_atual.status_code == 200 and response_previsao.status_code == 200:
+            dados = {
+                "atual": response_atual.json(),
+                "previsao": response_previsao.json()
+            }
+            CACHE_TEMPO["dados"] = dados
+            CACHE_TEMPO["timestamp"] = datetime.utcnow()
+            return dados
+    except Exception as e:
+        print(f"Erro ao obter meteorologia: {e}")
+    
+    return None
+
+def formatar_tempo_atual(dados):
+    """Formata os dados meteorológicos atuais"""
+    atual = dados["atual"]
+    
+    temp = atual["main"]["temp"]
+    sensacao = atual["main"]["feels_like"]
+    humidade = atual["main"]["humidity"]
+    descricao = atual["weather"][0]["description"].capitalize()
+    vento = atual["wind"]["speed"] * 3.6  # Converter m/s para km/h
+    icone = atual["weather"][0]["main"]
+    
+    # Emoji baseado na condição
+    emojis = {
+        "Clear": "☀️", "Clouds": "⛅", "Rain": "🌧️",
+        "Drizzle": "🌦️", "Thunderstorm": "⛈️", "Mist": "🌫️",
+        "Haze": "🌫️", "Fog": "🌫️"
+    }
+    emoji = emojis.get(icone, "🌤️")
+    
+    # Verificar chuva
+    chuva = atual.get("rain", {}).get("1h", 0)
+    alerta_chuva = ""
+    if chuva > 0:
+        alerta_chuva = f"\n🌧️ Chuva na última hora: {chuva}mm"
+    
+    # Horário do nascer e pôr do sol
+    nascer = datetime.fromtimestamp(atual["sys"]["sunrise"]).strftime("%H:%M")
+    por = datetime.fromtimestamp(atual["sys"]["sunset"]).strftime("%H:%M")
+    
+    return (
+        f"{emoji} *Tempo em Ondjiva - Cunene*\n\n"
+        f"🌡️ Temperatura: {temp:.0f}°C (sensação: {sensacao:.0f}°C)\n"
+        f"💧 Humidade: {humidade}%\n"
+        f"☁️ Condição: {descricao}\n"
+        f"🌬️ Vento: {vento:.0f} km/h"
+        f"{alerta_chuva}\n"
+        f"🌅 Nascer do sol: {nascer}\n"
+        f"🌇 Pôr do sol: {por}\n\n"
+        f"Diga 'previsão' para ver os próximos dias."
+    )
+
+def formatar_previsao(dados):
+    """Formata a previsão para os próximos dias"""
+    previsao = dados["previsao"]
+    lista = previsao["list"]
+    
+    resposta = "📅 *Previsão para os próximos dias - Ondjiva*\n\n"
+    
+    # Agrupar por dia
+    dias = {}
+    for item in lista:
+        data = datetime.fromtimestamp(item["dt"])
+        dia_str = data.strftime("%d/%m")
+        if dia_str not in dias:
+            dias[dia_str] = []
+        dias[dia_str].append(item)
+    
+    emojis = {
+        "Clear": "☀️", "Clouds": "⛅", "Rain": "🌧️",
+        "Drizzle": "🌦️", "Thunderstorm": "⛈️"
+    }
+    
+    for dia_str, items in list(dias.items())[:4]:  # Máximo 4 dias
+        temps = [item["main"]["temp"] for item in items]
+        temp_max = max(temps)
+        temp_min = min(temps)
+        
+        # Condição predominante
+        condicoes = [item["weather"][0]["main"] for item in items]
+        condicao = max(set(condicoes), key=condicoes.count)
+        emoji = emojis.get(condicao, "🌤️")
+        
+        # Probabilidade de chuva
+        prob_chuva = max([item.get("pop", 0) for item in items]) * 100
+        
+        resposta += f"{emoji} *{dia_str}:* {temp_max:.0f}°C / {temp_min:.0f}°C"
+        if prob_chuva > 20:
+            resposta += f" | 🌧️ {prob_chuva:.0f}%"
+        resposta += "\n"
+    
+    # Recomendação baseada na estação
+    agora = datetime.utcnow() + timedelta(hours=1)
+    mes = agora.month
+    
+    if 3 <= mes <= 10:
+        resposta += "\n☀️ *Estação seca:* Mantenha-se hidratado e evite exposição solar prolongada."
+    else:
+        resposta += "\n🌧️ *Estação chuvosa:* Atenção às cheias do Rio Cunene. Siga as instruções da Protecção Civil."
+    
+    return resposta
+
+def handler_meteorologia(texto_baixo):
+    """Responde a perguntas sobre meteorologia e tempo"""
+    
+    # Palavras-chave que ativam a API
+    palavras_tempo = ["tempo", "meteorologia", "previsão", "previsao", "chuva", "chover", 
+                      "temperatura", "clima hoje", "como está", "vai chover", "quantos graus"]
+    
+    if not any(p in texto_baixo for p in palavras_tempo):
+        return None
+    
+    if not OPENWEATHER_API_KEY:
+        return "⚠️ Serviço de meteorologia temporariamente indisponível. Tenta mais tarde."
+    
+    dados = obter_tempo_ondjiva()
+    if not dados:
+        return "⚠️ Não foi possível obter dados meteorológicos. Tenta mais tarde.\n\n📋 *Dados climáticos do Cunene:*\n🌍 Clima: Árido a semi-árido\n☀️ Estação seca: Março a Outubro (até 30°C)\n🌧️ Estação chuvosa: Novembro a Fevereiro (20°C a 25°C)"
+    
+    # Se pediu previsão
+    if any(p in texto_baixo for p in ["previsão", "previsao", "próximos", "proximos", "dias", "semana"]):
+        return formatar_previsao(dados)
+    
+    # Se perguntou sobre chuva
+    if any(p in texto_baixo for p in ["chuva", "chover", "vai chover"]):
+        atual = dados["atual"]
+        chuva = atual.get("rain", {}).get("1h", 0)
+        if chuva > 0:
+            return f"🌧️ Sim, está a chover em Ondjiva! Precipitação na última hora: {chuva}mm.\n\n{formatar_tempo_atual(dados)}"
+        else:
+            # Verificar previsão de chuva próxima
+            previsao = dados["previsao"]["list"]
+            chuva_proxima = False
+            for item in previsao[:4]:  # Próximas 12 horas
+                if item.get("rain", {}).get("3h", 0) > 0:
+                    chuva_proxima = True
+                    break
+            
+            if chuva_proxima:
+                return f"⛅ Agora não está a chover, mas há previsão de chuva para as próximas horas.\n\n{formatar_tempo_atual(dados)}"
+            else:
+                return f"☀️ Não está a chover e não há previsão de chuva para as próximas horas.\n\n{formatar_tempo_atual(dados)}"
+    
+    # Resposta padrão: tempo atual
+    return formatar_tempo_atual(dados)
+
+
+# ==========================================
 # HANDLERS
 # ==========================================
 
@@ -735,7 +914,6 @@ def handler_conversa_casual(texto_baixo):
         return "Estou bem, obrigado! 😊 Escreve *menu* para veres o que posso fazer por ti."
     if any(p in texto_baixo for p in ["obrigado", "obrigada", "valeu", "brigado", "obg"]):
         return "De nada! 😊 Se precisares de mais alguma coisa, escreve *menu*."
-    # Respostas curtas que não são sobre o Cunene
     if texto_baixo in ["sim", "s", "yes", "y", "sim e você", "sim e voce"]:
         return "😊 Em que posso ajudar? Escreve *menu* para veres as opções ou faz uma pergunta sobre o Cunene."
     if texto_baixo in ["não", "nao", "n", "no"]:
@@ -744,7 +922,6 @@ def handler_conversa_casual(texto_baixo):
 
 def handler_fora_contexto(texto_baixo):
     """Deteta perguntas fora do contexto do Cunene e responde adequadamente"""
-    # Palavras-chave que indicam conhecimento geral
     palavras_gerais = [
         "android", "iphone", "ios", "windows", "linux", "mac", "apple", "samsung",
         "messi", "ronaldo", "neymar", "futebol", "mundial", "campeonato", "bola", "gol",
@@ -756,12 +933,10 @@ def handler_fora_contexto(texto_baixo):
         "significado", "definição", "definicao", "conceito", "o que é"
     ]
     
-    # Se a pergunta é "o que é X" e X não é algo do Cunene
     if any(p in texto_baixo for p in ["o que é", "o que e", "defina", "conceito", "significado"]) and \
        not any(p in texto_baixo for p in ["cunene", "ondjiva", "funge", "maiavi", "chacota", "cuanhama", "mandume"]):
         return RESPOSTA_FORA_CONTEXTO
     
-    # Se contém palavras de conhecimento geral
     if any(p in texto_baixo for p in palavras_gerais):
         return RESPOSTA_FORA_CONTEXTO
     
@@ -968,7 +1143,6 @@ def listar_escolas_por_tipo(tipo=None, bairro=None):
     return resposta
 
 def handler_escolas(texto_baixo, telefone=None):
-    # NÃO ativar se for pergunta de definição ("o que é uma escola")
     if any(p in texto_baixo for p in ["o que é", "o que e", "defina", "conceito", "significado"]):
         return None
     
@@ -1200,6 +1374,12 @@ def processar_texto(telefone_origem, user_text):
     if resposta_fora:
         return resposta_fora
 
+    # 0.6 METEOROLOGIA (TEMPO REAL)
+    if any(p in texto_baixo for p in ["tempo", "meteorologia", "previsão", "previsao", "chuva", "chover", "temperatura", "clima hoje", "como está o tempo", "vai chover", "quantos graus"]):
+        resposta = handler_meteorologia(texto_baixo)
+        if resposta:
+            return resposta
+
     # ==========================================
     # 1. NAVEGAÇÃO (MENU)
     # ==========================================
@@ -1230,7 +1410,7 @@ def processar_texto(telefone_origem, user_text):
                     return "🛒 *Mercados e Praças de Ondjiva*\n\n1. *Praça da Lemanha* - Bairro Kaculuvale\n2. *Praça do Xomucuio*\n\n📦 Produtos: Fuba, milho, arroz, massa, frango, peixe, tomate, cebola e muito mais.\n💰 Para preços atualizados, visite a praça.\n\nResponda com o número (1 ou 2) para detalhes."
                 elif opcao == "6":
                     ESTADO_NAVEGACAO.pop(telefone_origem)
-                    return "⚠️ *Cheias e Clima — Província do Cunene*\n\n🌍 Clima: Árido a semi-árido\n☀️ *Estação seca:* Março a Outubro (até 30°C)\n🌧️ *Estação chuvosa:* Novembro a Fevereiro (20°C a 25°C)\n\n⚠️ Cheias do Rio Cunene recorrentes na estação chuvosa.\n🆘 Emergência: Bombeiros 115 | Polícia 113"
+                    return "⚠️ *Cheias e Clima — Província do Cunene*\n\n🌍 Clima: Árido a semi-árido\n☀️ *Estação seca:* Março a Outubro (até 30°C)\n🌧️ *Estação chuvosa:* Novembro a Fevereiro (20°C a 25°C)\n\n⚠️ Cheias do Rio Cunene recorrentes na estação chuvosa.\n🆘 Emergência: Bombeiros 115 | Polícia 113\n\nDiga 'tempo' para ver a meteorologia atual."
                 elif opcao == "7":
                     ESTADO_NAVEGACAO[telefone_origem]["nivel"] = "agricultura_submenu"
                     return "🌾 *Agricultura e Pecuária — Cunene*\n\nEscolhe a opção:\nA - Agricultura\nB - Pecuária\nC - Pesca Artesanal\nD - Recursos Minerais\nE - Solo e Vegetação\n\nResponde com a letra."

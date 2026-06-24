@@ -781,7 +781,7 @@ def handler_meteorologia(texto_baixo):
     return formatar_tempo_atual(dados)
 
 # ==========================================
-# API DE CÂMBIO - EXCHANGERATE (CORRIGIDA)
+# API DE CÂMBIO - EXCHANGERATE (COM CONVERSÃO)
 # ==========================================
 def obter_cambio():
     global CACHE_CAMBIO
@@ -800,25 +800,74 @@ def obter_cambio():
         print(f"Erro câmbio: {e}")
     return None
 
+def extrair_valor_moeda(texto):
+    """Extrai valor numérico e moeda de uma frase como '100 zar' ou '50 dólares'"""
+    import re
+    
+    texto = texto.lower()
+    
+    # Mapeamento de moedas
+    moedas = {
+        "usd": "USD", "dólar": "USD", "dolar": "USD", "dólares": "USD", "dolares": "USD",
+        "eur": "EUR", "euro": "EUR", "euros": "EUR",
+        "zar": "ZAR", "rand": "ZAR", "rands": "ZAR", "rande": "ZAR",
+        "aoa": "AOA", "kwanza": "AOA", "kwanzas": "AOA", "kz": "AOA"
+    }
+    
+    moeda_encontrada = None
+    for chave, codigo in moedas.items():
+        if chave in texto:
+            moeda_encontrada = codigo
+            break
+    
+    # Encontrar valor numérico
+    numeros = re.findall(r'\d+[\.,]?\d*', texto)
+    if numeros and moeda_encontrada:
+        valor = float(numeros[0].replace(',', '.'))
+        return valor, moeda_encontrada
+    
+    return None, None
+
 def handler_cambio(texto_baixo):
-    palavras_cambio = ["câmbio", "cambio", "dólar", "dolar", "euro", "rand", "kwanza", "moeda", "conversão", "conversao"]
+    palavras_cambio = ["câmbio", "cambio", "dólar", "dolar", "euro", "rand", "rande", "zar", "kwanza", "moeda", "conversão", "conversao", "equivale", "quantos", "quanto vale"]
     if not any(p in texto_baixo for p in palavras_cambio):
         return None
+    
     dados = obter_cambio()
     if not dados:
         return "💱 Serviço de câmbio temporariamente indisponível."
+    
     taxas = dados.get("rates", {})
+    
+    # Verificar se é uma conversão específica
+    valor, moeda = extrair_valor_moeda(texto_baixo)
+    
+    if valor and moeda:
+        # Fazer a conversão
+        aoa_para_moeda = taxas.get(moeda, 0)
+        if aoa_para_moeda > 0:
+            moeda_para_aoa = 1 / aoa_para_moeda
+            resultado = valor * moeda_para_aoa
+            
+            nomes_moedas = {"USD": "Dólares", "EUR": "Euros", "ZAR": "Rand", "AOA": "Kwanzas"}
+            nome_moeda = nomes_moedas.get(moeda, moeda)
+            
+            return f"💱 *Conversão de Moeda*\n\n{valor:,.0f} {nome_moeda} = *{resultado:,.0f} AOA* (Kwanzas)\n\nFonte: Taxas de referência."
+    
+    # Se não é conversão específica, mostrar tabela
     aoa_para_usd = taxas.get("USD", 0)
     aoa_para_eur = taxas.get("EUR", 0)
     aoa_para_zar = taxas.get("ZAR", 0)
     usd_para_aoa = 1 / aoa_para_usd if aoa_para_usd > 0 else 0
     eur_para_aoa = 1 / aoa_para_eur if aoa_para_eur > 0 else 0
     zar_para_aoa = 1 / aoa_para_zar if aoa_para_zar > 0 else 0
+    
     return (
         f"💱 *Câmbio Atual*\n\n"
         f"🇺🇸 1 USD = {usd_para_aoa:,.0f} AOA\n"
         f"🇪🇺 1 EUR = {eur_para_aoa:,.0f} AOA\n"
-        f"🇿🇦 1 ZAR = {zar_para_aoa:,.0f} AOA\n\n"
+        f"🇿🇦 1 ZAR = {zar_para_aoa:,.0f} AOA (Rand)\n\n"
+        f"Para converter um valor, escreva: '100 ZAR para Kwanzas' ou '50 dólares em Kwanzas'.\n\n"
         f"Fonte: Taxas de referência do Banco Nacional de Angola."
     )
 

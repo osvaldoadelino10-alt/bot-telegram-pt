@@ -39,7 +39,7 @@ CACHE_CAMBIO = {"dados": None, "timestamp": None}
 CACHE_NOTICIAS = {"dados": None, "timestamp": None}
 
 # ==========================================
-# COORDENADAS DE ONDJIVA
+# COORDENADAS DE ONDJIVA (19 LOCAIS)
 # ==========================================
 COORDENADAS_ONDJIVA = {
     "shoprite": {"lat": -17.06568, "lon": 15.72992, "nome": "Shoprite Ondjiva", "endereco": "Bairro Castilhos, Ondjiva"},
@@ -64,7 +64,7 @@ COORDENADAS_ONDJIVA = {
 }
 
 # ==========================================
-# BASE DE DADOS - HOSPITAIS
+# BASE DE DADOS - HOSPITAIS (3)
 # ==========================================
 HOSPITAIS_ONDJIVA = {
     "hospital provincial ekuma": {
@@ -82,15 +82,13 @@ HOSPITAIS_ONDJIVA = {
 }
 
 ALCUNHAS_HOSPITAIS = {
-    "hospital ekuma": "hospital provincial ekuma",
-    "ekuma": "hospital provincial ekuma",
-    "simeone mucunde": "hospital central simeone mucunde",
-    "hospital central": "hospital central simeone mucunde",
+    "hospital ekuma": "hospital provincial ekuma", "ekuma": "hospital provincial ekuma",
+    "simeone mucunde": "hospital central simeone mucunde", "hospital central": "hospital central simeone mucunde",
     "hospital municipal": "hospital municipal de ondjiva",
 }
 
 # ==========================================
-# BASE DE DADOS - ESCOLAS PÚBLICAS
+# BASE DE DADOS - ESCOLAS PÚBLICAS (6)
 # ==========================================
 ESCOLAS_PUBLICAS = {
     "instituto de saúde de ondjiva": {
@@ -129,7 +127,7 @@ ESCOLAS_PUBLICAS = {
 }
 
 # ==========================================
-# BASE DE DADOS - ESCOLAS PRIVADAS
+# BASE DE DADOS - ESCOLAS PRIVADAS (8)
 # ==========================================
 ESCOLAS_PRIVADAS = {
     "colégio pitágoras": {
@@ -167,7 +165,7 @@ ESCOLAS_PRIVADAS = {
     },
     "colégio abcunene": {
         "nome": "Colégio Abcunene", "tipo": "Privada", "bairro": "Caxila 3", "nivel": "Primário + 1º Ciclo + Médio",
-        "cursos": ["Enfermagem Geral", "Análises Clínicas", "Informática"],
+        "cursos": ["Enfermagem Geral", "Análises Clínicas"],
         "turnos": ["Manhã: 07h-12h30", "Tarde: 13h-18h05"]
     },
 }
@@ -176,42 +174,30 @@ ESCOLAS_ONDJIVA = {**ESCOLAS_PUBLICAS, **ESCOLAS_PRIVADAS}
 
 ALCUNHAS_ESCOLAS = {
     "itso": "instituto de saúde de ondjiva", "iso": "instituto de saúde de ondjiva",
-    "instituto de saúde": "instituto de saúde de ondjiva", "eiffel": "eiffel",
-    "oulondelo": "complexo escolar oulondelo", "impo": "instituto médio de pedagogia de ondjiva",
-    "cesmo": "complexo escolar cesmo", "itas": "itas",
-    "pitágoras": "colégio pitágoras", "pitagoras": "colégio pitágoras",
+    "eiffel": "eiffel", "oulondelo": "complexo escolar oulondelo",
+    "impo": "instituto médio de pedagogia de ondjiva", "cesmo": "complexo escolar cesmo",
+    "itas": "itas", "pitágoras": "colégio pitágoras", "pitagoras": "colégio pitágoras",
     "ednas": "colégio ednas", "popiene": "colégio popiene", "arcanjo": "colégio arcanjo",
     "marc leandres": "colégio marc leandres", "bulet": "colégio bulet salú 1",
     "abcunene": "colégio abcunene", "abc": "colégio abcunene",
 }
 
 # ==========================================
-# BASE DE DADOS - MERCADOS
+# MERCADOS, CHEIAS, MUNICÍPIOS, HISTÓRIA, AGRICULTURA, DOENÇAS
 # ==========================================
 MERCADOS_ONDJIVA = {
-    "praça da lemanha": {
-        "nome": "Praça da Lemanha", "bairro": "Kaculuvale", "tipo": "Mercado/Praça",
-        "produtos": ["Fuba", "Milho", "Arroz", "Massa", "Frango", "Peixe", "Tomate", "Cebola", "Alho", "Batata", "Feijão", "Óleo", "Sal", "Açúcar"],
-        "horario": "Todos os dias, das primeiras horas da manhã até ao final da tarde"
-    },
-    "praça do xomucuio": {
-        "nome": "Praça do Xomucuio", "bairro": "Ondjiva", "tipo": "Mercado/Praça",
-        "produtos": ["Fuba", "Milho", "Arroz", "Massa", "Frango", "Peixe", "Tomate", "Cebola", "Alho", "Batata", "Feijão", "Óleo", "Sal", "Açúcar"],
-        "horario": "Todos os dias, das primeiras horas da manhã até ao final da tarde"
-    }
+    "praça da lemanha": {"nome": "Praça da Lemanha", "bairro": "Kaculuvale", "produtos": ["Fuba", "Milho", "Arroz", "Massa", "Frango", "Peixe", "Tomate", "Cebola", "Alho", "Batata", "Feijão", "Óleo", "Sal", "Açúcar"], "horario": "Todos os dias, das primeiras horas da manhã até ao final da tarde"},
+    "praça do xomucuio": {"nome": "Praça do Xomucuio", "bairro": "Ondjiva", "produtos": ["Fuba", "Milho", "Arroz", "Massa", "Frango", "Peixe", "Tomate", "Cebola", "Alho", "Batata", "Feijão", "Óleo", "Sal", "Açúcar"], "horario": "Todos os dias, das primeiras horas da manhã até ao final da tarde"}
 }
 
-# ==========================================
-# CHEIAS E ALERTAS
-# ==========================================
 CHEIAS_ALERTAS = {
     "estacao_seca": {"periodo": "Março a Outubro", "descricao": "Clima seco e quente.", "temperatura": "Média diária até 30°C"},
     "estacao_chuvosa": {"periodo": "Novembro a Fevereiro", "descricao": "Chuvas mais frequentes. Cheias do Rio Cunene recorrentes.", "temperatura": "Média diária entre 20°C e 25°C"},
     "areas_risco": [
-        {"zona": "Bairro Kafitu", "risco": "Alto - Zona baixa"},
-        {"zona": "Bairro Onahumba", "risco": "Médio"},
-        {"zona": "Margens do Rio Cunene", "risco": "Alto - Cheias"},
-        {"zona": "Bairro Castilhos", "risco": "Baixo"},
+        {"zona": "Bairro Kafitu", "risco": "Alto - Zona baixa, propensa a inundações"},
+        {"zona": "Bairro Onahumba", "risco": "Médio - Algumas áreas alagadiças"},
+        {"zona": "Margens do Rio Cunene", "risco": "Alto - Cheias durante a estação chuvosa"},
+        {"zona": "Bairro Castilhos", "risco": "Baixo - Área relativamente elevada"},
     ],
     "contactos_emergencia": {"bombeiros": "115", "policia": "113"},
     "recomendacoes": ["Esteja atento às previsões", "Siga instruções da Protecção Civil", "Evite zonas baixas", "Tenha plano de evacuação"]
@@ -219,9 +205,6 @@ CHEIAS_ALERTAS = {
 
 CLIMA_CUNENE = {"tipo": "Árido a semi-árido", "estacoes": "Duas estações distintas"}
 
-# ==========================================
-# MUNICÍPIOS
-# ==========================================
 MUNICIPIOS_CUNENE = [
     {"numero": 1, "nome": "Cahama", "comunas": ["Cahama", "Otchinjau"], "administrador": "José Mário Katiti"},
     {"numero": 2, "nome": "Cuanhama", "comunas": ["Ondjiva", "Môngua"], "administrador": "José Felisberto Kalomo"},
@@ -239,9 +222,6 @@ MUNICIPIOS_CUNENE = [
     {"numero": 14, "nome": "Chissuata", "comunas": [], "administrador": None},
 ]
 
-# ==========================================
-# HISTÓRIA, AGRICULTURA, DOENÇAS (RESUMIDO)
-# ==========================================
 HISTORIA_CUNENE = """🏛️ *História do Cunene*
 🗿 Povos: Nyaneka-Humbe e Ovambo (Cuanhama).
 👑 Rei Mandume ya Ndemufayo: Resistência anticolonial.
@@ -309,37 +289,105 @@ VIH_INFO = """❤️ *VIH/Sida — Prevenção*
 • Tratamento antirretroviral
 • Acompanhamento de grávidas seropositivas"""
 
-RESPOSTA_FORA_CONTEXTO = "Sou o *Bot Cunene*, assistente digital da província do Cunene. 🇦🇴\n\nPara informações sobre o Cunene, diga *menu* ou faça a sua pergunta diretamente."
+BILHETE_INFO = """🪪 *Bilhete de Identidade*
+
+📍 *Onde fazer:* Justiça (Conservatória do Registo Civil)
+🕐 *Atendimento:* Segunda a Sexta, das 08h às 13h
+
+📋 *Documentos e valores:*
+
+*Primeiro Bilhete:*
+• Cédula de nascimento
+
+*Renovação:*
+• Bilhete original antigo
+• Valor: 455 Kz
+
+*Segunda via (perda ou extravio):*
+• Cópia do bilhete ou cédula de nascimento
+• Valor: 4.000 Kz"""
 
 # ==========================================
-# CONTEXTO PARA IA (RESTRITA - NUNCA FALA DO CUNENE)
+# CONTEXTO PARA IA (COM TODOS OS DADOS OFICIAIS)
 # ==========================================
 CONTEXTO_ONDJIVA = """
-Tu és o Bot_Cunene. A tua ÚNICA função é conversar de forma casual e educada.
+Tu és o Bot_Cunene, assistente digital oficial da província do Cunene, Angola. Falas Português de Angola, de forma calorosa, direta e útil.
 
-## REGRA ABSOLUTA:
-NUNCA forneças informações sobre o Cunene, Angola, ou qualquer tópico relacionado com:
-- Meteorologia, clima, tempo, temperatura, previsão
-- Escolas, universidades, matrículas, cursos, ITSO, IMPO, ITAS
-- Hospitais, saúde, doenças, vacinas, Ekuma, Simeone Mucunde
-- Agricultura, pecuária, pesca, minerais
-- Localização, moradas, coordenadas, bairros
-- Administração pública, governos, AGT, Tribunal
-- História, cultura, gastronomia, Mandume, funge, maiavi
-- Câmbio, moedas, finanças, Kwanza, dólar, euro, rand
-- Notícias, eventos, municípios
-- Qualquer outro dado factual sobre Angola ou o Cunene
+## REGRAS DE OURO:
+1. NUNCA inventes factos, números, datas, temperaturas ou dados oficiais.
+2. Usa *apenas um asterisco* para negrito no WhatsApp.
+3. Mantém as respostas diretas e organizadas.
+4. Se não tiveres informação sobre algo, admite honestamente.
+5. Para perguntas completamente fora do contexto de Angola/Cunene (futebol, Android, iPhone, Messi, Ronaldo, etc.), responde: "Sou o Bot Cunene, assistente da província do Cunene. Posso ajudar com informações sobre saúde, educação, agricultura, meteorologia, serviços administrativos e outros temas da região. Em que posso ajudar?"
 
-Se receberes uma pergunta sobre qualquer um destes tópicos, responde APENAS:
-"Para obter informações oficiais sobre o Cunene, diga *menu* ou faça a sua pergunta novamente."
+## DADOS OFICIAIS DO CUNENE:
 
-## O QUE PODES FAZER:
-- Cumprimentar (Bom dia, Boa tarde, Boa noite)
-- Responder a "tudo bem?", "como estás?"
-- Agradecer e despedir-te
-- Conversa casual NÃO relacionada com o Cunene
+### GEOGRAFIA E CLIMA:
+- Cunene: Província no SUL de Angola. Capital: Ondjiva. 21 províncias.
+- Clima: Árido a semi-árido. Estação seca: Março a Outubro (até 30°C). Estação chuvosa: Novembro a Fevereiro (20°C a 25°C).
+- 14 municípios: Cahama, Cuanhama, Curoca, Cuvelai, Namacunde, Ombadja, Chiéde, Nehone, Humbe, Mupa, Naulila, Chitado, Cafima, Chissuata.
+- Bairros: Naipalala, Kafitu, Onahumba, Pioneiro Zeca, Castilhos, Kaculuvale, Ekuma, Muhongo, Bangula.
+- Governadora: Gerdina Didalelwa.
+- Cheias do Rio Cunene recorrentes na estação chuvosa.
+- Áreas de risco: Kafitu (Alto), Onahumba (Médio), Margens do Rio Cunene (Alto), Castilhos (Baixo).
 
-Mantém as respostas curtas (máximo 2 frases). NUNCA inventes nada.
+### SAÚDE:
+- Hospital Provincial Ekuma (Bairro Ekuma)
+- Hospital Central Simeone Mucunde (Bairro Naipalala)
+- Hospital Municipal de Ondjiva (Bairro Bangula)
+- Todos os bairros têm posto médico.
+- Urgências: 24h. Consultas: Seg-Sex 08h-15h.
+- Não há campanhas de vacinação ativas.
+
+### DOENÇAS E PREVENÇÃO:
+- Malária: Mosquiteiros, repelente, eliminar águas paradas, antimaláricos para grávidas.
+- Doenças Diarreicas: Água tratada, lavar mãos, alimentos cozinhados.
+- Dracunculose: Filtrar água com pano fino.
+- Doenças Respiratórias: Evitar fumo de lenha, vacinação.
+- Malnutrição: Aleitamento materno, papas enriquecidas.
+- VIH/Sida: Preservativo, testagem, antirretrovirais.
+
+### EDUCAÇÃO:
+Escolas Públicas: ITSO (Ekuma) - Enfermagem, Fisioterapia, Análises Clínicas; IMPO (Naipalala) - Pedagogia; ITAS (Naipalala) - Finanças, Contabilidade, Gestão; Oulondelo (Naipalala) - CFB, CEJ; Eiffel (Naipalala) - CFB; CESMO (Kaculuvale) - CFB, CEJ.
+Colégios Privados: Pitágoras (Farmácia, Informática, Enfermagem); Ednas, Popiene (só primário), Arcanjo, Marc Leandres, Bulet Salú, Abcunene (Enfermagem, Análises Clínicas - NÃO tem Informática).
+Turnos: Manhã 07h-12h30, Tarde 13h-18h05, Noite 18h-22h30.
+Matrículas: Julho/Agosto.
+Documentos: Iniciação/Primário: Bilhete + 2 fotos; 1º Ciclo: Bilhete + 2 fotos + Certificado primário; Ensino Médio: Bilhete + 2 fotos + Certificado 1º ciclo.
+
+### SERVIÇOS ADMINISTRATIVOS:
+- Bilhete de Identidade: Justiça (Conservatória do Registo Civil), Seg-Sex 08h-13h.
+  Primeiro BI: Cédula de nascimento.
+  Renovação: BI antigo + 455 Kz.
+  Segunda via: Cópia do BI ou cédula + 4.000 Kz.
+
+### CULTURA E HISTÓRIA:
+- Povos: Nyaneka-Humbe e Ovambo.
+- Rei Mandume: Resistência anticolonial.
+- Gastronomia: Funge, Maiavi, Chacota.
+- Pastorícia: 1 milhão+ cabeças de gado.
+
+### AGRICULTURA E PECUÁRIA:
+- Culturas: Milho, massango, massambala, trigo, feijão, algodão, cana-de-açúcar.
+- 51.650 lavras, 77.475 hectares.
+- Pecuária: 1M+ bovinos, ovinos Caracul, caprinos.
+- Pesca artesanal no Rio Cunene.
+- Minerais: Ferro, Cobre, Ouro, Mica.
+
+### ADMINISTRAÇÃO PÚBLICA:
+- Horário: Seg-Qui 08h-15h30, Sex 08h-15h.
+- Bangula: Governo Provincial, Tribunal, AGT.
+- Kaculuvale: Administração Provincial, Mediateca, Aeroporto.
+- Castilhos: Comando Municipal, SIC.
+- Naipalala: Viação, Bombeiros, Polícia Fiscal.
+
+### COMÉRCIO E MERCADOS:
+- Shoprite e AngoMarte (Castilhos): Seg-Sáb 08h-20h, Dom 08h-13h30.
+- Praça da Lemanha (Kaculuvale), Praça do Xomucuio.
+- Produtos: Fuba, milho, arroz, massa, frango, peixe, tomate, cebola, etc.
+
+### EMERGÊNCIAS:
+- Polícia: 113
+- Bombeiros: 115
 """
 
 # ==========================================
@@ -357,12 +405,10 @@ def enviar_mensagem_whatsapp(telefone_destino, texto):
     except Exception as e: print(f"Erro WhatsApp: {e}")
 
 def enviar_mensagens_partidas(telefone_destino, texto):
-    max_len = 3800
-    while len(texto) > max_len:
-        corte = texto.rfind(' ', 0, max_len)
-        if corte == -1: corte = max_len
-        bloco = texto[:corte].strip()
-        enviar_mensagem_whatsapp(telefone_destino, bloco)
+    while len(texto) > 3800:
+        corte = texto.rfind(' ', 0, 3800)
+        if corte == -1: corte = 3800
+        enviar_mensagem_whatsapp(telefone_destino, texto[:corte].strip())
         texto = texto[corte:].strip()
         time.sleep(0.5)
     if texto: enviar_mensagem_whatsapp(telefone_destino, texto)
@@ -432,7 +478,17 @@ def formatar_tempo_atual(dados):
     alerta_chuva = f"\n🌧️ Chuva na última hora: {chuva}mm" if chuva > 0 else ""
     nascer = datetime.fromtimestamp(atual["sys"]["sunrise"]).strftime("%H:%M")
     por = datetime.fromtimestamp(atual["sys"]["sunset"]).strftime("%H:%M")
-    return (f"{emoji} *Tempo em Ondjiva - Cunene*\n\n🌡️ Temperatura: {temp:.0f}°C (sensação: {sensacao:.0f}°C)\n💧 Humidade: {humidade}%\n☁️ Condição: {descricao}\n🌬️ Vento: {vento:.0f} km/h{alerta_chuva}\n🌅 Nascer do sol: {nascer}\n🌇 Pôr do sol: {por}\n\nDiga 'previsão' para ver os próximos dias.")
+    agora = datetime.utcnow() + timedelta(hours=1)
+    hora_por = int(por.split(":")[0])
+    texto_por = f"🌇 Pôr do sol (amanhã): {por}" if agora.hour >= hora_por else f"🌇 Pôr do sol (hoje): {por}"
+    return (f"{emoji} *Tempo em Ondjiva - Cunene*\n\n"
+            f"🌡️ Temperatura: {temp:.0f}°C (sensação: {sensacao:.0f}°C)\n"
+            f"💧 Humidade: {humidade}%\n"
+            f"☁️ Condição: {descricao}\n"
+            f"🌬️ Vento: {vento:.0f} km/h{alerta_chuva}\n"
+            f"🌅 Nascer do sol: {nascer}\n"
+            f"{texto_por}\n\n"
+            f"Diga 'previsão' para ver os próximos dias.")
 
 def formatar_previsao(dados):
     previsao = dados["previsao"]; lista = previsao["list"]
@@ -450,24 +506,19 @@ def formatar_previsao(dados):
         resposta += f"{emoji} *{dia_str}:* {temp_max:.0f}°C / {temp_min:.0f}°C"
         if prob_chuva > 20: resposta += f" | 🌧️ {prob_chuva:.0f}%"
         resposta += "\n"
-    agora = datetime.utcnow() + timedelta(hours=1); mes = agora.month
-    resposta += "\n☀️ *Estação seca:* Mantenha-se hidratado." if 3 <= mes <= 10 else "\n🌧️ *Estação chuvosa:* Atenção às cheias do Rio Cunene."
+    agora = datetime.utcnow() + timedelta(hours=1)
+    resposta += "\n☀️ *Estação seca:* Mantenha-se hidratado." if 3 <= agora.month <= 10 else "\n🌧️ *Estação chuvosa:* Atenção às cheias do Rio Cunene."
     return resposta
 
 def handler_meteorologia(texto_baixo):
-    expressoes_tempo = [
-        "como está o tempo", "tempo hoje", "tempo amanhã", "tempo em ondjiva",
-        "previsão do tempo", "previsao do tempo", "vai chover",
-        "meteorologia", "temperatura", "quantos graus", "clima hoje",
-        "previsão", "previsao", "previsões", "previsoes"
-    ]
+    expressoes_tempo = ["tempo", "como está o tempo", "tempo hoje", "tempo amanhã", "tempo em ondjiva", "previsão", "previsao", "previsões", "previsoes", "previsão do tempo", "vai chover", "meteorologia", "temperatura", "quantos graus", "clima hoje"]
     expressoes_bloqueio = ["perder tempo", "perdendo tempo", "muito tempo", "no tempo", "meu tempo", "seu tempo"]
     if any(p in texto_baixo for p in expressoes_bloqueio): return None
     if not any(p in texto_baixo for p in expressoes_tempo): return None
     if not OPENWEATHER_API_KEY: return "⚠️ Serviço de meteorologia temporariamente indisponível."
     dados = obter_tempo_ondjiva()
-    if not dados: return f"⚠️ Não foi possível obter dados meteorológicos.\n\n📋 *Dados climáticos do Cunene:*\n🌍 Clima: {CLIMA_CUNENE['tipo']}\n☀️ Estação seca: Março a Outubro (até 30°C)\n🌧️ Estação chuvosa: Novembro a Fevereiro (20°C a 25°C)"
-    if any(p in texto_baixo for p in ["previsão", "previsao", "previsões", "previsoes", "próximos", "proximos", "dias", "semana"]): return formatar_previsao(dados)
+    if not dados: return f"⚠️ Não foi possível obter dados meteorológicos.\n\n📋 *Clima do Cunene:*\n🌍 {CLIMA_CUNENE['tipo']}\n☀️ Estação seca: Março a Outubro (até 30°C)\n🌧️ Estação chuvosa: Novembro a Fevereiro (20°C a 25°C)"
+    if any(p in texto_baixo for p in ["previsão", "previsao", "previsões", "previsoes", "próximos", "dias", "semana"]): return formatar_previsao(dados)
     if any(p in texto_baixo for p in ["chuva", "chover", "vai chover"]):
         chuva = dados["atual"].get("rain", {}).get("1h", 0)
         return f"🌧️ Sim, está a chover em Ondjiva! Precipitação: {chuva}mm.\n\n{formatar_tempo_atual(dados)}" if chuva > 0 else f"☀️ Não está a chover.\n\n{formatar_tempo_atual(dados)}"
@@ -488,34 +539,27 @@ def obter_cambio():
     except Exception as e: print(f"Erro câmbio: {e}")
     return None
 
-def extrair_valor_moeda(texto):
-    import re
-    moedas = {"usd": "USD", "dólar": "USD", "dolar": "USD", "dólares": "USD", "eur": "EUR", "euro": "EUR", "euros": "EUR", "zar": "ZAR", "rand": "ZAR", "rands": "ZAR", "rande": "ZAR", "kwanza": "AOA", "kwanzas": "AOA"}
-    moeda_encontrada = None
-    for chave, codigo in moedas.items():
-        if chave in texto.lower(): moeda_encontrada = codigo; break
-    numeros = re.findall(r'\d+[\.,]?\d*', texto)
-    if numeros and moeda_encontrada: return float(numeros[0].replace(',', '.')), moeda_encontrada
-    return None, None
-
 def handler_cambio(texto_baixo):
-    palavras_cambio = ["câmbio", "cambio", "dólar", "dolar", "euro", "rand", "rande", "zar", "kwanza", "moeda", "conversão", "equivale", "quantos"]
-    if not any(p in texto_baixo for p in palavras_cambio): return None
+    if not any(p in texto_baixo for p in ["câmbio", "cambio", "dólar", "dolar", "euro", "rand", "zar", "kwanza", "moeda", "conversão", "equivale", "quantos"]): return None
     dados = obter_cambio()
     if not dados: return "💱 Serviço de câmbio temporariamente indisponível."
     taxas = dados.get("rates", {})
-    valor, moeda = extrair_valor_moeda(texto_baixo)
-    if valor and moeda:
-        aoa_para_moeda = taxas.get(moeda, 0)
+    import re
+    moedas = {"usd": "USD", "dólar": "USD", "dolar": "USD", "eur": "EUR", "euro": "EUR", "zar": "ZAR", "rand": "ZAR", "kwanza": "AOA"}
+    moeda_enc = None
+    for chave, codigo in moedas.items():
+        if chave in texto_baixo: moeda_enc = codigo; break
+    numeros = re.findall(r'\d+[\.,]?\d*', texto_baixo)
+    if numeros and moeda_enc:
+        aoa_para_moeda = taxas.get(moeda_enc, 0)
         if aoa_para_moeda > 0:
-            resultado = valor * (1 / aoa_para_moeda)
+            resultado = float(numeros[0].replace(',', '.')) * (1 / aoa_para_moeda)
             nomes = {"USD": "Dólares", "EUR": "Euros", "ZAR": "Rand", "AOA": "Kwanzas"}
-            return f"💱 *Conversão de Moeda*\n\n{valor:,.0f} {nomes.get(moeda, moeda)} = *{resultado:,.0f} AOA* (Kwanzas)\n\nFonte: Taxas de referência."
-    aoa_para_usd = taxas.get("USD", 0); aoa_para_eur = taxas.get("EUR", 0); aoa_para_zar = taxas.get("ZAR", 0)
-    usd_para_aoa = 1 / aoa_para_usd if aoa_para_usd > 0 else 0
-    eur_para_aoa = 1 / aoa_para_eur if aoa_para_eur > 0 else 0
-    zar_para_aoa = 1 / aoa_para_zar if aoa_para_zar > 0 else 0
-    return (f"💱 *Câmbio Atual*\n\n🇺🇸 1 USD = {usd_para_aoa:,.0f} AOA\n🇪🇺 1 EUR = {eur_para_aoa:,.0f} AOA\n🇿🇦 1 ZAR = {zar_para_aoa:,.0f} AOA (Rand)\n\nPara converter: '100 ZAR para Kwanzas'.\n\nFonte: Taxas de referência do Banco Nacional de Angola.")
+            return f"💱 *Conversão de Moeda*\n\n{numeros[0]} {nomes.get(moeda_enc, moeda_enc)} = *{resultado:,.0f} AOA* (Kwanzas)\n\nFonte: Taxas de referência."
+    usd = 1/taxas.get("USD", 0.001) if taxas.get("USD", 0) > 0 else 0
+    eur = 1/taxas.get("EUR", 0.001) if taxas.get("EUR", 0) > 0 else 0
+    zar = 1/taxas.get("ZAR", 0.001) if taxas.get("ZAR", 0) > 0 else 0
+    return f"💱 *Câmbio Atual*\n\n🇺🇸 1 USD = {usd:,.0f} AOA\n🇪🇺 1 EUR = {eur:,.0f} AOA\n🇿🇦 1 ZAR = {zar:,.0f} AOA (Rand)\n\nPara converter: '100 ZAR para Kwanzas'.\n\nFonte: Taxas de referência do Banco Nacional de Angola."
 
 # ==========================================
 # API DE NOTÍCIAS
@@ -548,9 +592,9 @@ def handler_noticias(texto_baixo):
 # ==========================================
 def handler_cuanhama(texto_baixo):
     if texto_baixo in ["wa aluka", "wa aluka po", "aluka"]:
-        agora = datetime.utcnow() + timedelta(hours=1); hora = agora.hour
-        if 5 <= hora < 12: return "Wa aluka! ☀️ *Bot Cunene* ove li po. (Bom dia! Escreve *menu*.)"
-        elif 12 <= hora < 18: return "Wa aluka! 🌤️ *Bot Cunene* ove li po. (Boa tarde! Escreve *menu*.)"
+        agora = datetime.utcnow() + timedelta(hours=1)
+        if 5 <= agora.hour < 12: return "Wa aluka! ☀️ *Bot Cunene* ove li po. (Bom dia! Escreve *menu*.)"
+        elif 12 <= agora.hour < 18: return "Wa aluka! 🌤️ *Bot Cunene* ove li po. (Boa tarde! Escreve *menu*.)"
         else: return "Wa aluka! 🌙 *Bot Cunene* ove li po. (Boa noite! Escreve *menu*.)"
     if "ame ove" in texto_baixo or "ou li tutu" in texto_baixo: return "Ondei! 😊 *Tangi* (Estou bem! Escreve *menu*.)"
     if texto_baixo in ["tangi", "nda pandula"]: return "Ka li na shilwe! 🙏 (De nada! Escreve *menu*.)"
@@ -561,9 +605,9 @@ def handler_cuanhama(texto_baixo):
 
 def handler_conversa_casual(texto_baixo):
     if texto_baixo in ["oi", "olá", "ola", "oie", "hey", "ei"]:
-        agora = datetime.utcnow() + timedelta(hours=1); hora = agora.hour
-        if 5 <= hora < 12: saudacao = "Bom dia"
-        elif 12 <= hora < 18: saudacao = "Boa tarde"
+        agora = datetime.utcnow() + timedelta(hours=1)
+        if 5 <= agora.hour < 12: saudacao = "Bom dia"
+        elif 12 <= agora.hour < 18: saudacao = "Boa tarde"
         else: saudacao = "Boa noite"
         return f"{saudacao}! 👋 Sou o *Bot Cunene*. Escreve *menu* para veres as opções."
     if texto_baixo in ["bom dia", "boa tarde", "boa noite"]: return f"{texto_baixo.capitalize()}! 👋 Sou o *Bot Cunene*. Escreve *menu*."
@@ -576,6 +620,11 @@ def handler_conversa_casual(texto_baixo):
 def handler_matricula(texto_baixo):
     if any(p in texto_baixo for p in ["matrícula", "matricula", "matricular", "documentos necessários", "documentos para", "preciso para matricular", "documentos exigidos", "como matricular", "quero matricular"]):
         return ("📝 *Matrículas — Ano Letivo*\n\n📅 *Período:* Julho/Agosto.\n\n📋 *Documentos Necessários:*\n\n*Iniciação e Ensino Primário:*\n• Bilhete de identidade ou cédula de nascimento\n• Duas fotos tipo passe\n\n*1º Ciclo:*\n• Cópia do bilhete de identidade\n• Duas fotos tipo passe\n• Certificado de conclusão do ensino primário\n\n*Ensino Médio:*\n• Cópia do bilhete de identidade\n• Duas fotos tipo passe\n• Certificado de conclusão do 1º ciclo\n\n📍 Dirija-se à escola mais próxima para efetuar a matrícula.")
+    return None
+
+def handler_bilhete(texto_baixo):
+    if any(p in texto_baixo for p in ["bilhete de identidade", "bilhete", "bi", "registo civil", "justiça", "segunda via", "renovar bilhete"]):
+        return BILHETE_INFO
     return None
 
 def handler_historia_cultura(texto_baixo):
@@ -633,11 +682,13 @@ def pesquisar_escola(texto):
         if alcunha in texto: return ESCOLAS_ONDJIVA[chave_oficial]
     return None
 
-def formatar_resposta_escola(d, completo=False):
+def formatar_resposta_escola(d):
+    """Resposta SEMPRE completa com todos os cursos e turnos"""
     emoji = "🏫" if d['tipo'] == "Pública" else "🎓"
-    cursos_str = ", ".join(d['cursos'][:3]) + (f" e mais {len(d['cursos'])-3}" if len(d['cursos'])>3 else "") if d['cursos'] else ("Apenas ensino primário" if d['nivel']=="Primário" else "Ensino Primário e 1º Ciclo")
-    if not completo: return f"{emoji} *{d['nome']}*\n📚 {d['tipo']} | {d['nivel']}\n📍 Bairro: {d['bairro']}\n📖 Cursos: {cursos_str}\n🕐 {d['turnos'][0]}\n\nPara detalhes completos, diga 'detalhes {d['nome']}'."
-    cursos_str = "\n".join([f"  • {c}" for c in d['cursos']]) if d['cursos'] else "  • Ensino Primário e 1º Ciclo"
+    if d['cursos']:
+        cursos_str = "\n".join([f"  • {c}" for c in d['cursos']])
+    else:
+        cursos_str = "  • Ensino Primário" if d['nivel'] == "Primário" else "  • Ensino Primário e 1º Ciclo"
     turnos_str = "\n".join([f"  • {t}" for t in d['turnos']])
     return f"{emoji} *{d['nome']}*\n📚 {d['tipo']} | {d['nivel']}\n📍 Bairro: {d['bairro']}\n\n📖 *Cursos:*\n{cursos_str}\n\n🕐 *Turnos:*\n{turnos_str}"
 
@@ -659,12 +710,10 @@ def handler_escolas(texto_baixo, telefone=None):
         if telefone: ESTADO_LISTA[telefone] = {"tipo": "escolas", "dados": list(ESCOLAS_PRIVADAS.keys())}
         return listar_escolas_por_tipo(tipo="Privada")
     if "enfermagem" in texto_baixo: return "📖 *Escolas com Enfermagem Geral:*\n🏫 ITSO (Pública - Ekuma)\n🎓 Colégio Pitágoras (Privada - Naipalala)\n🎓 Colégio Arcanjo (Privada - Naipalala)\n🎓 Colégio Abcunene (Privada - Caxila 3)"
-    if "informática" in texto_baixo or "informatica" in texto_baixo: return "📖 *Escolas com Informática:*\n🎓 Colégio Pitágoras (Privada - Naipalala)\n🎓 Colégio Abcunene (Privada - Caxila 3)"
+    if "informática" in texto_baixo or "informatica" in texto_baixo: return "📖 *Escolas com Informática:*\n🎓 Colégio Pitágoras (Privada - Naipalala)"
     if "contabilidade" in texto_baixo or "finanças" in texto_baixo: return "📖 *Escola com Finanças/Contabilidade:*\n🏫 ITAS (Pública - Naipalala)"
     escola = pesquisar_escola(texto_baixo)
-    if escola:
-        if any(p in texto_baixo for p in ["completo", "detalhes"]): return formatar_resposta_escola(escola, completo=True)
-        return formatar_resposta_escola(escola)
+    if escola: return formatar_resposta_escola(escola)
     if any(p in texto_baixo for p in ["escola", "colégio", "colegio", "liceu", "instituto"]): return "📚 *Escolas em Ondjiva*\n\n🏫 *Públicas:* ITSO, Eiffel, Oulondelo, IMPO, CESMO, ITAS\n🎓 *Privadas:* Pitágoras, Ednas, Popiene, Arcanjo, Marc Leandres, Bulet Salú, Abcunene\n\nDiga 'escolas públicas', 'colégios privados' ou o nome da escola."
     return None
 
@@ -673,10 +722,8 @@ def handler_mercados(texto_baixo, telefone=None):
         for chave, dados in MERCADOS_ONDJIVA.items():
             if chave in texto_baixo: return f"🛒 *{dados['nome']}*\n\n💰 Os preços variam conforme a época.\n📌 Visite a praça.\n📍 Bairro: {dados['bairro']}\n🕐 {dados['horario']}"
         return "💰 Os preços variam conforme a época.\n📌 Visite as praças:\n• Praça da Lemanha (Kaculuvale)\n• Praça do Xomucuio"
-    if "lemanha" in texto_baixo:
-        m = MERCADOS_ONDJIVA["praça da lemanha"]; return f"🛒 *{m['nome']}*\n📍 {m['bairro']}\n🕐 {m['horario']}\n📦 Produtos: {', '.join(m['produtos'])}"
-    if "xomucuio" in texto_baixo or "xamucuio" in texto_baixo:
-        m = MERCADOS_ONDJIVA["praça do xomucuio"]; return f"🛒 *{m['nome']}*\n📍 {m['bairro']}\n🕐 {m['horario']}\n📦 Produtos: {', '.join(m['produtos'])}"
+    if "lemanha" in texto_baixo: m = MERCADOS_ONDJIVA["praça da lemanha"]; return f"🛒 *{m['nome']}*\n📍 {m['bairro']}\n🕐 {m['horario']}\n📦 Produtos: {', '.join(m['produtos'])}"
+    if "xomucuio" in texto_baixo or "xamucuio" in texto_baixo: m = MERCADOS_ONDJIVA["praça do xomucuio"]; return f"🛒 *{m['nome']}*\n📍 {m['bairro']}\n🕐 {m['horario']}\n📦 Produtos: {', '.join(m['produtos'])}"
     if any(p in texto_baixo for p in ["mercado", "praça", "praca", "feira"]):
         if telefone: ESTADO_LISTA[telefone] = {"tipo": "mercados", "dados": list(MERCADOS_ONDJIVA.keys())}
         return "🛒 *Mercados e Praças*\n\n1. Praça da Lemanha (Kaculuvale)\n2. Praça do Xomucuio\n\n📦 Produtos: Fuba, milho, arroz, massa, frango, peixe, tomate, cebola e muito mais.\n\nResponda com o número (1 ou 2)."
@@ -692,8 +739,7 @@ def handler_cheias_alertas(texto_baixo):
         for a in CHEIAS_ALERTAS['areas_risco']: r += f"📍 *{a['zona']}*\n   Risco: {a['risco']}\n\n"
         return r
     if any(p in texto_baixo for p in ["contacto", "telefone", "emergência", "socorro"]): return "🆘 *Contactos de Emergência*\n🚒 Bombeiros: 115\n👮 Polícia: 113"
-    if "recomenda" in texto_baixo or "dica" in texto_baixo:
-        recs = "\n".join([f"  ✓ {r}" for r in CHEIAS_ALERTAS['recomendacoes']]); return f"🛡️ *Recomendações*\n\n{recs}"
+    if "recomenda" in texto_baixo or "dica" in texto_baixo: return "🛡️ *Recomendações*\n\n" + "\n".join([f"  ✓ {r}" for r in CHEIAS_ALERTAS['recomendacoes']])
     if "rio cunene" in texto_baixo: return "🌊 *Rio Cunene*\n⚠️ Cheias recorrentes na estação chuvosa (Novembro-Fevereiro)."
     if any(p in texto_baixo for p in ["cheia", "cheias", "inundação", "alerta", "alagamento"]): return f"⚠️ *Cheias e Clima — Cunene*\n🌍 Clima: {CLIMA_CUNENE['tipo']}\n☀️ Seca: Março a Outubro\n🌧️ Chuvosa: Novembro a Fevereiro\n🆘 Emergência: 115 | 113"
     return None
@@ -748,6 +794,7 @@ def processar_texto(telefone_origem, user_text):
     texto_baixo = user_text.lower().strip()
     MEMORIA_TIMESTAMPS[telefone_origem] = datetime.utcnow()
 
+    # LISTAS NUMERADAS
     if texto_baixo.isdigit() and telefone_origem in ESTADO_LISTA:
         numero = int(texto_baixo); ctx = ESTADO_LISTA[telefone_origem]
         if ctx["tipo"] == "escolas" and 1 <= numero <= len(ctx["dados"]):
@@ -759,14 +806,18 @@ def processar_texto(telefone_origem, user_text):
             return f"🛒 *{m['nome']}*\n📍 {m['bairro']}\n🕐 {m['horario']}\n📦 Produtos: {', '.join(m['produtos'])}"
         ESTADO_LISTA.pop(telefone_origem); return "❌ Número inválido. Escreve *menu*."
 
+    # RESPOSTAS DIRETAS
     for pergunta, resposta in RESPOSTAS_DIRETAS.items():
         if pergunta in texto_baixo: return resposta
 
+    # EMERGÊNCIA
     if any(p in texto_baixo for p in ["emergencia", "emergência", "socorro"]): return "🚨 *Emergência:* Polícia 113 | Bombeiros 115."
 
-    # Handlers prioritários (ANTES de tudo)
+    # CUANHAMA
     resposta = handler_cuanhama(texto_baixo)
     if resposta: return resposta
+
+    # CONVERSA CASUAL
     resposta = handler_conversa_casual(texto_baixo)
     if resposta: return resposta
 
@@ -774,11 +825,19 @@ def processar_texto(telefone_origem, user_text):
     resposta = handler_matricula(texto_baixo)
     if resposta: return resposta
 
-    # Meteorologia, Câmbio, Notícias
+    # BILHETE DE IDENTIDADE
+    resposta = handler_bilhete(texto_baixo)
+    if resposta: return resposta
+
+    # METEOROLOGIA
     resposta = handler_meteorologia(texto_baixo)
     if resposta: return resposta
+
+    # CÂMBIO
     resposta = handler_cambio(texto_baixo)
     if resposta: return resposta
+
+    # NOTÍCIAS
     resposta = handler_noticias(texto_baixo)
     if resposta: return resposta
 
@@ -786,7 +845,7 @@ def processar_texto(telefone_origem, user_text):
     if telefone_origem in ESTADO_NAVEGACAO:
         estado = ESTADO_NAVEGACAO[telefone_origem]; nivel = estado.get("nivel", "menu")
         if nivel == "menu":
-            if texto_baixo in ["1", "2", "3", "4", "5", "6", "7"]:
+            if texto_baixo in ["1", "2", "3", "4", "5", "6", "7", "8"]:
                 opcao = texto_baixo
                 if opcao == "1":
                     ESTADO_NAVEGACAO.pop(telefone_origem); ESTADO_REPORTAGEM[telefone_origem] = {'passo': 1, 'problema': '', 'tempo': '', 'causa': '', 'inicio': datetime.utcnow()}
@@ -799,6 +858,7 @@ def processar_texto(telefone_origem, user_text):
                     return "🛒 *Mercados e Praças*\n\n1. Praça da Lemanha (Kaculuvale)\n2. Praça do Xomucuio\n\nResponda com o número (1 ou 2)."
                 elif opcao == "6": ESTADO_NAVEGACAO.pop(telefone_origem); return "⚠️ *Cheias e Clima — Cunene*\n\n🌍 Clima: Árido a semi-árido\n☀️ Seca: Março a Outubro\n🌧️ Chuvosa: Novembro a Fevereiro\n\nDiga 'tempo' para meteorologia."
                 elif opcao == "7": ESTADO_NAVEGACAO[telefone_origem]["nivel"] = "agricultura_submenu"; return "🌾 *Agricultura e Pecuária — Cunene*\n\nA - Agricultura\nB - Pecuária\nC - Pesca Artesanal\nD - Recursos Minerais\nE - Solo e Vegetação\n\nResponde com a letra."
+                elif opcao == "8": ESTADO_NAVEGACAO.pop(telefone_origem); return "🏛️ *Serviços Administrativos*\n\nA - Bilhete de Identidade\n\nResponde com a letra."
             else: ESTADO_NAVEGACAO.pop(telefone_origem)
         elif nivel == "agricultura_submenu":
             opcao = texto_baixo.upper().strip(); ESTADO_NAVEGACAO.pop(telefone_origem)
@@ -887,7 +947,7 @@ def processar_texto(telefone_origem, user_text):
     # MENU
     if texto_baixo in ["menu", "ajuda", "help", "guia", "opções", "opcoes", "início", "inicio"]:
         ESTADO_NAVEGACAO[telefone_origem] = {"nivel": "menu"}; ESTADO_LISTA.pop(telefone_origem, None)
-        return "📋 *Menu Principal — Bot Cunene*\n\n1️⃣ Reportar problema\n2️⃣ Localização de locais\n3️⃣ Informações oficiais\n4️⃣ Emergências\n5️⃣ Mercado\n6️⃣ Cheias e alertas\n7️⃣ Agricultura e Pecuária\n\nResponde com o número ou faz uma pergunta directa. ✨"
+        return "📋 *Menu Principal — Bot Cunene*\n\n1️⃣ Reportar problema\n2️⃣ Localização de locais\n3️⃣ Informações oficiais\n4️⃣ Emergências\n5️⃣ Mercado\n6️⃣ Cheias e alertas\n7️⃣ Agricultura e Pecuária\n8️⃣ Serviços Administrativos\n\nResponde com o número ou faz uma pergunta directa. ✨"
 
     # REPORTAGEM
     if texto_baixo.startswith("reportagem") or any(p in texto_baixo for p in ["quero reportar", "reportar um problema"]):
@@ -905,19 +965,18 @@ def processar_texto(telefone_origem, user_text):
             guardar_reportagem_bd(telefone_origem, relato); ESTADO_REPORTAGEM.pop(telefone_origem)
             return f"✅ *Ocorrência enviada!*\n• {dados['problema']}\n• Duração: {dados['tempo']}\n• Causa: {dados['causa']}\n\nEscreve *menu*."
 
-    # FORA DO CONTEXTO (DEPOIS DE TODOS OS HANDLERS)
+    # FORA DO CONTEXTO
     if any(p in texto_baixo for p in ["android", "iphone", "messi", "ronaldo", "neymar", "futebol", "biologia", "física", "química", "matemática", "filme", "música", "guerra", "presidente", "carro", "avião", "receita", "significado"]):
-        return RESPOSTA_FORA_CONTEXTO
+        return "Sou o *Bot Cunene*, assistente da província do Cunene. 🇦🇴\n\nPara informações sobre o Cunene, diga *menu* ou faça a sua pergunta diretamente."
 
-    # IA (FALLBACK - NUNCA DEVE FALAR DO CUNENE)
+    # IA (FALLBACK)
     try:
         if not client: return "Serviço temporariamente indisponível."
         if telefone_origem not in MEMORIA_CONVERSAS: MEMORIA_CONVERSAS[telefone_origem] = []
         MEMORIA_CONVERSAS[telefone_origem].append({"role": "user", "content": user_text})
         if len(MEMORIA_CONVERSAS[telefone_origem]) > 16: MEMORIA_CONVERSAS[telefone_origem] = MEMORIA_CONVERSAS[telefone_origem][-16:]
         agora = datetime.utcnow() + timedelta(hours=1)
-        hora_atual = agora.hour
-        saudacao = "Bom dia" if 5 <= hora_atual < 12 else "Boa tarde" if 12 <= hora_atual < 18 else "Boa noite"
+        saudacao = "Bom dia" if 5 <= agora.hour < 12 else "Boa tarde" if 12 <= agora.hour < 18 else "Boa noite"
         regra_relogio = f"\n\nHoje: {agora.strftime('%d/%m/%Y')}, {agora.strftime('%H:%M')}.\n"
         if len(MEMORIA_CONVERSAS[telefone_origem]) <= 2: regra_relogio += f"Podes usar '{saudacao}'."
         else: regra_relogio += "Responde diretamente."
@@ -967,8 +1026,7 @@ def webhook():
                         agora = datetime.utcnow()
                         if chave_unica in MENSAGENS_PROCESSADAS and (agora - MENSAGENS_PROCESSADAS[chave_unica]).total_seconds() < 30: continue
                         MENSAGENS_PROCESSADAS[chave_unica] = agora
-                        chaves_antigas = [k for k, v in MENSAGENS_PROCESSADAS.items() if (agora - v).total_seconds() > 300]
-                        for k in chaves_antigas: del MENSAGENS_PROCESSADAS[k]
+                        for k in [k for k, v in MENSAGENS_PROCESSADAS.items() if (agora - v).total_seconds() > 300]: del MENSAGENS_PROCESSADAS[k]
                         ULTIMA_ATIVIDADE = agora; tel = msg["from"]
                         if msg["type"] == "text":
                             resposta = processar_texto(tel, msg["text"]["body"])
